@@ -148,30 +148,36 @@ function toggleFavorite(uid, item){
   renderFavoritesModal();
 }
 function renderFavoritesModal(){
-  const list = qs("#favoritesList");
+  const list = qs('#favoritesList');
   if(!list) return;
   const favs = getFavorites();
+
   if(favs.length === 0){
     list.innerHTML = `<div class="text-center text-muted w-100 py-4">${currentLang==="en" ? "No favorites saved." : "کوئی پسندیدہ محفوظ نہیں ہے۔"}</div>`;
     return;
   }
-  list.innerHTML = favs.map(f => `
-    <div class="col-12 col-md-6">
-      <div class="card p-2 service-card">
-        <div class="card-body d-flex justify-content-between align-items-start">
-          <div>
-            <h6 class="mb-1">${escapeHtml(f.name)}</h6>
-            <div class="small text-muted">${escapeHtml(f.address)}</div>
-          </div>
-          <div>
-            <a href="tel:${f.phone || '#'}" class="btn btn-sm btn-success">Call</a>
-            <button class="btn btn-sm btn-danger mt-2" onclick="removeFavorite('${f.uid}')">Remove</button>
+
+  list.innerHTML = favs.map(f => {
+    const phone = f.phone || '1122'; // fallback if missing
+    return `
+      <div class="col-12 col-md-6">
+        <div class="card p-2 service-card">
+          <div class="card-body d-flex justify-content-between align-items-start">
+            <div>
+              <h6 class="mb-1">${escapeHtml(f.name)}</h6>
+              <div class="small text-muted">${escapeHtml(f.address)}</div>
+            </div>
+            <div class="d-flex flex-column gap-2">
+              <a href="tel:${phone}" class="btn btn-sm btn-success" aria-label="Call ${escapeHtml(f.name)}">📞</a>
+              <button class="btn btn-sm btn-danger mt-2" onclick="removeFavorite(${f.id})">Remove</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  `).join("");
+    `;
+  }).join('');
 }
+
 function removeFavorite(uid){
   let favs = getFavorites().filter(f => f.uid !== uid);
   saveFavorites(favs);
@@ -193,56 +199,48 @@ function focusOnService(item){
 }
 function displayResults(services){
   const container = qs("#results");
-  const empty = qs("#emptyState");
   container.innerHTML = "";
+  const empty = qs("#emptyState");
+  const favorites = getFavorites();
+
   if(!services || services.length === 0){
-    if(empty) empty.classList.remove("d-none");
+    if(empty) empty.classList.remove('d-none');
+    qs('#resultsMeta').textContent = '—';
     return;
   }
-  empty.classList.add("d-none");
+
+  if(empty) empty.classList.add('d-none');
+  qs('#resultsMeta').textContent = `${services.length} ${currentLang==='en' ? 'results' : 'نتائج'}`;
 
   services.forEach(s => {
-    const uidKey = s.id || s._uid || uid("s_");
-    s._uid = uidKey;
+    const isFav = favorites.some(f => f.id === s.id);
+    const phone = s.phone || '1122'; // fallback to emergency number
 
-    const col = document.createElement("div");
-    col.className = "col-12 col-md-6";
+    const col = document.createElement('div');
+    col.className = 'col-12 col-md-6';
     col.innerHTML = `
-      <div class="card service-card position-relative">
-        ${s.distance ? `<span class="distance-badge">${s.distance} km</span>` : ""}
-        <div class="card-body">
-          <h6 class="mb-1">${escapeHtml(s.name)}</h6>
-          <div class="small text-muted">${escapeHtml(s.address || "")}</div>
-          <div class="mt-3 d-flex gap-2">
-            <a class="btn btn-sm btn-success" href="tel:${s.phone || '#'}">📞</a>
-            <a class="btn btn-sm btn-primary" target="_blank" rel="noopener" href="https://www.google.com/maps?q=${s.lat},${s.lng}">🗺</a>
-            <button class="btn btn-sm btn-outline-warning" data-uid="${s._uid}">${isFavorited(s) ? "★" : "☆"}</button>
-            <button class="btn btn-sm btn-outline-secondary ms-auto btn-focus">Focus</button>
+      <div class="card p-2 service-card position-relative">
+        ${s.distance ? `<span class="distance-badge">${s.distance} km</span>` : ''}
+        <div class="card-body d-flex justify-content-between align-items-start">
+          <div>
+            <h6 class="mb-1">${escapeHtml(s.name)}</h6>
+            <div class="small text-muted">${escapeHtml(s.address)}</div>
+            <div class="small mt-2">Rating: ${s.rating || 'N/A'}</div>
+          </div>
+          <div class="d-flex flex-column gap-2">
+            <a class="btn btn-sm btn-success" href="tel:${phone}" aria-label="Call ${escapeHtml(s.name)}">📞</a>
+            <a class="btn btn-sm btn-primary" target="_blank" rel="noopener" href="https://www.google.com/maps?q=${s.lat},${s.lng}" aria-label="Map ${escapeHtml(s.name)}">🗺</a>
+            <button class="btn btn-sm btn-outline-warning" aria-pressed="${isFav}" onclick="toggleFavorite(${s.id}, ${JSON.stringify(s.name)}, ${JSON.stringify(s.type)}, ${JSON.stringify(s.address)}, ${JSON.stringify(phone)}, ${s.lat}, ${s.lng})">
+              ${isFav ? '★' : '☆'}
+            </button>
           </div>
         </div>
       </div>
     `;
     container.appendChild(col);
-
-    // focus button
-    const focusBtn = col.querySelector(".btn-focus");
-    focusBtn.addEventListener("click", () => focusOnService(s));
-
-    // favorite button
-    const favBtn = col.querySelector("button[data-uid]");
-    favBtn.addEventListener("click", () => {
-      toggleFavorite(`${s.type || 't'}_${s.id || s._uid}`, s);
-      favBtn.textContent = isFavorited(s) ? "★" : "☆";
-    });
-
-    // clicking card body also focuses
-    col.querySelector(".card-body").addEventListener("click", (ev) => {
-      // avoid clicks on buttons
-      if(ev.target.closest("button") || ev.target.closest("a")) return;
-      focusOnService(s);
-    });
   });
 }
+
 
 function isFavorited(s){
   const uid = `${s.type || 't'}_${s.id || s._uid}`;
