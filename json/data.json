@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "name": "City Hospital",
+    "type": "hospital",
+    "address": "Main Road, Karachi",
+    "phone": "+92-21-1234567",
+    "lat": 24.8607,
+    "lng": 67.0011
+  },
+  {
+    "id": 2,
+    "name": "Green Clinic",
+    "type": "clinic",
+    "address": "Block 5, Clifton, Karachi",
+    "phone": "+92-21-2345678",
+    "lat": 24.8256,
+    "lng": 67.0352
+  },
+  {
+    "id": 3,
+    "name": "Health Pharmacy",
+    "type": "pharmacy",
+    "address": "Tariq Road, Karachi",
+    "phone": "+92-21-3456789",
+    "lat": 24.8693,
+    "lng": 67.0822
+  },
+  {
+    "id": 4,
+    "name": "Hope Food Bank",
+    "type": "foodbank",
+    "address": "Near Saddar, Karachi",
+    "phone": "+92-21-4567890",
+    "lat": 24.8512,
+    "lng": 67.0204
+  },
+  {
+    "id": 5,
+    "name": "National Hospital",
+    "type": "hospital",
+    "address": "Gulshan-e-Iqbal, Karachi",
+    "phone": "+92-21-5678901",
+    "lat": 24.9234,
+    "lng": 67.0971
+  },
+  {
+    "id": 6,
+    "name": "Care Clinic",
+    "type": "clinic",
+    "address": "Shahrah-e-Faisal, Karachi",
+    "phone": "+92-21-6789012",
+    "lat": 24.8702,
+    "lng": 67.0739
+  },
+  {
+    "id": 7,
+    "name": "QuickMed Pharmacy",
+    "type": "pharmacy",
+    "address": "North Nazimabad, Karachi",
+    "phone": "+92-21-7890123",
+    "lat": 24.9476,
+    "lng": 67.0324
+  },
+  {
+    "id": 8,
+    "name": "Charity Food Bank",
+    "type": "foodbank",
+    "address": "Korangi, Karachi",
+    "phone": "+92-21-8901234",
+    "lat": 24.8325,
+    "lng": 67.1141
+  },
+  {
+    "id": 9,
+    "name": "Red Crescent Hospital",
+    "type": "hospital",
+    "address": "PECHS, Karachi",
+    "phone": "+92-21-9012345",
+    "lat": 24.8668,
+    "lng": 67.0476
+  },
+  { 
+    "id": 10,
+    "name": "Medico Pharmacy",
+    "type": "pharmacy",
+    "address": "Malir, Karachi",
+    "phone": "+92-21-0123456",
+    "lat": 24.8899,
+    "lng": 67.2165
+  }
+]

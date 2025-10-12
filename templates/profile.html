@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pukaar - Profile & Settings</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .card { margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-dark bg-dark sticky-top">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold" href="index.html">PUKAAR</a>
+      <div>
+        <button class="btn btn-outline-light btn-sm" onclick="loadProfile()">🔄 Refresh</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container my-4">
+    <h2 class="mb-4">Profile & Settings</h2>
+
+    <!-- Default Location -->
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Default Location</h5>
+        <p>Set your default location for nearby services.</p>
+        <input type="text" id="defaultCity" class="form-control mb-2" placeholder="Enter city name...">
+        <button class="btn btn-primary" onclick="saveLocation()">Save Location</button>
+        <p class="mt-2" id="savedLocation"></p>
+      </div>
+    </div>
+
+    <!-- Preferred Categories -->
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Preferred Categories</h5>
+        <p>Select your preferred categories for faster search:</p>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="hospital" id="prefHospital">
+          <label class="form-check-label" for="prefHospital">Hospitals</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="clinic" id="prefClinic">
+          <label class="form-check-label" for="prefClinic">Clinics</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="pharmacy" id="prefPharmacy">
+          <label class="form-check-label" for="prefPharmacy">Pharmacies</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="foodbank" id="prefFoodbank">
+          <label class="form-check-label" for="prefFoodbank">Food Banks</label>
+        </div>
+        <button class="btn btn-primary mt-2" onclick="savePreferences()">Save Preferences</button>
+      </div>
+    </div>
+
+    <!-- Manage Favorites -->
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Manage Favorites</h5>
+        <p>View and remove your saved favorite services:</p>
+        <div id="favoritesContainer" class="row"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../scripts/profile.js"></script>
+</body>
+</html>

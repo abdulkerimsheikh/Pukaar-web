@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pukaar - About & Help</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Leaflet CSS for Map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="../assets/style.css">
+
+  <meta name="theme-color" content="#212529">
+  <style>
+    body { scroll-behavior: smooth; transition: background 0.3s, color 0.3s; }
+    .hero { background: linear-gradient(135deg,#212529,#343a40); color:white; text-align:center; padding:80px 20px; border-bottom-left-radius:50px; border-bottom-right-radius:50px; }
+    .hero h1 { font-weight:bold; font-size:2.5rem; }
+    .hero p { opacity:0.9; margin-bottom:25px; }
+
+    /* Section styling */
+    .section { padding:50px 20px; }
+    .section-title { font-weight:bold; margin-bottom:30px; }
+
+    /* Feature Cards */
+    .feature-card { transition: transform 0.3s; cursor:pointer; }
+    .feature-card:hover { transform: scale(1.05); }
+
+    /* FAQ */
+    .faq-card { cursor:pointer; transition: all 0.3s; }
+    .faq-card:hover { background:#f8f9fa; }
+
+    /* Map */
+    #map { height:300px; border-radius:15px; }
+
+    /* Dark Mode */
+    body.dark-mode { background:#121212; color:#f0f0f0; }
+    body.dark-mode .navbar { background:#1a1a1a !important; }
+    body.dark-mode .card { background:#1e1e1e; color:#f0f0f0; }
+    body.dark-mode .modal-content { background:#1e1e1e; color:#f0f0f0; }
+
+    /* Theme Toggle Button */
+    #theme-toggle { cursor:pointer; }
+
+    /* Star Rating */
+    .star { font-size:1.5rem; color:#ddd; cursor:pointer; }
+    .star.selected, .star.hover { color:#ffc107; }
+
+    /* Contact form feedback */
+    .feedback-msg { display:none; }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold" href="index.html">PUKAAR</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-center">
+          <li class="nav-item"><a class="nav-link" href="index.html"> Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="profile.html">⚙ Profile</a></li>
+          <li class="nav-item"><button class="btn btn-outline-light btn-sm me-2" data-bs-toggle="modal" data-bs-target="#favoritesModal">⭐ Favorites</button></li>
+          <li class="nav-item"><button class="btn btn-outline-light btn-sm" id="lang-toggle">اردو</button></li>
+          <li class="nav-item"><button class="btn btn-outline-light btn-sm ms-2" id="theme-toggle">🌙</button></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>About Pukaar</h1>
+    <p>Locate hospitals, clinics, pharmacies & food banks near you – fast and easy.</p>
+    <button class="btn btn-light btn-lg mt-3" data-bs-toggle="modal" data-bs-target="#guideModal">🚀 Interactive Guide</button>
+  </section>
+
+  <!-- Features Section -->
+  <section class="section container">
+    <h2 class="section-title text-center">Features</h2>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card feature-card shadow-sm p-3 text-center">
+          <i class="bi bi-geo-alt-fill display-4 mb-2"></i>
+          <h5>Enable Location</h5>
+          <p>Find nearby services accurately using your device location.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card feature-card shadow-sm p-3 text-center">
+          <i class="bi bi-star-fill display-4 mb-2"></i>
+          <h5>Save Favorites</h5>
+          <p>Bookmark your frequently used services for quick access.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card feature-card shadow-sm p-3 text-center">
+          <i class="bi bi-phone-fill display-4 mb-2"></i>
+          <h5>Emergency Calls</h5>
+          <p>Call emergency services instantly using our quick-access button.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card feature-card shadow-sm p-3 text-center">
+          <i class="bi bi-cloud-download-fill display-4 mb-2"></i>
+          <h5>Offline Mode</h5>
+          <p>Access previously loaded services even without internet.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card feature-card shadow-sm p-3 text-center">
+          <i class="bi bi-map-fill display-4 mb-2"></i>
+          <h5>Interactive Map</h5>
+          <p>Visualize nearby services and your location on a live map.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card feature-card shadow-sm p-3 text-center">
+          <i class="bi bi-phone-vibrate-fill display-4 mb-2"></i>
+          <h5>PWA Installable</h5>
+          <p>Add Pukaar to your home screen and use it like an app.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="section container bg-light">
+    <h2 class="section-title text-center">FAQ</h2>
+    <input type="text" id="faqSearch" class="form-control mb-3" placeholder="Search FAQ...">
+    <div id="faqList" class="accordion"></div>
+  </section>
+
+  <!-- Interactive Map Section -->
+  <section class="section container">
+    <h2 class="section-title text-center">Map Example</h2>
+    <div id="map"></div>
+  </section>
+
+  <!-- Contact Form -->
+  <section class="section container bg-light">
+    <h2 class="section-title text-center">Contact / Feedback</h2>
+    <form id="contactForm" class="mx-auto" style="max-width:600px;">
+      <div class="mb-3">
+        <label for="name" class="form-label">Full Name *</label>
+        <input type="text" class="form-control" id="name" required>
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email *</label>
+        <input type="email" class="form-control" id="email" required>
+      </div>
+      <div class="mb-3">
+        <label for="message" class="form-label">Message *</label>
+        <textarea class="form-control" id="message" rows="4" required></textarea>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Rate Pukaar</label>
+        <div id="ratingStars">
+          <i class="bi bi-star star" data-value="1"></i>
+          <i class="bi bi-star star" data-value="2"></i>
+          <i class="bi bi-star star" data-value="3"></i>
+          <i class="bi bi-star star" data-value="4"></i>
+          <i class="bi bi-star star" data-value="5"></i>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+      <div class="feedback-msg mt-2 alert alert-success">Thank you! Your feedback has been sent.</div>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer mt-5">
+    <p>© 2025 Pukaar. All rights reserved.</p>
+    <p>
+      <a href="#">Privacy</a> | <a href="#">Terms</a> | Follow us:
+      <a href="#" class="text-decoration-none"><i class="bi bi-facebook"></i></a>
+      <a href="#" class="text-decoration-none"><i class="bi bi-twitter"></i></a>
+      <a href="#" class="text-decoration-none"><i class="bi bi-instagram"></i></a>
+    </p>
+  </footer>
+
+  <!-- Guide Modal -->
+  <div class="modal fade" id="guideModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-dark text-white">
+          <h5 class="modal-title">🚀 Step-by-Step Guide</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <ol>
+            <li>Enable device location to see nearby services.</li>
+            <li>Search and filter by type: hospital, clinic, pharmacy, food bank.</li>
+            <li>Click on service cards to call or view map directions.</li>
+            <li>Save favorite services for quick access later.</li>
+            <li>Add Pukaar to your home screen for fast app-like usage.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Favorites Modal -->
+  <div class="modal fade" id="favoritesModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-dark text-white">
+          <h5 class="modal-title">⭐ Saved Favorites</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div id="favoritesList" class="row"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step-by-Step Guide Modal -->
+<div class="modal fade" id="guideModal" tabindex="-1" aria-labelledby="guideModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="guideModalLabel">📖 How to Use Pukaar</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="wizardSteps">
+          <!-- Step 1 -->
+          <div class="wizard-step active" data-step="1">
+            <h3>Enable Location</h3>
+            <p>Allow Pukaar to access your location for accurate nearby services.</p>
+            <img src="../assets/steps/location.png" class="img-fluid rounded shadow-sm" alt="Enable Location">
+          </div>
+          <!-- Step 2 -->
+          <div class="wizard-step" data-step="2">
+            <h3>Search & Filter</h3>
+            <p>Type a service name or use category buttons to find what you need fast.</p>
+            <img src="../assets/steps/search.png" class="img-fluid rounded shadow-sm" alt="Search Services">
+          </div>
+          <!-- Step 3 -->
+          <div class="wizard-step" data-step="3">
+            <h3>Save Favorites</h3>
+            <p>Click the star icon on a service card to save it for quick access later.</p>
+            <img src="../assets/steps/favorites.png" class="img-fluid rounded shadow-sm" alt="Save Favorites">
+          </div>
+          <!-- Step 4 -->
+          <div class="wizard-step" data-step="4">
+            <h3>Emergency Calls</h3>
+            <p>Use the red emergency button to call 1122 instantly in case of an emergency.</p>
+            <img src="../assets/steps/emergency.png" class="img-fluid rounded shadow-sm" alt="Emergency Call">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-secondary" id="prevStep" disabled>⬅ Previous</button>
+        <div>
+          <span id="stepIndicator">Step 1 of 4</span>
+        </div>
+        <button type="button" class="btn btn-primary" id="nextStep">Next ➡</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="../scripts/about.js"></script>
+    

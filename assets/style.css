@@ -1,0 +1,101 @@
+/* ================= Hero Section ================= */
+.hero {
+  background: linear-gradient(135deg, #212529, #343a40);
+  color: white;
+  text-align: center;
+  padding: 80px 20px;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+  transition: all 0.3s ease;
+}
+.hero h1 {
+  font-weight: bold;
+  font-size: 2.5rem;
+}
+.hero p {
+  opacity: 0.9;
+  margin-bottom: 25px;
+}
+
+/* ================= Categories ================= */
+.categories {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-top: -30px;
+}
+.cat-btn {
+  background: linear-gradient(135deg, #fff, #f8f9fa);
+  border-radius: 15px;
+  padding: 15px 20px;
+  min-width: 120px;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+.cat-btn:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* ================= Service Cards ================= */
+.service-card {
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.5s forwards;
+}
+@keyframes fadeInUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+.service-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* Distance Color */
+.text-success { color: #28a745 !important; }
+.text-warning { color: #ffc107 !important; }
+.text-danger { color: #dc3545 !important; }
+
+/* ================= Emergency Button ================= */
+.emergency-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  font-size: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(220,53,69,0.7); }
+  70% { box-shadow: 0 0 0 20px rgba(220,53,69,0); }
+  100% { box-shadow: 0 0 0 0 rgba(220,53,69,0); }
+}
+
+/* ================= Dark/Light Mode ================= */
+body.light-mode {
+  background: #f8f9fa;
+  color: #212529;
+}
+body.light-mode .navbar-dark { background: #e9ecef; }
+body.light-mode .navbar-brand, 
+body.light-mode .btn-outline-light { color: #212529; }
+body.light-mode .hero { background: linear-gradient(135deg, #f8f9fa, #e9ecef); color: #212529; }
+
+
+
+
+.wizard-step { display: none; opacity: 0; transition: opacity 0.5s ease; }
+.wizard-step.active { display: block; opacity: 1; }
+
+#stepIndicator { font-weight: bold; }
