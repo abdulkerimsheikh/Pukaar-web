@@ -1,33 +1,32 @@
-// scripts/service-worker.js
-const CACHE_NAME = "pukaar-cache-v1";
+// service-worker.js
+const CACHE_NAME = "pukaar-cache-v2";
+const OFFLINE_URL = "offline.html";
 
-// Assets to precache (app shell)
-const assetsToCache = [
+const ASSETS = [
+  "./",
   "./index.html",
   "./about.html",
   "./contact.html",
-  "./offline.html",
+  "./profile.html",
   "./assets/style.css",
   "./script.js",
-  "./json/manifest.json",
   "./json/data.json",
-  "./assets/icons/favicon.png",
   "./assets/icons/icon-192.png",
-  "./assets/icons/icon-512.png"
+  "./assets/icons/icon-512.png",
+  OFFLINE_URL
 ];
 
-
-// Install: precache assets
-self.addEventListener("install", (evt) => {
-  evt.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(assetsToCache))
+// === Install ===
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
   );
   self.skipWaiting();
 });
 
-// Activate: clear old caches
-self.addEventListener("activate", (evt) => {
-  evt.waitUntil(
+// === Activate ===
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
     caches.keys().then((keys) =>
       Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
     )
@@ -35,45 +34,48 @@ self.addEventListener("activate", (evt) => {
   self.clients.claim();
 });
 
-// Fetch handler
-self.addEventListener("fetch", (evt) => {
-  const req = evt.request;
-  const url = new URL(req.url);
+// === Fetch ===
+self.addEventListener("fetch", (event) => {
+  const { request } = event;
 
-  // Network-first for API or JSON
-  if (url.pathname.includes("/services") || url.pathname.endsWith("data.json")) {
-    evt.respondWith(
-      fetch(req)
+  // API/network requests use network-first
+  if (request.url.includes("overpass-api") || request.url.endsWith("data.json")) {
+    event.respondWith(
+      fetch(request)
         .then((res) => {
           const copy = res.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
           return res;
         })
-        .catch(() => caches.match(req))
+        .catch(() => caches.match(request))
     );
     return;
   }
 
-  // Cache-first for static assets
-  evt.respondWith(
-    caches.match(req).then((cached) => {
-      return (
-        cached ||
-        fetch(req)
-          .then((res) => {
-            if (req.method === "GET") {
-              const copy = res.clone();
-              caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
-            }
-            return res;
-          })
-          .catch(() => {
-            // Offline fallback for navigation
-            if (req.headers.get("accept")?.includes("text/html")) {
-              return caches.match("../templates/offline.html");
-            }
-          })
-      );
-    })
+  // For HTML navigation: fallback to offline.html
+  if (request.mode === "navigate") {
+    event.respondWith(
+      fetch(request)
+        .then((res) => {
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, res.clone()));
+          return res;
+        })
+        .catch(() => caches.match(OFFLINE_URL))
+    );
+    return;
+  }
+
+  // For static assets: cache-first
+  event.respondWith(
+    caches.match(request).then((cached) =>
+      cached ||
+      fetch(request)
+        .then((res) => {
+          const copy = res.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+          return res;
+        })
+        .catch(() => caches.match(OFFLINE_URL))
+    )
   );
 });

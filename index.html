@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -9,171 +10,61 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-  <!-- Leaflet (map) -->
+  <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <!-- Custom stylesheet (optional override) -->
+
+  <!-- Custom CSS -->
   <link rel="stylesheet" href="assets/style.css">
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#212529">
+  <meta name="description" content="Pukaar — Find hospitals, clinics, pharmacies & food banks near you. Help is always near.">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Pukaar">
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
   <link rel="icon" href="assets/icons/favicon.png" sizes="32x32" type="image/png">
 
-  <style>
-    :root{
-      --primary: #0d6efd;
-      --muted: #6c757d;
-      --card: #fff;
-      --bg: #f8f9fa;
-      --text: #222;
-    }
-    body{
-      background:var(--bg);
-      color:var(--text);
-      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-      transition: background .25s, color .25s;
-    }
-    body.dark{
-      --bg:#0b0f14; --card:#0f1720; --text:#e6eef8; --muted:#9aa5b1;
-    }
+  <!-- Social Preview -->
+  <meta property="og:title" content="Pukaar — Find Nearby Services">
+  <meta property="og:description" content="Locate hospitals, clinics, pharmacies, and food banks near you.">
+  <meta property="og:image" content="assets/icons/icon-512.png">
 
-    /* Navbar background and blur */
-.navbar{
-  background: rgba(15,23,36,0.85) !important;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 4px 12px rgba(0,0,0,.1);
-  transition: all 0.3s ease;
-}
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 
-/* Brand gradient */
-.navbar .navbar-brand{
-  font-weight:900;
-  font-size:1.6rem;
-  background: linear-gradient(45deg,#0d6efd,#20c997);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-
-/* Nav links buttons style */
-.navbar .nav-link.btn{
-  border-radius: 20px;
-  padding: 5px 12px;
-  font-weight: 500;
-  transition: transform .2s, background .2s;
-}
-.navbar .nav-link.btn:hover{
-  transform: translateY(-2px);
-  background: rgba(255,255,255,0.15);
-}
-
-/* Navbar shrink on scroll */
-.navbar.shrink{
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-  box-shadow: 0 4px 20px rgba(0,0,0,.25);
-}
-
-/* Toggle icon for mobile */
-.navbar-toggler{
-  border-color: rgba(255,255,255,.3);
-}
-.navbar-toggler-icon{
-  filter: invert(1);
-}
-
-/* Ensure desktop shows full menu */
-@media (min-width:768px){
-  .navbar-collapse {
-    display: flex !important;
-    justify-content: flex-end;
-  }
-  .navbar-toggler{
-    display: none; /* hide toggle on desktop */
-  }
-}
-  
-
-    /* Hero */
-    .hero{ background: linear-gradient(135deg,#0f1724,#212529); color:#fff; padding:110px 16px 60px; border-bottom-left-radius:40px; border-bottom-right-radius:40px; text-align:center; }
-    .hero h1{ font-weight:800; font-size:2.4rem; margin-bottom:6px; }
-    .hero p{ opacity:.85; }
-
-    /* Category cards (square) */
-    .cat-grid{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:18px; }
-    .cat-card{
-      width:120px; height:120px; border-radius:16px; background:var(--card); color:var(--text);
-      display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:0 8px 24px rgba(2,6,23,.06);
-      cursor:pointer; transition:transform .18s, box-shadow .18s;
-    }
-    .cat-card:hover{ transform: translateY(-6px); box-shadow:0 16px 32px rgba(0,0,0,.12); }
-    .cat-card > div{ margin-top:8px; font-size:0.95rem; }
-
-    /* Map */
-    #map{ width:100%; height:500px; border-radius:12px; border:2px solid #e9ecef; }
-
-    /* Results grid */
-    #results .service-card{ height:100%; display:flex; flex-direction:column; justify-content:space-between; }
-    .distance-badge{
-      position:absolute; top:10px; right:10px; background:var(--primary); color:#fff; padding:4px 8px; border-radius:14px; font-size:.8rem;
-    }
-    .service-card .card-body{ padding:12px; }
-
-    /* Loading spinner & dots */
-    #loadingSpinner{ display:inline-block; width:18px; height:18px; border:3px solid rgba(255,255,255,0.2); border-top-color:var(--primary); border-radius:50%; animation:spin 1s linear infinite; margin-left:8px; vertical-align:middle; }
-    @keyframes spin{ to{ transform: rotate(360deg); } }
-    .dots::after{ content:''; animation:dots 1.5s steps(4,end) infinite; margin-left:6px; }
-    @keyframes dots{ 0%{content:''} 25%{content:'.'} 50%{content:'..'} 75%{content:'...'} 100%{content:''} }
-
-    /* Emoji marker (divIcon) */
-    .emoji-marker{
-      width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; color:#fff;
-      box-shadow:0 4px 10px rgba(0,0,0,.15);
-      border:2px solid rgba(255,255,255,0.18);
-    }
-
-    /* Make results area scrollable on tall screens */
-    .results-scroll{ max-height:520px; overflow:auto; padding-right:6px; }
-
-    @media (max-width:575px){
-      .hero h1{ font-size:1.6rem; }
-      #map{ height:300px; }
-    }
-  </style>
+ 
 </head>
+
 <body>
- <nav class="navbar navbar-expand-md navbar-dark sticky-top py-2" aria-label="Main navigation">
-  <div class="container-fluid">
-    <a class="navbar-brand fw-bold" href="#">PUKAAR</a>
+  <!-- Modern Animated Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top py-2 modern-navbar">
+    <div class="container-fluid position-relative">
+      <a class="navbar-brand fw-bold" href="index.html">Pukaar</a>
 
-    <!-- Toggler for mobile -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-    <!-- Navbar links -->
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto align-items-center">
-        <li class="nav-item">
-          <a class="nav-link btn btn-outline-light btn-sm m-1" href="index.html">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link btn btn-outline-light btn-sm m-1" href="about.html">About</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link btn btn-outline-light btn-sm m-1" href="contact.html">Contact</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link btn btn-outline-light btn-sm m-1" href="profile.html">Profile</a>
-        </li>
-        <li class="nav-item d-flex gap-1 ms-2 mt-2 mt-md-0">
-          <button class="btn btn-outline-light btn-sm" id="favoritesBtn" data-bs-toggle="modal" data-bs-target="#favoritesModal">⭐</button>
-          <button class="btn btn-outline-light btn-sm" id="lang-toggle">اردو</button>
-          <button class="btn btn-outline-light btn-sm" id="theme-toggle" title="Toggle theme">🌙</button>
-        </li>
-      </ul>
+      <div class="collapse navbar-collapse position-relative" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-center gap-2" id="navLinks">
+          <li class="nav-item"><a class="nav-link px-3 active" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link px-3" href="about.html">About</a></li>
+          <li class="nav-item"><a class="nav-link px-3" href="contact.html">Contact</a></li>
+          <li class="nav-item"><a class="nav-link px-3" href="profile.html">Profile</a></li>
+          <li class="nav-item d-flex gap-2 ms-lg-3 mt-2 mt-lg-0">
+            <button class="btn btn-outline-warning btn-sm" id="favoritesBtn" data-bs-toggle="modal" data-bs-target="#favoritesModal">⭐</button>
+            <button class="btn btn-outline-light btn-sm" id="lang-toggle">اردو</button>
+            <button class="btn btn-outline-light btn-sm" id="theme-toggle" title="Toggle theme">🌙</button>
+          </li>
+        </ul>
+        <span class="nav-underline"></span>
+      </div>
     </div>
-  </div>
-</nav>
-
-
+  </nav>
 
   <!-- HERO -->
   <header class="hero text-center">
@@ -214,10 +105,9 @@
   <!-- MAIN -->
   <main class="container my-4">
     <div class="row g-4">
-      <!-- results -->
       <div class="col-lg-6">
         <div class="d-flex justify-content-between align-items-center mb-2">
-          <h5 id="resultsTitle">Nearby Services</h5>
+          <h5 id="resultsTitle">Nearby Services <small id="resultsMeta" class="text-muted ms-2">—</small></h5>
           <div class="d-flex gap-2">
             <button id="sortDistance" class="btn btn-outline-secondary btn-sm">Sort: Distance</button>
             <button id="sortRating" class="btn btn-outline-secondary btn-sm">Sort: Rating</button>
@@ -233,20 +123,16 @@
         </div>
       </div>
 
-      <!-- map -->
       <div class="col-lg-6">
         <div id="map"></div>
       </div>
     </div>
 
-    <!-- announcements -->
-  <div class="carousel-item active">
-  <div class="p-3 bg-info bg-opacity-10 rounded d-flex justify-content-between align-items-center">
-    <span>📢 Add Pukaar to your home screen for faster access.</span>
-    <button id="installBtn" class="btn btn-sm btn-primary">Install</button>
-  </div>
-</div>
-
+    <!-- PWA Install Banner -->
+    <div class="p-3 bg-info bg-opacity-10 rounded d-flex justify-content-between align-items-center mt-3">
+      <span>📢 Add Pukaar to your home screen for faster access.</span>
+      <button id="installBtn" class="btn btn-sm btn-primary">Install</button>
+    </div>
   </main>
 
   <!-- Favorites Modal -->
@@ -274,17 +160,9 @@
     </div>
   </div>
 
-  <!-- scripts -->
+  <!-- Scripts -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
-
-
-
-
-
-<!-- AIzaSyChq47841snUQxk50FLBVrLaDpNw2OBzKE
-
-AIzaSyChq47841snUQxk50FLBVrLaDpNw2OBzKE -->
