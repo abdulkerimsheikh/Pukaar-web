@@ -1,9 +1,4 @@
-// scripts/script.js
-// Full client logic: Overpass -> map -> UI (grid) -> favorites -> theme/lang -> PWA
 
-/* ===========================
-   Config & globals
-   =========================== */
 const OVERPASS_URL = "https://overpass-api.de/api/interpreter";
 const FALLBACK_JSON = "../json/data.json";
 const RADIUS_DEFAULT = 7000; // meters
@@ -494,7 +489,7 @@ function filterCategory(type){
    =========================== */
 if("serviceWorker" in navigator){
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("../scripts/service-worker.js")
+   navigator.serviceWorker.register("scripts/service-worker.js")
       .then(reg => console.log("SW registered", reg))
       .catch(err => console.warn("SW failed", err));
   });

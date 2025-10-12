@@ -3,12 +3,12 @@ const CACHE_NAME = "pukaar-cache-v1";
 
 // Assets to precache (app shell)
 const assetsToCache = [
-  "../templates/index.html",
-  "../templates/about.html",
-  "../templates/contact.html",
-  "../templates/offline.html",
+  "../index.html",
+  "../about.html",
+  "../contact.html",
+  "../offline.html",
   "../assets/style.css",
-  "../scripts/script.js",
+  "script.js",
   "../json/manifest.json",
   "../json/data.json",
   "../assets/icons/favicon.png",
