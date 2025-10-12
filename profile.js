@@ -118,3 +118,5 @@ function removeFavoriteProfile(id){
 document.addEventListener("DOMContentLoaded", () => {
   loadProfile();
 });
+
+

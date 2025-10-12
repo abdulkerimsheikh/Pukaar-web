@@ -518,3 +518,28 @@ if("serviceWorker" in navigator){
   });
 })();
 
+
+const installBtn = qs("#installBtn");
+if(installBtn){
+  installBtn.style.display = "none"; // hide by default
+
+  // Show button when beforeinstallprompt fires
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault(); // prevent automatic prompt
+    deferredPrompt = e;
+    installBtn.style.display = "inline-block";
+  });
+
+  installBtn.addEventListener("click", async () => {
+    if(!deferredPrompt) return;
+    deferredPrompt.prompt(); // show browser install prompt
+    const choice = await deferredPrompt.userChoice;
+    if(choice.outcome === "accepted"){
+      showToast("✅ Pukaar installed!");
+    } else {
+      showToast("ℹ️ Installation dismissed", "info");
+    }
+    deferredPrompt = null;
+    installBtn.style.display = "none"; // hide button after click
+  });
+}
