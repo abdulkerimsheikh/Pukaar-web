@@ -3,18 +3,19 @@ const CACHE_NAME = "pukaar-cache-v1";
 
 // Assets to precache (app shell)
 const assetsToCache = [
-  "../index.html",
-  "../about.html",
-  "../contact.html",
-  "../offline.html",
-  "../assets/style.css",
-  "script.js",
-  "../json/manifest.json",
-  "../json/data.json",
-  "../assets/icons/favicon.png",
-  "../assets/icons/icon-192.png",
-  "../assets/icons/icon-512.png"
+  "./index.html",
+  "./about.html",
+  "./contact.html",
+  "./offline.html",
+  "./assets/style.css",
+  "./script.js",
+  "./json/manifest.json",
+  "./json/data.json",
+  "./assets/icons/favicon.png",
+  "./assets/icons/icon-192.png",
+  "./assets/icons/icon-512.png"
 ];
+
 
 // Install: precache assets
 self.addEventListener("install", (evt) => {
