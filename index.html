@@ -34,9 +34,61 @@
       --bg:#0b0f14; --card:#0f1720; --text:#e6eef8; --muted:#9aa5b1;
     }
 
-    /* Navbar */
-    .navbar{ background: rgba(15,23,36,0.75) !important; backdrop-filter: blur(10px); }
-    .navbar .navbar-brand{ font-weight:900; background: linear-gradient(45deg,#0d6efd,#20c997); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    /* Navbar background and blur */
+.navbar{
+  background: rgba(15,23,36,0.85) !important;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 12px rgba(0,0,0,.1);
+  transition: all 0.3s ease;
+}
+
+/* Brand gradient */
+.navbar .navbar-brand{
+  font-weight:900;
+  font-size:1.6rem;
+  background: linear-gradient(45deg,#0d6efd,#20c997);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+/* Nav links buttons style */
+.navbar .nav-link.btn{
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-weight: 500;
+  transition: transform .2s, background .2s;
+}
+.navbar .nav-link.btn:hover{
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.15);
+}
+
+/* Navbar shrink on scroll */
+.navbar.shrink{
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,.25);
+}
+
+/* Toggle icon for mobile */
+.navbar-toggler{
+  border-color: rgba(255,255,255,.3);
+}
+.navbar-toggler-icon{
+  filter: invert(1);
+}
+
+/* Ensure desktop shows full menu */
+@media (min-width:768px){
+  .navbar-collapse {
+    display: flex !important;
+    justify-content: flex-end;
+  }
+  .navbar-toggler{
+    display: none; /* hide toggle on desktop */
+  }
+}
+  
 
     /* Hero */
     .hero{ background: linear-gradient(135deg,#0f1724,#212529); color:#fff; padding:110px 16px 60px; border-bottom-left-radius:40px; border-bottom-right-radius:40px; text-align:center; }
@@ -86,31 +138,41 @@
   </style>
 </head>
 <body>
-  <!-- NAV -->
-  <nav class="navbar navbar-dark bg-dark sticky-top" aria-label="Main navigation">
+ <nav class="navbar navbar-expand-md navbar-dark sticky-top py-2" aria-label="Main navigation">
   <div class="container-fluid">
     <a class="navbar-brand fw-bold" href="#">PUKAAR</a>
 
     <!-- Toggler for mobile -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <!-- Collapsible links -->
+    <!-- Navbar links -->
     <div class="collapse navbar-collapse" id="navbarNav">
-      <div class="d-flex flex-column flex-md-row gap-2 ms-auto align-items-start align-items-md-center mt-2 mt-md-0">
-        <a class="btn btn-outline-light btn-sm" href="about.html">About</a>
-        <a class="btn btn-outline-light btn-sm" href="contact.html">Contact</a>
-        <a class="btn btn-outline-light btn-sm" href="profile.html">Profile</a>
-
-        <!-- action buttons -->
-        <button class="btn btn-outline-light btn-sm" id="favoritesBtn" data-bs-toggle="modal" data-bs-target="#favoritesModal" aria-label="Open favorites">⭐</button>
-        <button class="btn btn-outline-light btn-sm" id="lang-toggle" aria-pressed="false">اردو</button>
-        <button class="btn btn-outline-light btn-sm" id="theme-toggle" aria-pressed="false" title="Toggle theme">🌙</button>
-      </div>
+      <ul class="navbar-nav ms-auto align-items-center">
+        <li class="nav-item">
+          <a class="nav-link btn btn-outline-light btn-sm m-1" href="index.html">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link btn btn-outline-light btn-sm m-1" href="about.html">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link btn btn-outline-light btn-sm m-1" href="contact.html">Contact</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link btn btn-outline-light btn-sm m-1" href="profile.html">Profile</a>
+        </li>
+        <li class="nav-item d-flex gap-1 ms-2 mt-2 mt-md-0">
+          <button class="btn btn-outline-light btn-sm" id="favoritesBtn" data-bs-toggle="modal" data-bs-target="#favoritesModal">⭐</button>
+          <button class="btn btn-outline-light btn-sm" id="lang-toggle">اردو</button>
+          <button class="btn btn-outline-light btn-sm" id="theme-toggle" title="Toggle theme">🌙</button>
+        </li>
+      </ul>
     </div>
   </div>
 </nav>
+
 
 
   <!-- HERO -->
