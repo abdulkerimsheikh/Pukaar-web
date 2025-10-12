@@ -1,6 +1,7 @@
 
 const OVERPASS_URL = "https://overpass-api.de/api/interpreter";
-const FALLBACK_JSON = "../json/data.json";
+const FALLBACK_JSON = "json/data.json";
+
 const RADIUS_DEFAULT = 7000; // meters
 let currentLang = "en";
 let lastFetchedData = [];
@@ -489,11 +490,12 @@ function filterCategory(type){
    =========================== */
 if("serviceWorker" in navigator){
   window.addEventListener("load", () => {
-   navigator.serviceWorker.register("scripts/service-worker.js")
+   navigator.serviceWorker.register("service-worker.js") // updated path
       .then(reg => console.log("SW registered", reg))
       .catch(err => console.warn("SW failed", err));
   });
 }
+
 
 /* ===========================
    Initialize handlers
