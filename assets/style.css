@@ -20,6 +20,8 @@
       --muted: #9aa5b1;
     }
 
+    
+
     /* --- Modern Glass Navbar --- */
     .modern-navbar {
       background: rgba(15, 23, 36, 0.75);
@@ -259,3 +261,23 @@
         height: 300px;
       }
     }
+
+    /* Force visible white text for location status */
+.hero #statusWrap,
+.hero #statusWrap * {
+  color: #ffffff !important;
+  opacity: 1 !important;
+  filter: brightness(1.2) !important;
+}
+
+/* If Bootstrap adds .text-muted — override it completely */
+.hero #statusWrap.text-muted,
+.hero #statusWrap .text-muted {
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+
+
+
+
