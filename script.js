@@ -306,28 +306,28 @@
 
       // This is the updated card template
       col.innerHTML = `
-  <div class="card service-card shadow-sm">
+  <div class="card service-card shadow-sm ${s.type}">
     <div class="card-body">
-      <div class="d-flex justify-content-between align-items-start mb-2">
+      <div class="d-flex justify-content-between align-items-start">
         <div class="service-info">
           <h6 class="fw-semibold mb-1">${s.name}</h6>
           <div class="small text-muted">${s.address}</div>
           <div class="rating mt-1">⭐ ${s.rating}</div>
-          <div class="distance-text text-muted small">Distance: ${s.distance} km</div>
+          <div class="distance-text small text-muted">Distance: 📍 ${s.distance} km</div>
         </div>
-        <button class="btn btn-sm fav-btn ${isFav ? "btn-warning" : "btn-outline-warning"}" title="Add to favorites">
-          ${isFav ? "★" : "☆"}
-        </button>
-      </div>
-
-      <div class="d-flex justify-content-between align-items-center mt-3">
-        <div class="d-flex gap-2">
-          <a href="tel:${s.phone || "1122"}" class="btn btn-sm btn-success" title="Call">
-            <i class="bi bi-telephone-fill"></i>
-          </a>
-          <a href="https://www.google.com/maps?q=${s.lat},${s.lng}" target="_blank" class="btn btn-sm btn-primary" title="Open in Maps">
+        <div class="action-buttons d-flex flex-column align-items-center gap-2">
+          ${s.phone
+            ? `<a href="tel:${s.phone}" class="btn btn-sm btn-success" title="Call ${s.phone}">
+                <i class="bi bi-telephone-fill"></i>
+              </a>`
+            : ""
+          }
+          <a href="https://www.google.com/maps?q=${s.lat},${s.lng}" target="_blank"
+            class="btn btn-sm btn-primary" title="Open in Maps">
             <i class="bi bi-geo-alt-fill"></i>
           </a>
+          <button class="btn btn-sm fav-btn ${isFav ? "btn-warning" : "btn-outline-warning"}" 
+            title="Add to favorites">${isFav ? "★" : "☆"}</button>
         </div>
       </div>
     </div>
