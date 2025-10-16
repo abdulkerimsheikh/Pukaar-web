@@ -24,13 +24,12 @@
     const body = qs("#toastMessage");
     if (!toastEl || !body) return alert(message);
     body.textContent = message;
-    toastEl.className = `toast align-items-center text-white ${
-      variant === "success"
+    toastEl.className = `toast align-items-center text-white ${variant === "success"
         ? "bg-success"
         : variant === "error"
-        ? "bg-danger"
-        : "bg-dark"
-    } border-0`;
+          ? "bg-danger"
+          : "bg-dark"
+      } border-0`;
     new bootstrap.Toast(toastEl).show();
   }
 
@@ -107,9 +106,8 @@
       const type = s.type || "default";
       const icon = ICONS[type] || ICONS.default;
       if (!s.lat || !s.lng) return;
-      const popupHtml = `<strong>${s.name}</strong><br>${s.address || ""}${
-        s.phone ? `<br>Tel: ${s.phone}` : ""
-      }${s.distance ? `<br><small>${s.distance} km</small>` : ""}`;
+      const popupHtml = `<strong>${s.name}</strong><br>${s.address || ""}${s.phone ? `<br>Tel: ${s.phone}` : ""
+        }${s.distance ? `<br><small>${s.distance} km</small>` : ""}`;
       const marker = L.marker([s.lat, s.lng], { icon })
         .addTo(map)
         .bindPopup(popupHtml);
@@ -304,7 +302,7 @@
       col.className = "col-12 col-md-6 mb-3";
 
       // This is the updated card template
-col.innerHTML = `
+      col.innerHTML = `
       <div class="card p-2 service-card shadow-sm">
         <div class="card-body d-flex justify-content-between align-items-start">
           <div class="me-2">
@@ -316,9 +314,8 @@ col.innerHTML = `
           <div class="d-flex flex-column align-items-center gap-2">
             <a href="tel:${s.phone || "1122"}" class="btn btn-sm btn-success">📞</a>
             <a href="https://www.google.com/maps?q=${s.lat},${s.lng}" target="_blank" class="btn btn-sm btn-primary">🗺</a>
-            <button class="btn btn-sm ${
-              isFav ? "btn-warning" : "btn-outline-warning"
-            } fav-btn">${isFav ? "★" : "☆"}</button>
+            <button class="btn btn-sm ${isFav ? "btn-warning" : "btn-outline-warning"
+        } fav-btn">${isFav ? "★" : "☆"}</button>
             <div class="distance-badge">${s.distance} km</div>
           </div>
         </div>
@@ -449,5 +446,75 @@ col.innerHTML = `
     qs("#sortDistance").classList.remove("active");
     filterAndSortResults();
   });
-  qs("#requestLocationBtn")?.addEventListener("click", findNearby);
+  // ===========================
+  // Dynamic Allow ↔ Stop Button
+  // ===========================
+  const locationBtn = document.getElementById("requestLocationBtn");
+  let locationInProgress = false;
+  let geoFetchAbort = null;
+
+  if (locationBtn) {
+    locationBtn.addEventListener("click", async () => {
+      if (!locationInProgress) {
+        startLocationProcess();
+      } else {
+        stopLocationProcess("Search stopped by user");
+      }
+    });
+  }
+
+  function startLocationProcess() {
+    if (!navigator.geolocation) {
+      showToast("Geolocation not supported in this browser", "error");
+      return;
+    }
+
+    locationInProgress = true;
+    locationBtn.textContent = "Stop ⏹";
+    locationBtn.classList.remove("btn-outline-light");
+    locationBtn.classList.add("btn-danger");
+    qs("#statusMessage").textContent = "Getting your location...";
+    qs("#loadingSpinner").style.display = "inline-block";
+
+    // Optional AbortController to cancel fetch
+    geoFetchAbort = new AbortController();
+
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        if (!locationInProgress) return; // user stopped midway
+        const { latitude, longitude } = pos.coords;
+        userLocation = { lat: latitude, lng: longitude };
+        initMap(latitude, longitude, 13);
+        qs("#statusMessage").textContent = "Fetching nearby services...";
+        try {
+          await fetchAndProcessData(latitude, longitude, geoFetchAbort.signal);
+          showToast("Nearby results updated ✅", "success");
+        } catch (e) {
+          if (e.name !== "AbortError") {
+            console.error("Fetch failed:", e);
+            showToast("Failed to fetch data", "error");
+          }
+        } finally {
+          stopLocationProcess();
+        }
+      },
+      (err) => {
+        if (err.code === 1) showToast("Location permission denied", "error");
+        else showToast("Unable to get location", "error");
+        stopLocationProcess();
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
+    );
+  }
+
+  function stopLocationProcess(msg) {
+    if (geoFetchAbort) geoFetchAbort.abort();
+    locationInProgress = false;
+    locationBtn.textContent = "Allow";
+    locationBtn.classList.remove("btn-danger");
+    locationBtn.classList.add("btn-outline-light");
+    qs("#loadingSpinner").style.display = "none";
+    qs("#statusMessage").textContent = msg || "Allow location for best results.";
+  }
+
 })();
