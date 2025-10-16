@@ -425,27 +425,12 @@
   // ===========================
   // Init and Event Listeners
   // ===========================
-  document.addEventListener("DOMContentLoaded", () => {
-    initMap();
-    initNavUnderline();
-    renderFavoritesModal();
-    initFooterReveal();
-   
-  });
+document.addEventListener("DOMContentLoaded", () => {
+  initMap();
+  initNavUnderline();
+  renderFavoritesModal();
+  initFooterReveal();
 
-  qs("#findBtn")?.addEventListener("click", filterAndSortResults);
-  qs("#searchInput")?.addEventListener("input", filterAndSortResults);
-  qs("#filterSelect")?.addEventListener("change", filterAndSortResults);
-  qs("#sortDistance")?.addEventListener("click", () => {
-    qs("#sortDistance").classList.add("active");
-    qs("#sortRating").classList.remove("active");
-    filterAndSortResults();
-  });
-  qs("#sortRating")?.addEventListener("click", () => {
-    qs("#sortRating").classList.add("active");
-    qs("#sortDistance").classList.remove("active");
-    filterAndSortResults();
-  });
   // ===========================
   // Dynamic Allow ↔ Stop Button
   // ===========================
@@ -476,12 +461,11 @@
     qs("#statusMessage").textContent = "Getting your location...";
     qs("#loadingSpinner").style.display = "inline-block";
 
-    // Optional AbortController to cancel fetch
     geoFetchAbort = new AbortController();
 
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
-        if (!locationInProgress) return; // user stopped midway
+        if (!locationInProgress) return;
         const { latitude, longitude } = pos.coords;
         userLocation = { lat: latitude, lng: longitude };
         initMap(latitude, longitude, 13);
@@ -516,5 +500,21 @@
     qs("#loadingSpinner").style.display = "none";
     qs("#statusMessage").textContent = msg || "Allow location for best results.";
   }
+});
 
+
+  qs("#findBtn")?.addEventListener("click", filterAndSortResults);
+  qs("#searchInput")?.addEventListener("input", filterAndSortResults);
+  qs("#filterSelect")?.addEventListener("change", filterAndSortResults);
+  qs("#sortDistance")?.addEventListener("click", () => {
+    qs("#sortDistance").classList.add("active");
+    qs("#sortRating").classList.remove("active");
+    filterAndSortResults();
+  });
+  qs("#sortRating")?.addEventListener("click", () => {
+    qs("#sortRating").classList.add("active");
+    qs("#sortDistance").classList.remove("active");
+    filterAndSortResults();
+  });
+  
 })();
