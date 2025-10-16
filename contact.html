@@ -1,103 +1,253 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pukaar - Contact & Feedback</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pukaar — Contact & Feedback</title>
 
-  <!-- Bootstrap -->
+  <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="assets/Contactstyle.css">
 
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="style.css">
-  
   <meta name="theme-color" content="#212529">
 
   <style>
-    .hero {
-      background: linear-gradient(135deg, #212529, #343a40);
-      color: white;
-      text-align: center;
-      padding: 80px 20px;
-      border-bottom-left-radius: 50px;
-      border-bottom-right-radius: 50px;
+    :root {
+      --primary: #0d6efd;
+      --muted: #6c757d;
+      --card: #fff;
+      --bg: #f8f9fa;
+      --radius: 14px;
     }
-    .hero h1 { font-weight: bold; font-size: 2.5rem; }
-    .hero p { opacity: 0.9; margin-bottom: 25px; }
 
-    .section { padding: 50px 20px; }
-    .section-title { font-weight: bold; margin-bottom: 30px; }
+    body {
+      background: var(--bg);
+      color: #222;
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      transition: background 0.25s, color 0.25s;
+      padding-bottom: 72px;
+    }
 
-    .footer {
-      background: #212529;
-      color: white;
+    /* === NAVBAR GLASS STYLE === */
+    .modern-navbar {
+      backdrop-filter: blur(14px);
+      background: rgba(15, 23, 42, 0.75) !important;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+    }
+    .modern-navbar .nav-link {
+      position: relative;
+      color: #fff;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+    .modern-navbar .nav-link:hover {
+      color: var(--primary);
+    }
+    .modern-navbar .nav-link.active {
+      color: var(--primary);
+    }
+    .modern-navbar .nav-underline {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary);
+      transition: all 0.3s ease;
+    }
+
+    /* === HERO === */
+    .hero {
+      background: linear-gradient(135deg, #0f1724, #212529);
+      color: #fff;
+      padding: 36px 16px;
+      border-bottom-left-radius: 28px;
+      border-bottom-right-radius: 28px;
       text-align: center;
-      padding: 20px 0;
+    }
+
+    /* === CARDS === */
+    .card-ghost {
+      background: var(--card);
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(2, 6, 23, 0.06);
+    }
+
+    #mapContact {
+      height: 240px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(2, 6, 23, 0.06);
+    }
+
+    .floating {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 1300;
+    }
+
+    .small-muted {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    /* === DARK THEME === */
+    body.dark {
+      --bg: #0b0f14;
+      --card: #0f1720;
+      color: #e6eef8;
+      background: linear-gradient(180deg, #07101a, #09121a);
+    }
+
+    .form-error {
+      color: #d63384;
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 575px) {
+      .hero h1 { font-size: 1.4rem; }
     }
   </style>
 </head>
 <body>
-  <!-- Navbar -->
-  <nav class="navbar navbar-dark bg-dark sticky-top">
-    <div class="container-fluid">
-      <a class="navbar-brand fw-bold" href="index.html">PUKAAR</a>
-      <div>
-        <a href="about.html" class="btn btn-outline-light btn-sm me-2">ℹ About</a>
-        <a href="index.html" class="btn btn-outline-light btn-sm">🏠 Home</a>
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top py-2 modern-navbar">
+    <div class="container-fluid position-relative">
+      <a class="navbar-brand fw-bold" href="index.html">Pukaar</a>
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse position-relative" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-center gap-2" id="navLinks">
+          <li class="nav-item"><a class="nav-link px-3" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link px-3" href="about.html">About</a></li>
+          <li class="nav-item"><a class="nav-link px-3 active" href="contact.html">Contact</a></li>
+          <li class="nav-item d-flex gap-2 ms-lg-3 mt-2 mt-lg-0">
+            <button class="btn btn-outline-light btn-sm" id="theme-toggle" title="Toggle theme">🌙</button>
+          </li>
+        </ul>
+        <span class="nav-underline"></span>
       </div>
     </div>
   </nav>
 
-  <!-- Hero Section -->
-  <section class="hero">
-    <h1>Contact & Feedback</h1>
-    <p>Help us improve Pukaar by sharing your feedback or reporting missing services.</p>
-  </section>
+  <!-- HERO -->
+  <header class="hero" role="banner">
+    <div class="container">
+      <h1>Contact Pukaar</h1>
+      <p class="tag small-muted">Questions, feedback, bug reports, or partnership — send it here. We'll respond ASAP.</p>
+    </div>
+  </header>
 
-  <!-- Contact Form Section -->
-  <section class="section container">
-    <h2 class="section-title">Send Feedback</h2>
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <form id="feedbackForm">
-          <div class="mb-3">
-            <label for="name" class="form-label">Your Name</label>
-            <input type="text" class="form-control" id="name" placeholder="John Doe" required>
+  <!-- MAIN -->
+  <main class="container my-4">
+    <div class="row g-4">
+      <div class="col-lg-7">
+        <div class="card card-ghost p-3" role="form">
+          <h5>Send a message</h5>
+          <p class="small-muted">Messages stay private. Offline? Your message queues automatically.</p>
+
+          <form id="contactForm" novalidate>
+            <div class="row g-2">
+              <div class="col-md-6">
+                <label class="form-label">Full name <span class="text-danger">*</span></label>
+                <input id="name" class="form-control" required minlength="2" placeholder="e.g. Ali Khan" />
+                <div class="form-error" id="err-name"></div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Email</label>
+                <input id="email" type="email" class="form-control" placeholder="you@example.com" />
+                <div class="form-error" id="err-email"></div>
+              </div>
+            </div>
+
+            <div class="row g-2 mt-2">
+              <div class="col-md-6">
+                <label class="form-label">Phone</label>
+                <input id="phone" class="form-control" placeholder="+92 300 1234567" />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Category</label>
+                <select id="category" class="form-select">
+                  <option value="general">General</option>
+                  <option value="bug">Bug Report</option>
+                  <option value="feature">Feature Request</option>
+                  <option value="partnership">Partnership</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mt-2">
+              <label class="form-label">Message <span class="text-danger">*</span></label>
+              <textarea id="message" rows="6" class="form-control" required minlength="10" placeholder="Write your message here..."></textarea>
+              <div class="form-error" id="err-message"></div>
+            </div>
+
+            <div class="mt-2 d-flex gap-2 align-items-center">
+              <button id="sendBtn" class="btn btn-primary">Send Message</button>
+              <button id="saveDraft" type="button" class="btn btn-outline-secondary">Save Draft</button>
+              <div class="ms-auto small-muted" id="outboxCount">Outbox: 0</div>
+            </div>
+          </form>
+
+          <hr />
+          <div class="small-muted">
+            <strong>Support Hours:</strong> Mon–Sat, 9:00–18:00 (UTC+5) • Replies within 24–72 hours.
           </div>
-          <div class="mb-3">
-            <label for="email" class="form-label">Email address</label>
-            <input type="email" class="form-control" id="email" placeholder="name@example.com" required>
-          </div>
-          <div class="mb-3">
-            <label for="serviceType" class="form-label">Service Type (optional)</label>
-            <select class="form-select" id="serviceType">
-              <option value="">Select service type</option>
-              <option value="hospital">Hospital</option>
-              <option value="clinic">Clinic</option>
-              <option value="pharmacy">Pharmacy</option>
-              <option value="foodbank">Food Bank</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="message" class="form-label">Message / Feedback</label>
-            <textarea class="form-control" id="message" rows="5" placeholder="Your message here..." required></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary">Submit Feedback</button>
-        </form>
-        <div id="feedbackAlert" class="alert mt-3 d-none"></div>
+        </div>
+
+        <div class="card card-ghost p-3 mt-3">
+          <h6>Messages (local history)</h6>
+          <div id="historyList" class="list-group list-group-flush mt-2"></div>
+        </div>
+      </div>
+
+      <div class="col-lg-5">
+        <div class="card card-ghost p-3 mb-3">
+          <h6>Quick contact</h6>
+          <p class="small-muted mb-1">Phone</p>
+          <a class="d-block fw-bold" href="tel:03123456789">+92 312 3456789</a>
+
+          <p class="small-muted mt-3 mb-1">Email</p>
+          <a class="d-block fw-bold" href="mailto:hello@pukaar.example">hello@pukaar.example</a>
+
+          <p class="small-muted mt-3 mb-1">Office</p>
+          <div>Karachi, Pakistan</div>
+        </div>
+
+        <div class="card card-ghost p-2">
+          <div id="mapContact" aria-label="Map showing Pukaar office"></div>
+          <div class="small-muted mt-2">Tap marker for address. Use the map to find your nearest help center.</div>
+        </div>
       </div>
     </div>
-  </section>
+  </main>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <p>© 2025 Pukaar. All rights reserved.</p>
-    <p>Built with ❤️ for quick access to emergency services.</p>
-  </footer>
+  <!-- Toast -->
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index:1400">
+    <div id="contactToast" class="toast align-items-center text-white bg-dark border-0" role="alert">
+      <div class="d-flex">
+        <div id="contactToastBody" class="toast-body">Message</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+      </div>
+    </div>
+  </div>
 
-  <!-- Scripts -->
+  <!-- Floating Emergency -->
+  <div class="floating">
+    <a href="tel:1122" class="btn btn-danger rounded-circle" title="Emergency">🚨</a>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="../scripts/contact.js"></script>
+  <script src="./scripts/contact.js"></script>
 </body>
 </html>
