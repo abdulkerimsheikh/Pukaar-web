@@ -1,187 +1,245 @@
 /* =====================================================
-   PUKAAR — Complete Refined Style (Final Contrast Build)
+   PUKAAR — UNIVERSAL THEME-COMPATIBLE STYLES
    ===================================================== */
 
-/* ---- Core Variables ---- */
+/* Core color variables */
 :root {
   --primary: #0d6efd;
-  --muted: #6c757d;
-  --card: #fff;
-  --bg: #f8f9fa;
-  --text: #222;
+  --accent: #20c997;
+  --bg-light: #f8f9fa;
+  --bg-dark: #0b0f14;
+  --card-light: #ffffff;
+  --card-dark: #141a24;
+  --text-light: #222;
+  --text-dark: #e9eef7;
+  --muted-light: #6c757d;
+  --muted-dark: #9aa5b1;
 }
 
+/* Base styles */
 body {
-  background: var(--bg);
-  color: var(--text);
+  background: var(--bg-light);
+  color: var(--text-light);
   font-family: 'Poppins', 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-  transition: background .25s, color .25s;
+  transition: background 0.25s, color 0.25s;
   padding-top: 70px;
 }
 
-/* ---- Dark Mode ---- */
+/* Dark mode */
 body.dark {
-  --bg: #0b0f14;
-  --card: #0f1720;
-  --text: #e6eef8;
-  --muted: #9aa5b1;
+  background: var(--bg-dark);
+  color: var(--text-dark);
 }
 
-/* ---- Navbar ---- */
+/* ==================== NAVBAR ==================== */
 .modern-navbar {
   background: rgba(15, 23, 36, 0.85);
-  backdrop-filter: blur(12px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1050;
-}
-
-.modern-navbar .navbar-brand {
-  font-size: 1.7rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  background: linear-gradient(90deg, #0d6efd, #20c997);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  transition: transform 0.3s ease;
-}
-
-.modern-navbar .navbar-brand:hover {
-  transform: scale(1.05);
-}
-
-.modern-navbar .nav-link {
-  color: rgba(255, 255, 255, 0.85);
-  font-weight: 500;
-  transition: all 0.25s ease;
-  text-transform: capitalize;
-}
-
-.modern-navbar .nav-link:hover {
-  color: #fff;
-  transform: translateY(-2px);
-}
-
-.modern-navbar .nav-link.active {
-  color: #fff !important;
-}
-
-.nav-underline {
-  position: absolute;
-  bottom: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #0d6efd, #20c997);
-  border-radius: 10px;
-  transition: all 0.3s ease;
-  width: 0;
-  left: 0;
-  opacity: 0;
 }
 
 body.dark .modern-navbar {
-  background: rgba(12, 18, 28, 0.85);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  background: rgba(10, 15, 25, 0.85);
 }
 
-body.dark .modern-navbar .btn-outline-light {
-  border-color: #f8f9fa;
-  color: #f8f9fa;
+.navbar-brand {
+  font-weight: 900;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-transform: uppercase;
+  font-size: 1.7rem;
 }
 
-@media (max-width: 991px) {
-  .navbar-nav {
-    text-align: center;
-  }
-  .nav-underline {
-    display: none;
-  }
+.nav-link {
+  color: rgba(255, 255, 255, 0.9);
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
-/* ---- Hero ---- */
+.nav-link:hover,
+.nav-link.active {
+  color: #fff !important;
+  transform: translateY(-2px);
+}
+
+/* ==================== HERO ==================== */
 .hero {
   background: linear-gradient(135deg, #0f1724, #212529);
-  color: white;
+  color: #fff;
   text-align: center;
   padding: 120px 20px 90px;
   border-bottom-left-radius: 60px;
   border-bottom-right-radius: 60px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+}
+
+body:not(.dark) .hero {
+  background: linear-gradient(135deg, #007bff, #00b894);
+  color: #fff;
 }
 
 .hero h1 {
-  font-weight: 800;
   font-size: 2.5rem;
-  margin-bottom: 10px;
+  font-weight: 800;
 }
 
 .hero p {
-  opacity: 0.9;
   font-size: 1.1rem;
-  max-width: 700px;
-  margin: 0 auto;
+  opacity: 0.9;
 }
 
-@media (max-width: 575px) {
-  .hero {
-    padding: 100px 15px 70px;
-  }
-  .hero h1 {
-    font-size: 1.8rem;
-  }
+/* Status text always visible */
+#statusWrap {
+  color: #fff !important;
 }
 
-/* ---- Category Grid ---- */
-.cat-grid {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 18px;
+#requestLocationBtn {
+  color: #fff;
 }
 
+/* ==================== CATEGORY CARDS ==================== */
 .cat-card {
   width: 120px;
   height: 120px;
   border-radius: 16px;
-  background: var(--card);
-  color: var(--text);
+  background: var(--card-light);
+  color: var(--text-light);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .1);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 24px rgba(2, 6, 23, .06);
-  cursor: pointer;
-  transition: transform .18s, box-shadow .18s;
+  transition: transform .2s, box-shadow .2s;
+}
+
+body.dark .cat-card {
+  background: var(--card-dark);
+  color: var(--text-dark);
+  box-shadow: 0 4px 14px rgba(255, 255, 255, .05);
 }
 
 .cat-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 16px 32px rgba(0, 0, 0, .12);
+  transform: translateY(-5px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .15);
 }
 
-.cat-card>div {
-  margin-top: 8px;
-  font-size: 0.95rem;
-}
-
-/* ---- Map ---- */
+/* ==================== MAP ==================== */
 #map {
   width: 100%;
   height: 500px;
   border-radius: 12px;
-  border: 2px solid #e9ecef;
-  background: #f8f9fa;
-  min-height: 350px;
+  border: 2px solid #dee2e6;
+  background: var(--bg-light);
 }
 
-/* ---- Spinner ---- */
+body.dark #map {
+  border-color: #1c2735;
+  background: var(--card-dark);
+}
+
+/* ==================== SERVICE CARDS ==================== */
+.service-card {
+  border: none;
+  background: var(--card-light);
+  color: var(--text-light);
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .08);
+  transition: all 0.25s ease;
+}
+
+body.dark .service-card {
+  background: var(--card-dark);
+  color: var(--text-dark);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, .05);
+}
+
+.service-info h6 {
+  color: inherit;
+  font-weight: 600;
+}
+
+.rating, .distance-text {
+  color: inherit;
+  opacity: 0.9;
+}
+
+/* Card edge color by type */
+.service-card.hospital { border-left: 4px solid #dc3545; }
+.service-card.clinic   { border-left: 4px solid #0d6efd; }
+.service-card.pharmacy { border-left: 4px solid #198754; }
+.service-card.foodbank { border-left: 4px solid #fd7e14; }
+
+/* ==================== BUTTONS ==================== */
+.btn {
+  font-weight: 500;
+}
+
+.btn-outline-light {
+  border-color: #fff;
+  color: #fff;
+}
+
+.btn-outline-light:hover {
+  background: #fff;
+  color: #000;
+}
+
+body.dark .btn-outline-light {
+  border-color: #f8f9fa;
+  color: #f8f9fa;
+}
+
+body.dark .btn-outline-light:hover {
+  background: #f8f9fa;
+  color: #000;
+}
+
+/* ==================== FOOTER ==================== */
+.pukaar-footer {
+  background: linear-gradient(180deg, #0f1724, #1c2433);
+  color: #e9ecef;
+  padding: 50px 0;
+  transition: all 0.3s ease;
+}
+
+body:not(.dark) .pukaar-footer {
+  background: #f8f9fa;
+  color: #212529;
+}
+
+.footer-link {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+.social-link {
+  font-size: 1.3rem;
+  color: inherit;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.social-link:hover {
+  color: var(--accent);
+  transform: translateY(-3px);
+}
+
+/* ==================== TOAST ==================== */
+.toast {
+  background: #212529 !important;
+  color: #fff !important;
+}
+
+body.dark .toast {
+  background: #0d1117 !important;
+}
+
+/* ==================== MISC ==================== */
 #loadingSpinner {
   display: inline-block;
   width: 18px;
@@ -190,193 +248,9 @@ body.dark .modern-navbar .btn-outline-light {
   border-top-color: var(--primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  margin-left: 8px;
-  vertical-align: middle;
+  margin-left: 6px;
 }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
-}
-
-/* ---- Emoji Markers ---- */
-.emoji-marker {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  color: #fff;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, .15);
-  border: 2px solid rgba(255, 255, 255, 0.18);
-}
-
-/* ---- Scrollable Results ---- */
-.results-scroll {
-  max-height: 520px;
-  overflow: auto;
-  padding-right: 6px;
-}
-
-/* ---- Status Wrap ---- */
-.hero #statusWrap,
-.hero #statusWrap * {
-  color: #ffffff !important;
-  opacity: 1 !important;
-  filter: brightness(1.2) !important;
-}
-
-/* =======================================================
-   SERVICE CARD (FINAL CLEAN VERSION)
-   ======================================================= */
-.service-card {
-  border: none;
-  background: var(--card);
-  border-radius: 14px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  overflow: hidden;
-  position: relative;
-}
-
-.service-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
-}
-
-.service-card .card-body {
-  padding: 16px 18px;
-}
-
-.service-info h6 {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.service-info .small {
-  color: var(--text);
-  opacity: 0.9;
-  line-height: 1.35;
-}
-
-.rating {
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--text);
-  margin-top: 4px;
-}
-
-.distance-text {
-  font-size: 0.8rem;
-  font-weight: 400;
-  color: var(--text);
-  opacity: 0.9;
-  margin-top: 2px;
-}
-
-/* Right-side buttons */
-.action-buttons .btn {
-  border-radius: 10px;
-  padding: 5px 9px;
-  font-size: 0.85rem;
-  min-width: 34px;
-  color: #fff;
-  border: none;
-}
-
-.action-buttons .btn i {
-  font-size: 1rem;
-}
-
-.fav-btn {
-  border-radius: 50%;
-  transition: transform 0.25s ease;
-}
-
-.fav-btn:hover {
-  transform: scale(1.1);
-}
-
-/* Dark-mode contrast fix */
-body.dark .service-card {
-  background: #141a24;
-  box-shadow: 0 4px 14px rgba(255, 255, 255, 0.05);
-}
-body.dark .service-info h6,
-body.dark .service-info .small,
-body.dark .rating,
-body.dark .distance-text {
-  color: #e9eef7 !important;
-  opacity: 1;
-}
-
-/* Colored edges by type */
-.service-card.hospital { border-left: 4px solid #dc3545; }
-.service-card.clinic   { border-left: 4px solid #0d6efd; }
-.service-card.pharmacy { border-left: 4px solid #198754; }
-.service-card.foodbank { border-left: 4px solid #fd7e14; }
-
-/* =======================================================
-   FOOTER (HIGH CONTRAST)
-   ======================================================= */
-.pukaar-footer {
-  background: linear-gradient(180deg, #0f1724, #1c2433);
-  color: #e9ecef;
-  transition: background 0.3s ease, color 0.3s ease;
-  padding: 40px 0;
-}
-
-.pukaar-footer .text-gradient {
-  background: linear-gradient(90deg, #0d6efd, #20c997);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.footer-link {
-  color: rgba(255, 255, 255, 0.95);
-  text-decoration: none;
-  transition: color 0.2s ease;
-  font-weight: 500;
-}
-
-.footer-link:hover {
-  color: #0d6efd;
-  text-decoration: underline;
-}
-
-.social-link {
-  font-size: 1.3rem;
-  color: #f8f9fa;
-  transition: transform 0.3s ease, color 0.3s ease;
-}
-
-.social-link:hover {
-  color: #20c997;
-  transform: translateY(-3px);
-}
-
-/* Light mode footer */
-body:not(.dark) .pukaar-footer {
-  background: #f8f9fa;
-  color: #212529;
-}
-
-body:not(.dark) .footer-link {
-  color: #212529;
-}
-
-body:not(.dark) .footer-link:hover {
-  color: #0d6efd;
-}
-
-/* Footer buttons full visible */
-.pukaar-footer .btn {
-  font-weight: 500;
-  border-radius: 8px;
-  color: #fff !important;
-}
-body:not(.dark) .pukaar-footer .btn {
-  color: #fff !important;
 }
