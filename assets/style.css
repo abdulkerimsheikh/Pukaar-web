@@ -1,184 +1,214 @@
 /* =====================================================
-   PUKAAR — UNIVERSAL THEME-COMPATIBLE STYLES
+   PUKAAR — Final Theme-Safe Build (Full Light & Dark)
    ===================================================== */
 
-/* Core color variables */
+/* Core palette */
 :root {
   --primary: #0d6efd;
   --accent: #20c997;
+  --text-light: #1a1a1a;
+  --text-dark: #e8eef7;
+  --muted-light: #6c757d;
+  --muted-dark: #aeb8c5;
   --bg-light: #f8f9fa;
   --bg-dark: #0b0f14;
   --card-light: #ffffff;
-  --card-dark: #141a24;
-  --text-light: #222;
-  --text-dark: #e9eef7;
-  --muted-light: #6c757d;
-  --muted-dark: #9aa5b1;
+  --card-dark: #111a25;
 }
 
-/* Base styles */
+/* Base setup */
 body {
   background: var(--bg-light);
   color: var(--text-light);
-  font-family: 'Poppins', 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-  transition: background 0.25s, color 0.25s;
+  font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  transition: background 0.3s, color 0.3s;
   padding-top: 70px;
 }
 
-/* Dark mode */
+/* Dark mode base */
 body.dark {
   background: var(--bg-dark);
   color: var(--text-dark);
 }
 
-/* ==================== NAVBAR ==================== */
-.modern-navbar {
-  background: rgba(15, 23, 36, 0.85);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease;
-}
+/* ================= NAVBAR ================= */
+/* =====================================================
+   FIX PATCH — NAVBAR + HERO ALIGNMENT RESTORE
+   ===================================================== */
 
-body.dark .modern-navbar {
-  background: rgba(10, 15, 25, 0.85);
+/* --- Navbar Alignment Fix --- */
+.modern-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1030;
+  padding: 0.6rem 1rem;
+  display: flex;
+  align-items: center;
 }
 
 .navbar-brand {
-  font-weight: 900;
-  background: linear-gradient(90deg, var(--primary), var(--accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-transform: uppercase;
-  font-size: 1.7rem;
+  display: flex;
+  align-items: center;
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.navbar-nav {
+  align-items: center;
 }
 
 .nav-link {
-  color: rgba(255, 255, 255, 0.9);
-  transition: color 0.2s ease, transform 0.2s ease;
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
 }
 
-.nav-link:hover,
-.nav-link.active {
-  color: #fff !important;
-  transform: translateY(-2px);
+/* Keep body offset for fixed navbar */
+body {
+  padding-top: 72px !important;
 }
 
-/* ==================== HERO ==================== */
+/* --- Hero Centering & Layout Fix --- */
 .hero {
-  background: linear-gradient(135deg, #0f1724, #212529);
-  color: #fff;
   text-align: center;
-  padding: 120px 20px 90px;
-  border-bottom-left-radius: 60px;
-  border-bottom-right-radius: 60px;
+  padding: 110px 15px 90px !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-body:not(.dark) .hero {
-  background: linear-gradient(135deg, #007bff, #00b894);
-  color: #fff;
+.hero .container {
+  max-width: 900px;
 }
 
 .hero h1 {
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   font-weight: 800;
+  margin-bottom: 0.6rem;
+  letter-spacing: 0.5px;
 }
 
 .hero p {
   font-size: 1.1rem;
-  opacity: 0.9;
+  margin-bottom: 1.2rem;
 }
 
-/* Status text always visible */
+/* Restore button/input centering */
+.input-group {
+  width: 100%;
+  justify-content: center;
+}
+
 #statusWrap {
-  color: #fff !important;
+  margin-top: 0.75rem;
+  text-align: center;
 }
 
-#requestLocationBtn {
-  color: #fff;
+/* --- Responsive polish --- */
+@media (max-width: 768px) {
+  .hero {
+    padding: 90px 10px 70px !important;
+  }
+  .hero h1 {
+    font-size: 2.2rem;
+  }
 }
 
-/* ==================== CATEGORY CARDS ==================== */
+
+/* ================= CATEGORY ================= */
+.cat-grid {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
 .cat-card {
   width: 120px;
   height: 120px;
   border-radius: 16px;
   background: var(--card-light);
   color: var(--text-light);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, .1);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  transition: transform .2s, box-shadow .2s;
+  transition: all 0.25s ease;
 }
-
+.cat-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
 body.dark .cat-card {
   background: var(--card-dark);
   color: var(--text-dark);
-  box-shadow: 0 4px 14px rgba(255, 255, 255, .05);
+  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.06);
 }
 
-.cat-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, .15);
-}
-
-/* ==================== MAP ==================== */
-#map {
-  width: 100%;
-  height: 500px;
-  border-radius: 12px;
-  border: 2px solid #dee2e6;
-  background: var(--bg-light);
-}
-
-body.dark #map {
-  border-color: #1c2735;
-  background: var(--card-dark);
-}
-
-/* ==================== SERVICE CARDS ==================== */
+/* ================= RESULTS + CARDS ================= */
 .service-card {
   border: none;
+  border-radius: 14px;
   background: var(--card-light);
   color: var(--text-light);
-  border-radius: 14px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, .08);
-  transition: all 0.25s ease;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+.service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
 }
 
 body.dark .service-card {
   background: var(--card-dark);
   color: var(--text-dark);
-  box-shadow: 0 4px 12px rgba(255, 255, 255, .05);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.05);
 }
 
 .service-info h6 {
-  color: inherit;
   font-weight: 600;
-}
-
-.rating, .distance-text {
   color: inherit;
-  opacity: 0.9;
+}
+.service-info .small,
+.rating,
+.distance-text {
+  color: inherit;
+  opacity: 0.85;
 }
 
-/* Card edge color by type */
 .service-card.hospital { border-left: 4px solid #dc3545; }
 .service-card.clinic   { border-left: 4px solid #0d6efd; }
 .service-card.pharmacy { border-left: 4px solid #198754; }
 .service-card.foodbank { border-left: 4px solid #fd7e14; }
 
-/* ==================== BUTTONS ==================== */
+/* ================= MAP ================= */
+#map {
+  width: 100%;
+  height: 500px;
+  border-radius: 12px;
+  border: 2px solid #dee2e6;
+  background: #f8f9fa;
+}
+body.dark #map {
+  background: #0e1622;
+  border-color: #1c2735;
+}
+
+/* ================= BUTTONS ================= */
 .btn {
   font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.25s ease;
 }
 
 .btn-outline-light {
   border-color: #fff;
   color: #fff;
 }
-
 .btn-outline-light:hover {
   background: #fff;
   color: #000;
@@ -188,20 +218,17 @@ body.dark .btn-outline-light {
   border-color: #f8f9fa;
   color: #f8f9fa;
 }
-
 body.dark .btn-outline-light:hover {
   background: #f8f9fa;
   color: #000;
 }
 
-/* ==================== FOOTER ==================== */
+/* ================= FOOTER ================= */
 .pukaar-footer {
   background: linear-gradient(180deg, #0f1724, #1c2433);
   color: #e9ecef;
-  padding: 50px 0;
-  transition: all 0.3s ease;
+  padding: 50px 0 30px;
 }
-
 body:not(.dark) .pukaar-footer {
   background: #f8f9fa;
   color: #212529;
@@ -210,36 +237,33 @@ body:not(.dark) .pukaar-footer {
 .footer-link {
   color: inherit;
   text-decoration: none;
+  font-weight: 500;
   transition: color 0.2s ease;
 }
-
 .footer-link:hover {
   color: var(--primary);
-  text-decoration: underline;
 }
 
 .social-link {
   font-size: 1.3rem;
   color: inherit;
-  transition: color 0.2s ease, transform 0.2s ease;
+  transition: color 0.25s ease, transform 0.25s ease;
 }
-
 .social-link:hover {
   color: var(--accent);
   transform: translateY(-3px);
 }
 
-/* ==================== TOAST ==================== */
+/* ================= TOAST ================= */
 .toast {
   background: #212529 !important;
   color: #fff !important;
 }
-
 body.dark .toast {
   background: #0d1117 !important;
 }
 
-/* ==================== MISC ==================== */
+/* ================= SPINNER ================= */
 #loadingSpinner {
   display: inline-block;
   width: 18px;
@@ -250,7 +274,25 @@ body.dark .toast {
   animation: spin 1s linear infinite;
   margin-left: 6px;
 }
-
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+/* ================= MISC ================= */
+.results-scroll {
+  max-height: 520px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+.emoji-marker {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, .15);
+  border: 2px solid rgba(255, 255, 255, 0.18);
 }
