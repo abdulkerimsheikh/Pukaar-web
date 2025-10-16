@@ -1,168 +1,191 @@
-  <!DOCTYPE html>
-  <html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Pukaar — Find Nearby Services</title>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pukaar — Find Nearby Services</title>
 
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Leaflet -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/style.css">
 
-    <!-- PWA -->
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#212529">
-    <meta name="description" content="Pukaar — Find hospitals, clinics, pharmacies & food banks near you. Help is always near.">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Pukaar">
-    <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
-    <link rel="icon" href="assets/icons/favicon.png" sizes="32x32" type="image/png">
+  <link rel="manifest" href="json/manifest.json">
 
-    <!-- Social Preview -->
-    <meta property="og:title" content="Pukaar — Find Nearby Services">
-    <meta property="og:description" content="Locate hospitals, clinics, pharmacies, and food banks near you.">
-    <meta property="og:image" content="assets/icons/icon-512.png">
+  <meta name="theme-color" content="#212529">
+  <meta name="description" content="Pukaar — Find hospitals, clinics, pharmacies & food banks near you. Help is always near.">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Pukaar">
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+  <link rel="icon" href="assets/icons/favicon.png" sizes="32x32" type="image/png">
 
-    <!-- Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <meta property="og:title" content="Pukaar — Find Nearby Services">
+  <meta property="og:description" content="Locate hospitals, clinics, pharmacies, and food banks near you.">
+  <meta property="og:image" content="assets/icons/icon-512.png">
 
-  
-  </head>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 
-  <body>
-    <!-- Modern Animated Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark sticky-top py-2 modern-navbar">
-      <div class="container-fluid position-relative">
-        <a class="navbar-brand fw-bold" href="index.html">Pukaar</a>
 
-        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
+</head>
 
-        <div class="collapse navbar-collapse position-relative" id="navbarNav">
-          <ul class="navbar-nav ms-auto align-items-center gap-2" id="navLinks">
-            <li class="nav-item"><a class="nav-link px-3 active" href="index.html">Home</a></li>
-            <li class="nav-item"><a class="nav-link px-3" href="about.html">About</a></li>
-            <li class="nav-item"><a class="nav-link px-3" href="contact.html">Contact</a></li>
-            <li class="nav-item"><a class="nav-link px-3" href="profile.html">Profile</a></li>
-            <li class="nav-item d-flex gap-2 ms-lg-3 mt-2 mt-lg-0">
-              <button class="btn btn-outline-warning btn-sm" id="favoritesBtn" data-bs-toggle="modal" data-bs-target="#favoritesModal">⭐</button>
-              <button class="btn btn-outline-light btn-sm" id="lang-toggle">اردو</button>
-              <button class="btn btn-outline-light btn-sm" id="theme-toggle" title="Toggle theme">🌙</button>
-            </li>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top py-2 modern-navbar">
+    <div class="container-fluid position-relative">
+      <a class="navbar-brand fw-bold" href="index.html">Pukaar</a>
+
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse position-relative" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-center gap-2" id="navLinks">
+          <li class="nav-item"><a class="nav-link px-3 active" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link px-3" href="about.html">About</a></li>
+          <li class="nav-item"><a class="nav-link px-3" href="contact.html">Contact</a></li>
+          <li class="nav-item d-flex gap-2 ms-lg-3 mt-2 mt-lg-0">
+            <button class="btn btn-outline-warning btn-sm" id="favoritesBtn" data-bs-toggle="modal"
+              data-bs-target="#favoritesModal" aria-label="Show Favorites">⭐</button>
+            <button class="btn btn-outline-light btn-sm" id="theme-toggle" aria-label="Toggle theme">🌙</button>
+          </li>
+        </ul>
+        <span class="nav-underline"></span>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero text-center">
+    <div class="container">
+      <h1 id="heroTitle">Find Help, Fast ⚡</h1>
+      <p id="heroDesc">Locate hospitals, clinics, pharmacies & food banks near you — instantly.</p>
+
+      <div class="input-row position-relative mt-3">
+        <div class="input-group mx-auto" style="max-width:920px;">
+          <input id="searchInput" class="form-control" type="search" placeholder="Search service or place..."
+            aria-label="Search for a service or place">
+          <select id="filterSelect" class="form-select" aria-label="Filter by service type">
+            <option value="">All</option>
+            <option value="hospital">Hospitals</option>
+            <option value="clinic">Clinics</option>
+            <option value="pharmacy">Pharmacies</option>
+            <option value="foodbank">Food Banks</option>
+          </select>
+          <button id="findBtn" class="btn btn-primary">Find Nearby</button>
+        </div>
+
+        <div id="statusWrap" class="mt-3 small text-muted">
+          <span id="statusMessage">Allow location for best results.</span>
+          <span id="loadingSpinner" style="display:none"></span>
+          <span id="dots" class="dots" style="display:none"></span>
+          <button id="requestLocationBtn" class="btn btn-sm btn-outline-light ms-2">Allow</button>
+        </div>
+      </div>
+
+      <div class="cat-grid mt-4">
+        <div class="cat-card" onclick="filterCategory('hospital')" role="button" tabindex="0">🏥
+          <div>Hospitals</div>
+        </div>
+        <div class="cat-card" onclick="filterCategory('clinic')" role="button" tabindex="0">👨‍⚕️
+          <div>Clinics</div>
+        </div>
+        <div class="cat-card" onclick="filterCategory('pharmacy')" role="button" tabindex="0">💊
+          <div>Pharmacies</div>
+        </div>
+        <div class="cat-card" onclick="filterCategory('foodbank')" role="button" tabindex="0">🍞
+          <div>Food Banks</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container my-4">
+    <section class="row g-4">
+      <div class="col-lg-6">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 id="resultsTitle">Nearby Services <small id="resultsMeta" class="text-muted ms-2">—</small></h5>
+          <div class="d-flex gap-2">
+            <button id="sortDistance" class="btn btn-outline-secondary btn-sm">Sort: Distance</button>
+            <button id="sortRating" class="btn btn-outline-secondary btn-sm">Sort: Rating</button>
+          </div>
+        </div>
+
+        <div id="results" class="row g-3 results-scroll"></div>
+
+        <div id="emptyState" class="text-center mt-4 d-none">
+          <i class="bi bi-search" style="font-size:2rem;color:var(--muted)"></i>
+          <h5>No results found</h5>
+          <p class="text-muted">Try a different query or grant location access.</p>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div id="map"></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal fade" id="favoritesModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header bg-dark text-white">
+          <h5 class="modal-title">⭐ Saved Favorites</h5>
+          <button class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="favoritesList" class="row g-3"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="pukaar-footer mt-5 pt-5 pb-3">
+    <div class="container text-center text-md-start">
+      <div class="row gy-4">
+        <div class="col-md-4">
+          <h5 class="fw-bold text-gradient mb-2">Pukaar</h5>
+          <p class="text-muted small mb-0">Find hospitals, clinics, pharmacies & food banks near you. Help is always near 🌍</p>
+        </div>
+        <div class="col-md-4">
+          <h6 class="fw-semibold mb-3">Quick Links</h6>
+          <ul class="list-unstyled small">
+            <li><a href="index.html" class="footer-link">Home</a></li>
+            <li><a href="about.html" class="footer-link">About</a></li>
+            <li><a href="contact.html" class="footer-link">Contact</a></li>
           </ul>
-          <span class="nav-underline"></span>
+        </div>
+        <div class="col-md-4">
+          <h6 class="fw-semibold mb-3">Connect With Us</h6>
+          <div class="d-flex gap-3">
+            <a href="#" class="social-link" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+            <a href="#" class="social-link" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
+            <a href="#" class="social-link" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+            <a href="#" class="social-link" aria-label="GitHub"><i class="bi bi-github"></i></a>
+          </div>
         </div>
       </div>
-    </nav>
+      <hr class="my-4 opacity-25">
+      <div class="text-center small text-muted">© 2025 Pukaar — All rights reserved.</div>
+    </div>
+  </footer>
 
-    <!-- HERO -->
-    <header class="hero text-center">
-      <div class="container">
-        <h1 id="heroTitle">Find Help, Fast ⚡</h1>
-        <p id="heroDesc">Locate hospitals, clinics, pharmacies & food banks near you — instantly.</p>
 
-        <div class="input-row position-relative mt-3">
-          <div class="input-group mx-auto" style="max-width:920px;">
-            <input id="searchInput" class="form-control" type="search" placeholder="Search service or place...">
-            <select id="filterSelect" class="form-select">
-              <option value="">All</option>
-              <option value="hospital">Hospitals</option>
-              <option value="clinic">Clinics</option>
-              <option value="pharmacy">Pharmacies</option>
-              <option value="foodbank">Food Banks</option>
-            </select>
-            <button id="findBtn" class="btn btn-primary">Find Nearby</button>
-          </div>
-
-          <div id="statusWrap" class="mt-3 small text-muted">
-            <span id="statusMessage">Allow location for best results.</span>
-            <span id="loadingSpinner" style="display:none"></span>
-            <span id="dots" class="dots" style="display:none"></span>
-            <button id="requestLocationBtn" class="btn btn-sm btn-outline-light ms-2">Allow</button>
-          </div>
-        </div>
-
-        <div class="cat-grid mt-4">
-          <div class="cat-card" onclick="filterCategory('hospital')">🏥<div>Hospitals</div></div>
-          <div class="cat-card" onclick="filterCategory('clinic')">👨‍⚕️<div>Clinics</div></div>
-          <div class="cat-card" onclick="filterCategory('pharmacy')">💊<div>Pharmacies</div></div>
-          <div class="cat-card" onclick="filterCategory('foodbank')">🍞<div>Food Banks</div></div>
-        </div>
-      </div>
-    </header>
-
-    <!-- MAIN -->
-    <main class="container my-4">
-      <div class="row g-4">
-        <div class="col-lg-6">
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <h5 id="resultsTitle">Nearby Services <small id="resultsMeta" class="text-muted ms-2">—</small></h5>
-            <div class="d-flex gap-2">
-              <button id="sortDistance" class="btn btn-outline-secondary btn-sm">Sort: Distance</button>
-              <button id="sortRating" class="btn btn-outline-secondary btn-sm">Sort: Rating</button>
-            </div>
-          </div>
-
-          <div id="results" class="row g-3 results-scroll"></div>
-
-          <div id="emptyState" class="text-center mt-4 d-none">
-            <i class="bi bi-search" style="font-size:2rem;color:var(--muted)"></i>
-            <h5>No results found</h5>
-            <p class="text-muted">Try a different query or grant location access.</p>
-          </div>
-        </div>
-
-        <div class="col-lg-6">
-          <div id="map"></div>
-        </div>
-      </div>
-
-      <!-- PWA Install Banner -->
-      <div class="p-3 bg-info bg-opacity-10 rounded d-flex justify-content-between align-items-center mt-3">
-        <span>📢 Add Pukaar to your home screen for faster access.</span>
-        <button id="installBtn" class="btn btn-sm btn-primary">Install</button>
-      </div>
-    </main>
-
-    <!-- Favorites Modal -->
-    <div class="modal fade" id="favoritesModal" tabindex="-1">
-      <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-          <div class="modal-header bg-dark text-white">
-            <h5 class="modal-title">⭐ Saved Favorites</h5>
-            <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            <div id="favoritesList" class="row g-3"></div>
-          </div>
-        </div>
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index:1300">
+    <div id="liveToast" class="toast align-items-center text-white bg-dark border-0">
+      <div class="d-flex">
+        <div id="toastMessage" class="toast-body">Action done</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+          aria-label="Close"></button>
       </div>
     </div>
+  </div>
 
-    <!-- Toast placeholder -->
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index:1300">
-      <div id="liveToast" class="toast align-items-center text-white bg-dark border-0">
-        <div class="d-flex">
-          <div id="toastMessage" class="toast-body">Action done</div>
-          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-        </div>
-      </div>
-    </div>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="script.js"></script>
+</body>
 
-    <!-- Scripts -->
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="script.js"></script>
-  </body>
-  </html>
+</html>

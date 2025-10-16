@@ -2,8 +2,10 @@
   "name": "Pukaar — Find Nearby Services",
   "short_name": "Pukaar",
   "description": "Locate hospitals, clinics, pharmacies, and food banks near you — even offline.",
-  "start_url": "index.html",
-  "scope": "./",
+  "start_url": "/Pukaar-web/",
+  "scope": "/Pukaar-web/",
+
+  
   "display": "standalone",
   "background_color": "#0b0f14",
   "theme_color": "#0d6efd",
