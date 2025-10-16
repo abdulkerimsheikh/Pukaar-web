@@ -430,7 +430,7 @@
     initNavUnderline();
     renderFavoritesModal();
     initFooterReveal();
-    findNearby(); // Initial fetch on load
+   
   });
 
   qs("#findBtn")?.addEventListener("click", filterAndSortResults);
