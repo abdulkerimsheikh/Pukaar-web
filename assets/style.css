@@ -32,27 +32,30 @@ body.dark {
 }
 
 /* ================= NAVBAR ================= */
-/* =====================================================
-   FIX PATCH — NAVBAR + HERO ALIGNMENT RESTORE
-   ===================================================== */
-
-/* --- Navbar Alignment Fix --- */
+/* ================= NAVBAR ================= */
 .modern-navbar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1030;
-  padding: 0.6rem 1rem;
-  display: flex;
-  align-items: center;
+  z-index: 1050;
+  background: rgba(15, 22, 33, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+body.dark .modern-navbar {
+  background: rgba(10, 15, 25, 0.9);
 }
 
 .navbar-brand {
-  display: flex;
-  align-items: center;
-  font-size: 1.8rem;
-  line-height: 1;
+  font-weight: 900;
+  font-size: 1.7rem;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .navbar-nav {
@@ -60,59 +63,93 @@ body.dark {
 }
 
 .nav-link {
-  padding-top: 0.5rem !important;
-  padding-bottom: 0.5rem !important;
+  font-weight: 500;
+  padding: 0.6rem 1rem !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  transition: all 0.25s ease;
+}
+.nav-link:hover,
+.nav-link.active {
+  color: #fff !important;
+  transform: translateY(-2px);
 }
 
-/* Keep body offset for fixed navbar */
+body:not(.dark) .modern-navbar {
+  background: rgba(255, 255, 255, 0.95);
+}
+body:not(.dark) .nav-link {
+  color: #212529 !important;
+}
+body:not(.dark) .nav-link:hover {
+  color: var(--primary) !important;
+}
+
+/* Adjust page offset for fixed navbar */
 body {
-  padding-top: 72px !important;
+  padding-top: 74px !important;
 }
 
-/* --- Hero Centering & Layout Fix --- */
+/* ================= HERO ================= */
 .hero {
+  background: linear-gradient(135deg, #007bff, #00b894);
+  color: #fff;
   text-align: center;
-  padding: 110px 15px 90px !important;
+  padding: 120px 20px 100px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25);
+}
+
+body.dark .hero {
+  background: linear-gradient(135deg, #0f1724, #1c2433);
 }
 
 .hero .container {
-  max-width: 900px;
+  max-width: 950px;
 }
 
 .hero h1 {
   font-size: 2.8rem;
   font-weight: 800;
-  margin-bottom: 0.6rem;
-  letter-spacing: 0.5px;
+  margin-bottom: 0.7rem;
 }
 
 .hero p {
   font-size: 1.1rem;
-  margin-bottom: 1.2rem;
+  margin-bottom: 1.3rem;
+  opacity: 0.95;
 }
 
-/* Restore button/input centering */
 .input-group {
-  width: 100%;
   justify-content: center;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 #statusWrap {
-  margin-top: 0.75rem;
+  margin-top: 10px;
+  color: #fff;
   text-align: center;
 }
 
-/* --- Responsive polish --- */
+body.dark #statusWrap {
+  color: #e9ecef;
+}
+
+/* Responsive alignment fixes */
 @media (max-width: 768px) {
   .hero {
-    padding: 90px 10px 70px !important;
+    padding: 90px 15px 70px;
   }
   .hero h1 {
-    font-size: 2.2rem;
+    font-size: 2.3rem;
+  }
+  .hero p {
+    font-size: 1rem;
   }
 }
 
@@ -295,4 +332,49 @@ body.dark .toast {
   color: #fff;
   box-shadow: 0 4px 10px rgba(0, 0, 0, .15);
   border: 2px solid rgba(255, 255, 255, 0.18);
+}
+
+/* ================= NAVBAR FINAL FIX ================= */
+.modern-navbar {
+  height: 66px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem !important;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 1.6rem !important;
+  line-height: 1;
+}
+
+.navbar-toggler {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.navbar-collapse {
+  background: transparent !important;
+}
+
+@media (max-width: 991px) {
+  .modern-navbar .navbar-collapse {
+    background: rgba(15, 22, 33, 0.96);
+    border-radius: 12px;
+    padding: 0.8rem 1rem;
+    margin-top: 0.5rem;
+  }
+
+  body:not(.dark) .modern-navbar .navbar-collapse {
+    background: rgba(82, 31, 31, 0.98);
+  }
+}
+
+/* Ensure consistent page offset */
+body {
+  padding-top: 66px !important;
 }
