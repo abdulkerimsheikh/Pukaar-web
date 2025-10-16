@@ -12,6 +12,8 @@
   let markers = [];
   let isFetching = false;
   let userLocation = null;
+  let allowManuallyTriggered = false;
+
 
   const qs = (s) => document.querySelector(s);
   const qsa = (s) => document.querySelectorAll(s);
@@ -212,6 +214,7 @@
   }
 
   async function handleGeolocationSuccess(pos) {
+    if (!allowManuallyTriggered) return;
     userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
     initMap(userLocation.lat, userLocation.lng, 13);
     setLoadingState(true, "Fetching data...");
@@ -454,8 +457,9 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    allowManuallyTriggered = true;
     locationInProgress = true;
-    locationBtn.textContent = "Stop ⏹";
+    locationBtn.textContent = "Stop";
     locationBtn.classList.remove("btn-outline-light");
     locationBtn.classList.add("btn-danger");
     qs("#statusMessage").textContent = "Getting your location...";
@@ -492,6 +496,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function stopLocationProcess(msg) {
+    allowManuallyTriggered = false;
     if (geoFetchAbort) geoFetchAbort.abort();
     locationInProgress = false;
     locationBtn.textContent = "Allow";
