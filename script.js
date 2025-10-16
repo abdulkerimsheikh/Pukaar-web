@@ -312,8 +312,8 @@
         <div class="service-info">
           <h6 class="fw-semibold mb-1">${s.name}</h6>
           <div class="small text-muted">${s.address}</div>
-          <div class="rating mt-1">⭐ ${s.rating}</div>
-          <div class="distance-text small text-muted">Distance: 📍 ${s.distance} km</div>
+          <div class="rating mt-1">${s.rating}</div>
+          <div class="distance-text small text-muted">Distance: ${s.distance} km</div>
         </div>
         <div class="action-buttons d-flex flex-column align-items-center gap-2">
           ${s.phone
