@@ -27,10 +27,10 @@
     if (!toastEl || !body) return alert(message);
     body.textContent = message;
     toastEl.className = `toast align-items-center text-white ${variant === "success"
-        ? "bg-success"
-        : variant === "error"
-          ? "bg-danger"
-          : "bg-dark"
+      ? "bg-success"
+      : variant === "error"
+        ? "bg-danger"
+        : "bg-dark"
       } border-0`;
     new bootstrap.Toast(toastEl).show();
   }
@@ -306,23 +306,33 @@
 
       // This is the updated card template
       col.innerHTML = `
-      <div class="card p-2 service-card shadow-sm">
-        <div class="card-body d-flex justify-content-between align-items-start">
-          <div class="me-2">
-            <h6 class="mb-1">${s.name}</h6>
-            <div class="small text-muted">${s.address}</div>
-            <div class="small mt-2 text-warning">★ ${s.rating}</div>
-          </div>
-
-          <div class="d-flex flex-column align-items-center gap-2">
-            <a href="tel:${s.phone || "1122"}" class="btn btn-sm btn-success">📞</a>
-            <a href="https://www.google.com/maps?q=${s.lat},${s.lng}" target="_blank" class="btn btn-sm btn-primary">🗺</a>
-            <button class="btn btn-sm ${isFav ? "btn-warning" : "btn-outline-warning"
-        } fav-btn">${isFav ? "★" : "☆"}</button>
-            <div class="distance-badge">${s.distance} km</div>
-          </div>
+  <div class="card service-card shadow-sm">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-start mb-2">
+        <div class="service-info">
+          <h6 class="fw-semibold mb-1">${s.name}</h6>
+          <div class="small text-muted">${s.address}</div>
+          <div class="rating mt-1">⭐ ${s.rating}</div>
+          <div class="distance-text text-muted small">Distance: ${s.distance} km</div>
         </div>
-      </div>`;
+        <button class="btn btn-sm fav-btn ${isFav ? "btn-warning" : "btn-outline-warning"}" title="Add to favorites">
+          ${isFav ? "★" : "☆"}
+        </button>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mt-3">
+        <div class="d-flex gap-2">
+          <a href="tel:${s.phone || "1122"}" class="btn btn-sm btn-success" title="Call">
+            <i class="bi bi-telephone-fill"></i>
+          </a>
+          <a href="https://www.google.com/maps?q=${s.lat},${s.lng}" target="_blank" class="btn btn-sm btn-primary" title="Open in Maps">
+            <i class="bi bi-geo-alt-fill"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
 
       col.querySelector(".fav-btn").addEventListener("click", () =>
         toggleFavorite(s._uid, {
@@ -428,84 +438,84 @@
   // ===========================
   // Init and Event Listeners
   // ===========================
-document.addEventListener("DOMContentLoaded", () => {
-  initMap();
-  initNavUnderline();
-  renderFavoritesModal();
-  initFooterReveal();
+  document.addEventListener("DOMContentLoaded", () => {
+    initMap();
+    initNavUnderline();
+    renderFavoritesModal();
+    initFooterReveal();
 
-  // ===========================
-  // Dynamic Allow ↔ Stop Button
-  // ===========================
-  const locationBtn = document.getElementById("requestLocationBtn");
-  let locationInProgress = false;
-  let geoFetchAbort = null;
+    // ===========================
+    // Dynamic Allow ↔ Stop Button
+    // ===========================
+    const locationBtn = document.getElementById("requestLocationBtn");
+    let locationInProgress = false;
+    let geoFetchAbort = null;
 
-  if (locationBtn) {
-    locationBtn.addEventListener("click", async () => {
-      if (!locationInProgress) {
-        startLocationProcess();
-      } else {
-        stopLocationProcess("Search stopped by user");
-      }
-    });
-  }
-
-  function startLocationProcess() {
-    if (!navigator.geolocation) {
-      showToast("Geolocation not supported in this browser", "error");
-      return;
+    if (locationBtn) {
+      locationBtn.addEventListener("click", async () => {
+        if (!locationInProgress) {
+          startLocationProcess();
+        } else {
+          stopLocationProcess("Search stopped by user");
+        }
+      });
     }
 
-    allowManuallyTriggered = true;
-    locationInProgress = true;
-    locationBtn.textContent = "Stop";
-    locationBtn.classList.remove("btn-outline-light");
-    locationBtn.classList.add("btn-danger");
-    qs("#statusMessage").textContent = "Getting your location...";
-    qs("#loadingSpinner").style.display = "inline-block";
+    function startLocationProcess() {
+      if (!navigator.geolocation) {
+        showToast("Geolocation not supported in this browser", "error");
+        return;
+      }
 
-    geoFetchAbort = new AbortController();
+      allowManuallyTriggered = true;
+      locationInProgress = true;
+      locationBtn.textContent = "Stop";
+      locationBtn.classList.remove("btn-outline-light");
+      locationBtn.classList.add("btn-danger");
+      qs("#statusMessage").textContent = "Getting your location...";
+      qs("#loadingSpinner").style.display = "inline-block";
 
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        if (!locationInProgress) return;
-        const { latitude, longitude } = pos.coords;
-        userLocation = { lat: latitude, lng: longitude };
-        initMap(latitude, longitude, 13);
-        qs("#statusMessage").textContent = "Fetching nearby services...";
-        try {
-          await fetchAndProcessData(latitude, longitude, geoFetchAbort.signal);
-          showToast("Nearby results updated ✅", "success");
-        } catch (e) {
-          if (e.name !== "AbortError") {
-            console.error("Fetch failed:", e);
-            showToast("Failed to fetch data", "error");
+      geoFetchAbort = new AbortController();
+
+      navigator.geolocation.getCurrentPosition(
+        async (pos) => {
+          if (!locationInProgress) return;
+          const { latitude, longitude } = pos.coords;
+          userLocation = { lat: latitude, lng: longitude };
+          initMap(latitude, longitude, 13);
+          qs("#statusMessage").textContent = "Fetching nearby services...";
+          try {
+            await fetchAndProcessData(latitude, longitude, geoFetchAbort.signal);
+            showToast("Nearby results updated ✅", "success");
+          } catch (e) {
+            if (e.name !== "AbortError") {
+              console.error("Fetch failed:", e);
+              showToast("Failed to fetch data", "error");
+            }
+          } finally {
+            stopLocationProcess();
           }
-        } finally {
+        },
+        (err) => {
+          if (err.code === 1) showToast("Location permission denied", "error");
+          else showToast("Unable to get location", "error");
           stopLocationProcess();
-        }
-      },
-      (err) => {
-        if (err.code === 1) showToast("Location permission denied", "error");
-        else showToast("Unable to get location", "error");
-        stopLocationProcess();
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
-    );
-  }
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
+      );
+    }
 
-  function stopLocationProcess(msg) {
-    allowManuallyTriggered = false;
-    if (geoFetchAbort) geoFetchAbort.abort();
-    locationInProgress = false;
-    locationBtn.textContent = "Allow";
-    locationBtn.classList.remove("btn-danger");
-    locationBtn.classList.add("btn-outline-light");
-    qs("#loadingSpinner").style.display = "none";
-    qs("#statusMessage").textContent = msg || "Allow location for best results.";
-  }
-});
+    function stopLocationProcess(msg) {
+      allowManuallyTriggered = false;
+      if (geoFetchAbort) geoFetchAbort.abort();
+      locationInProgress = false;
+      locationBtn.textContent = "Allow";
+      locationBtn.classList.remove("btn-danger");
+      locationBtn.classList.add("btn-outline-light");
+      qs("#loadingSpinner").style.display = "none";
+      qs("#statusMessage").textContent = msg || "Allow location for best results.";
+    }
+  });
 
 
   qs("#findBtn")?.addEventListener("click", filterAndSortResults);
@@ -521,5 +531,5 @@ document.addEventListener("DOMContentLoaded", () => {
     qs("#sortDistance").classList.remove("active");
     filterAndSortResults();
   });
-  
+
 })();
