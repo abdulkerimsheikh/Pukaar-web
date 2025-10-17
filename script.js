@@ -218,6 +218,7 @@
     userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
     initMap(userLocation.lat, userLocation.lng, 13);
     setLoadingState(true, "Fetching data...");
+    document.getElementById("resultsLoading").style.display = "block";
     await fetchAndProcessData(userLocation.lat, userLocation.lng);
     setLoadingState(false, `${lastFetchedData.length} results found`);
     qs("#requestLocationBtn").style.display = "none";
@@ -226,6 +227,7 @@
   async function handleGeolocationError(err) {
     console.error("Geolocation Error:", err);
     setLoadingState(false);
+    document.getElementById("resultsLoading").style.display = "block";
     showToast("Unable to get location. Using default data.", "error");
     initMap();
     await fetchAndProcessData();
@@ -291,12 +293,18 @@
   }
 
   function displayResults(services) {
-    const container = qs("#results");
-    container.innerHTML = "";
-    if (!services.length) {
-      qs("#emptyState").classList.remove("d-none");
-      return;
-    }
+  const container = qs("#results");
+
+  // Hide the radar loader when data arrives
+  const radar = document.getElementById("resultsLoading");
+  if (radar) radar.style.display = "none";
+
+  container.innerHTML = "";
+  if (!services.length) {
+    qs("#emptyState").classList.remove("d-none");
+    return;
+  }
+
     qs("#emptyState").classList.add("d-none");
 
     services.forEach((s) => {

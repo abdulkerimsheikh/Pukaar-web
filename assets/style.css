@@ -370,7 +370,7 @@ body.dark .toast {
   }
 
   body:not(.dark) .modern-navbar .navbar-collapse {
-    background: rgba(82, 31, 31, 0.98);
+    background: rgba(255, 255, 255, 0.98);
   }
 }
 
@@ -378,3 +378,46 @@ body.dark .toast {
 body {
   padding-top: 66px !important;
 }
+
+/* ================== RADAR LOADER ================== */
+.loading-radar {
+  color: var(--muted-light);
+  animation: fadePulse 2s ease-in-out infinite;
+}
+body.dark .loading-radar {
+  color: var(--muted-dark);
+}
+
+.radar-circle {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--primary) 35%, transparent 36%);
+  animation: radarPulse 1.8s infinite ease-in-out;
+  position: relative;
+  box-shadow: 0 0 15px rgba(13, 110, 253, 0.3);
+}
+
+@keyframes radarPulse {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.5;
+    box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.4);
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 0 15px rgba(13, 110, 253, 0);
+  }
+  100% {
+    transform: scale(0.7);
+    opacity: 0.5;
+    box-shadow: 0 0 0 0 rgba(13, 110, 253, 0);
+  }
+}
+
+@keyframes fadePulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+

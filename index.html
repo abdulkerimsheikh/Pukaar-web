@@ -15,7 +15,8 @@
   <link rel="manifest" href="json/manifest.json">
 
   <meta name="theme-color" content="#212529">
-  <meta name="description" content="Pukaar — Find hospitals, clinics, pharmacies & food banks near you. Help is always near.">
+  <meta name="description"
+    content="Pukaar — Find hospitals, clinics, pharmacies & food banks near you. Help is always near.">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -113,7 +114,13 @@
           </div>
         </div>
 
-        <div id="results" class="row g-3 results-scroll"></div>
+        <div id="results" class="row g-3 results-scroll">
+          <div id="resultsLoading" class="loading-radar text-center py-5 w-100">
+            <div class="radar-circle mx-auto mb-3"></div>
+            <p class="fw-semibold">Scanning your area for nearby services...</p>
+          </div>
+        </div>
+
 
         <div id="emptyState" class="text-center mt-4 d-none">
           <i class="bi bi-search" style="font-size:2rem;color:var(--muted)"></i>
@@ -143,52 +150,55 @@
   </div>
 
   <footer class="pukaar-footer mt-5 pt-5 pb-3">
-  <div class="container text-center text-md-start">
-    <div class="row gy-4">
-      <div class="col-md-4">
-        <h5 class="fw-bold text-gradient mb-2">Pukaar</h5>
-        <p class="text-muted small mb-0">
-          Find hospitals, clinics, pharmacies & food banks near you. Help is always near 🌍
-        </p>
-      </div>
+    <div class="container text-center text-md-start">
+      <div class="row gy-4">
+        <div class="col-md-4">
+          <h5 class="fw-bold text-gradient mb-2">Pukaar</h5>
+          <p class="text-muted small mb-0">
+            Find hospitals, clinics, pharmacies & food banks near you. Help is always near 🌍
+          </p>
+        </div>
 
-      <div class="col-md-4">
-        <h6 class="fw-semibold mb-3">Quick Links</h6>
-        <ul class="list-unstyled small">
-          <li><a href="index.html" class="footer-link">Home</a></li>
-          <li><a href="about.html" class="footer-link">About</a></li>
-          <li><a href="contact.html" class="footer-link">Contact</a></li>
-          <li><a href="https://abdulkerimsheikh.github.io/Pukaar-web/" class="footer-link" target="_blank">Live Demo</a></li>
-        </ul>
-      </div>
+        <div class="col-md-4">
+          <h6 class="fw-semibold mb-3">Quick Links</h6>
+          <ul class="list-unstyled small">
+            <li><a href="index.html" class="footer-link">Home</a></li>
+            <li><a href="about.html" class="footer-link">About</a></li>
+            <li><a href="contact.html" class="footer-link">Contact</a></li>
+            <li><a href="https://abdulkerimsheikh.github.io/Pukaar-web/" class="footer-link" target="_blank">Live
+                Demo</a></li>
+          </ul>
+        </div>
 
-      <div class="col-md-4">
-        <h6 class="fw-semibold mb-3">Connect With Me</h6>
-        <div class="d-flex gap-3">
-          <a href="https://facebook.com/abdulkerimsheikh" target="_blank" class="social-link" aria-label="Facebook">
-            <i class="bi bi-facebook"></i>
-          </a>
-          <a href="https://twitter.com/abdulkerimsheikh" target="_blank" class="social-link" aria-label="Twitter">
-            <i class="bi bi-twitter-x"></i>
-          </a>
-          <a href="https://linkedin.com/in/abdulkerimsheikh" target="_blank" class="social-link" aria-label="LinkedIn">
-            <i class="bi bi-linkedin"></i>
-          </a>
-          <a href="https://github.com/abdulkerimsheikh" target="_blank" class="social-link" aria-label="GitHub">
-            <i class="bi bi-github"></i>
-          </a>
+        <div class="col-md-4">
+          <h6 class="fw-semibold mb-3">Connect With Me</h6>
+          <div class="d-flex gap-3">
+            <a href="https://facebook.com/abdulkerimsheikh" target="_blank" class="social-link" aria-label="Facebook">
+              <i class="bi bi-facebook"></i>
+            </a>
+            <a href="https://twitter.com/abdulkerimsheikh" target="_blank" class="social-link" aria-label="Twitter">
+              <i class="bi bi-twitter-x"></i>
+            </a>
+            <a href="https://linkedin.com/in/abdulkerimsheikh" target="_blank" class="social-link"
+              aria-label="LinkedIn">
+              <i class="bi bi-linkedin"></i>
+            </a>
+            <a href="https://github.com/abdulkerimsheikh" target="_blank" class="social-link" aria-label="GitHub">
+              <i class="bi bi-github"></i>
+            </a>
+          </div>
         </div>
       </div>
-    </div>
 
-    <hr class="my-4 opacity-25">
-    <div class="text-center small text-muted">
-      © 2025 <strong>Pukaar</strong> — Built by 
-      <a href="https://github.com/abdulkerimsheikh" target="_blank" class="footer-link fw-semibold">Abdul Karim Sheikh</a>.
-      All rights reserved.
+      <hr class="my-4 opacity-25">
+      <div class="text-center small text-muted">
+        © 2025 <strong>Pukaar</strong> — Built by
+        <a href="https://github.com/abdulkerimsheikh" target="_blank" class="footer-link fw-semibold">Abdul Karim
+          Sheikh</a>.
+        All rights reserved.
+      </div>
     </div>
-  </div>
-</footer>
+  </footer>
 
 
 
