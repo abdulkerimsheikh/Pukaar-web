@@ -396,6 +396,7 @@ body.dark .loading-radar {
   animation: radarPulse 1.8s infinite ease-in-out;
   position: relative;
   box-shadow: 0 0 15px rgba(13, 110, 253, 0.3);
+  margin-bottom: 10px;
 }
 
 @keyframes radarPulse {
@@ -420,4 +421,5 @@ body.dark .loading-radar {
   0%, 100% { opacity: 0.7; }
   50% { opacity: 1; }
 }
+
 

@@ -293,17 +293,17 @@
   }
 
   function displayResults(services) {
-  const container = qs("#results");
+    const container = qs("#results");
 
-  // Hide the radar loader when data arrives
-  const radar = document.getElementById("resultsLoading");
-  if (radar) radar.style.display = "none";
+    // Hide the radar loader when data arrives
+    const radar = document.getElementById("resultsLoading");
+    if (radar) radar.style.display = "none";
 
-  container.innerHTML = "";
-  if (!services.length) {
-    qs("#emptyState").classList.remove("d-none");
-    return;
-  }
+    container.innerHTML = "";
+    if (!services.length) {
+      qs("#emptyState").classList.remove("d-none");
+      return;
+    }
 
     qs("#emptyState").classList.add("d-none");
 
@@ -324,11 +324,11 @@
         </div>
         <div class="action-buttons d-flex flex-column align-items-center gap-2">
           ${s.phone
-            ? `<a href="tel:${s.phone}" class="btn btn-sm btn-success" title="Call ${s.phone}">
+          ? `<a href="tel:${s.phone}" class="btn btn-sm btn-success" title="Call ${s.phone}">
                 <i class="bi bi-telephone-fill"></i>
               </a>`
-            : ""
-          }
+          : ""
+        }
           <a href="https://www.google.com/maps?q=${s.lat},${s.lng}" target="_blank"
             class="btn btn-sm btn-primary" title="Open in Maps">
             <i class="bi bi-geo-alt-fill"></i>
@@ -480,6 +480,15 @@
       locationBtn.textContent = "Stop";
       locationBtn.classList.remove("btn-outline-light");
       locationBtn.classList.add("btn-danger");
+      // Update loader to scanning mode when user clicks Allow
+      const radarTitle = document.getElementById("radarTitle");
+      const radarSubtitle = document.getElementById("radarSubtitle");
+      if (radarTitle && radarSubtitle) {
+        radarTitle.textContent = "📡 Scanning your area for nearby services...";
+        radarSubtitle.textContent = "";
+        document.getElementById("resultsLoading").style.display = "block";
+      }
+
       qs("#statusMessage").textContent = "Getting your location...";
       qs("#loadingSpinner").style.display = "inline-block";
 
