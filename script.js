@@ -298,8 +298,6 @@
     // Hide the radar loader when data arrives
     const radar = document.getElementById("resultsLoading");
     if (radar) radar.style.display = "none";
-    v
-
 
     container.innerHTML = "";
     if (!services.length) {
