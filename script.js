@@ -298,6 +298,7 @@
     // Hide the radar loader when data arrives
     const radar = document.getElementById("resultsLoading");
     if (radar) radar.style.display = "none";
+    document.querySelector(".radar-circle")?.classList.remove("active");
 
     container.innerHTML = "";
     if (!services.length) {
@@ -481,13 +482,17 @@
       locationBtn.classList.remove("btn-outline-light");
       locationBtn.classList.add("btn-danger");
       // Update loader to scanning mode when user clicks Allow
-      const radarTitle = document.getElementById("radarTitle");
-      const radarSubtitle = document.getElementById("radarSubtitle");
-      if (radarTitle && radarSubtitle) {
-        radarTitle.textContent = "📡 Scanning your area for nearby services...";
-        radarSubtitle.textContent = "";
-        document.getElementById("resultsLoading").style.display = "block";
-      }
+      // Update loader to scanning mode when user clicks Allow
+const radarTitle = document.getElementById("radarTitle");
+const radarSubtitle = document.getElementById("radarSubtitle");
+const radarCircle = document.querySelector(".radar-circle");
+if (radarTitle && radarSubtitle && radarCircle) {
+  radarTitle.textContent = "📡 Scanning your area for nearby services...";
+  radarSubtitle.textContent = "";
+  radarCircle.classList.add("active"); // Start animation
+  document.getElementById("resultsLoading").style.display = "block";
+}
+
 
       qs("#statusMessage").textContent = "Getting your location...";
       qs("#loadingSpinner").style.display = "inline-block";
