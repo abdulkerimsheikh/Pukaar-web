@@ -388,6 +388,7 @@ body.dark .loading-radar {
   color: var(--muted-dark);
 }
 
+/* Default radar (idle) */
 .radar-circle {
   width: 70px;
   height: 70px;
@@ -397,6 +398,11 @@ body.dark .loading-radar {
   box-shadow: 0 0 8px rgba(13, 110, 253, 0.25);
   opacity: 0.8;
   transition: all 0.3s ease;
+}
+
+/* Idle state — explicitly prevent animation */
+.radar-circle.idle {
+  animation: none !important;
 }
 
 /* Only animate when scanning is active */
@@ -422,5 +428,3 @@ body.dark .loading-radar {
     box-shadow: 0 0 0 0 rgba(13, 110, 253, 0);
   }
 }
-
-
