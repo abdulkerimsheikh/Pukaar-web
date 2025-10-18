@@ -378,6 +378,7 @@ function filterCategory(type) {
     "success"
   );
 }
+window.filterCategory = filterCategory;
 
 
   // ===========================
