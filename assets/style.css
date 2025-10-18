@@ -102,6 +102,13 @@ body.dark .hero {
   background: linear-gradient(135deg, #0f1724, #1c2433);
 }
 
+/* ---------- HERO (Updated Light Mode Color) ---------- */
+body:not(.dark) .hero {
+  background: linear-gradient(135deg, #74b9ff, #a29bfe); /* Vibrant sky to lavender */
+  color: #fff;
+}
+
+
 .hero h1 {
   font-size: 2.8rem;
   font-weight: 800;
@@ -207,6 +214,12 @@ body.dark .pukaar-footer {
   background: linear-gradient(180deg, #0f1724, #1c2433);
   color: #e9ecef;
 }
+/* ---------- FOOTER (Improved Light Mode Contrast) ---------- */
+body:not(.dark) .pukaar-footer {
+  background: #f1f3f6; /* Softer gray tone */
+  color: #212529;
+}
+
 .footer-link {
   color: inherit;
   text-decoration: none;
