@@ -324,30 +324,30 @@ function handleFindNearby() {
   if (radar) radar.style.display = "block";
   if (statusWrap) statusWrap.style.display = "block";
 
-  // Default messages
-  let titleText = "Looking for the closest help around you…";
-  let subtitleText = "Please wait a moment.";
+  // Determine the message based on permission state
+let titleText = "Looking for the closest help around you…";
+let subtitleText = "Please wait a moment.";
 
-  // Check current permission state
-  if (navigator.permissions && navigator.permissions.query) {
-    navigator.permissions.query({ name: "geolocation" }).then((result) => {
-      if (result.state === "granted") {
-        titleText = "Using your location to find nearby services…";
-        subtitleText = "";
-      } else if (result.state === "denied") {
-        titleText = "Location access denied";
-        subtitleText = "Using fallback data instead.";
-      } // 'prompt' or unknown stays default
-      radarTitle.textContent = titleText;
-      radarSubtitle.textContent = subtitleText;
-    }).catch(() => {
-      radarTitle.textContent = titleText;
-      radarSubtitle.textContent = subtitleText;
-    });
-  } else {
+if (navigator.permissions && navigator.permissions.query) {
+  navigator.permissions.query({ name: "geolocation" }).then((result) => {
+    if (result.state === "granted") {
+      titleText = "Using your location to find nearby services…";
+      subtitleText = "";
+    } else if (result.state === "denied") {
+      titleText = "Location access denied";
+      subtitleText = "Using fallback data instead.";
+    } // prompt or unknown keeps default
     radarTitle.textContent = titleText;
     radarSubtitle.textContent = subtitleText;
-  }
+  }).catch(() => {
+    radarTitle.textContent = titleText;
+    radarSubtitle.textContent = subtitleText;
+  });
+} else {
+  radarTitle.textContent = titleText;
+  radarSubtitle.textContent = subtitleText;
+}
+
 
   if (!navigator.geolocation) {
     showToast("Geolocation not supported by your browser.", "error");
