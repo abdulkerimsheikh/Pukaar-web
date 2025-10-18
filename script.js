@@ -319,41 +319,39 @@ function handleFindNearby() {
   const radarTitle = document.getElementById("radarTitle");
   const radarSubtitle = document.getElementById("radarSubtitle");
   const statusWrap = document.getElementById("statusWrap");
+  const statusMessage = document.getElementById("statusMessage");
 
-  // Show radar loader and status only now
-  if (radar) radar.style.display = "block";
+  // Show hero status and radar loader
   if (statusWrap) statusWrap.style.display = "block";
+  if (radar) radar.style.display = "block";
 
-  // Determine the message based on permission state
-let titleText = "Looking for the closest help around you…";
-let subtitleText = "Please wait a moment.";
+  // Default hero text
+  let heroText = "Looking for the closest help around you…";
 
-if (navigator.permissions && navigator.permissions.query) {
-  navigator.permissions.query({ name: "geolocation" }).then((result) => {
-    if (result.state === "granted") {
-      titleText = "Using your location to find nearby services…";
-      subtitleText = "";
-    } else if (result.state === "denied") {
-      titleText = "Location access denied";
-      subtitleText = "Using fallback data instead.";
-    } // prompt or unknown keeps default
-    radarTitle.textContent = titleText;
-    radarSubtitle.textContent = subtitleText;
-  }).catch(() => {
-    radarTitle.textContent = titleText;
-    radarSubtitle.textContent = subtitleText;
-  });
-} else {
-  radarTitle.textContent = titleText;
-  radarSubtitle.textContent = subtitleText;
-}
-
+  // Check permission state to customize message
+  if (navigator.permissions && navigator.permissions.query) {
+    navigator.permissions.query({ name: "geolocation" }).then((result) => {
+      if (result.state === "granted") {
+        heroText = "Using your location to find nearby services…";
+      } else if (result.state === "denied") {
+        heroText = "Location access denied. Using fallback data.";
+      }
+      if (statusMessage) statusMessage.textContent = heroText;
+    }).catch(() => {
+      if (statusMessage) statusMessage.textContent = heroText;
+    });
+  } else if (statusMessage) {
+    statusMessage.textContent = heroText;
+  }
 
   if (!navigator.geolocation) {
     showToast("Geolocation not supported by your browser.", "error");
-    radarTitle.textContent = "Location not supported";
+    if (statusMessage) statusMessage.textContent = "Location not supported";
     initMap();
-    fetchAndProcessData();
+    fetchAndProcessData().then(() => {
+      if (statusWrap) statusWrap.style.display = "none";
+      if (radar) radar.style.display = "none";
+    });
     return;
   }
 
@@ -362,21 +360,32 @@ if (navigator.permissions && navigator.permissions.query) {
       userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
       initMap(userLocation.lat, userLocation.lng, 13);
       showToast("Location detected", "success");
-      radarTitle.textContent = "Fetching nearby services...";
-      radarSubtitle.textContent = "";
+      if (radarTitle) radarTitle.textContent = "Fetching nearby services...";
+      if (radarSubtitle) radarSubtitle.textContent = "";
+
       await fetchAndProcessData(userLocation.lat, userLocation.lng);
+
+      // Hide hero status and radar after results are displayed
+      if (statusWrap) statusWrap.style.display = "none";
+      if (radar) radar.style.display = "none";
     },
-    (err) => {
+    async (err) => {
       console.warn(err);
-      radarTitle.textContent = "Location access denied";
-      radarSubtitle.textContent = "Using fallback data instead.";
+      if (radarTitle) radarTitle.textContent = "Location access denied";
+      if (radarSubtitle) radarSubtitle.textContent = "Using fallback data instead.";
       initMap();
-      fetchAndProcessData();
+      await fetchAndProcessData();
+
       showToast("Using fallback data.", "error");
+
+      // Hide hero status and radar after results
+      if (statusWrap) statusWrap.style.display = "none";
+      if (radar) radar.style.display = "none";
     },
     { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
   );
 }
+
 
 
 // ===========================
