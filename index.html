@@ -55,6 +55,13 @@
               <i class="bi bi-moon-fill"></i>
             </button>
 
+            <button class="btn btn-warning position-relative" data-bs-toggle="modal" data-bs-target="#favoritesModal">
+              <i class="bi bi-star-fill"></i>
+              <span id="favCountBadge"
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+            </button>
+
+
           </li>
         </ul>
         <span class="nav-underline"></span>
@@ -204,9 +211,26 @@
     </div>
   </div>
 
+
+
   <!-- ================= SCRIPTS ================= -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="script.js"></script>
+
+
+  <!-- Custom PWA Install Banner -->
+  <div id="pwaBanner" class="pwa-banner d-none">
+    <div class="pwa-content">
+      <img src="assets/icons/icon-192.png" alt="Pukaar" class="pwa-icon">
+      <div>
+        <strong>Install Pukaar</strong>
+        <p class="small mb-0">Add to your home screen for faster access.</p>
+      </div>
+      <button id="pwaInstallBtn" class="btn btn-success btn-sm">Install</button>
+      <button id="pwaCloseBtn" class="btn btn-link btn-sm text-muted">Later</button>
+    </div>
+  </div>
+
 </body>
 
 </html>

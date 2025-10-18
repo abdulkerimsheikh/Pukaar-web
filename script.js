@@ -15,10 +15,10 @@
     if (!toastEl || !body) return alert(message);
     body.textContent = message;
     toastEl.className = `toast align-items-center text-white ${variant === "success"
-        ? "bg-success"
-        : variant === "error"
-          ? "bg-danger"
-          : "bg-dark"
+      ? "bg-success"
+      : variant === "error"
+        ? "bg-danger"
+        : "bg-dark"
       } border-0`;
     new bootstrap.Toast(toastEl).show();
   }
@@ -47,6 +47,13 @@
   const saveFavorites = (f) =>
     localStorage.setItem("favorites", JSON.stringify(f));
 
+  function updateFavoritesCount() {
+    const count = getFavorites().length;
+    const badge = document.getElementById('favCountBadge');
+    if (badge) badge.textContent = count;
+  }
+
+
   function toggleFavorite(uid, item, btn) {
     let favs = getFavorites();
     const exists = favs.some((f) => f.uid === uid);
@@ -66,6 +73,8 @@
     }
     saveFavorites(favs);
     renderFavoritesModal();
+    updateFavoritesCount();
+
   }
 
   function renderFavoritesModal() {
@@ -256,3 +265,34 @@
     fetchAndProcessData(24.8607, 67.0011);
   });
 })();
+
+
+// ====== PWA Install Banner Logic ======
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const banner = document.getElementById('pwaBanner');
+  if (!localStorage.getItem('pwaBannerShown')) {
+    banner.classList.remove('d-none');
+  }
+});
+
+document.getElementById('pwaInstallBtn').addEventListener('click', async () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const choice = await deferredPrompt.userChoice;
+    if (choice.outcome === 'accepted') {
+      showToast('Pukaar installed successfully ✅', 'success');
+    }
+    deferredPrompt = null;
+  }
+  localStorage.setItem('pwaBannerShown', 'true');
+  document.getElementById('pwaBanner').classList.add('d-none');
+});
+
+document.getElementById('pwaCloseBtn').addEventListener('click', () => {
+  localStorage.setItem('pwaBannerShown', 'true');
+  document.getElementById('pwaBanner').classList.add('d-none');
+});
+
