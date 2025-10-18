@@ -324,7 +324,7 @@ function handleFindNearby() {
   if (radar) radar.style.display = "block";
   if (statusWrap) statusWrap.style.display = "block";
 
-  radarTitle.textContent = "Getting your location...";
+  radarTitle.textContent = "Looking for the closest help around you…";
   radarSubtitle.textContent = "Please wait a moment.";
 
   if (!navigator.geolocation) {
