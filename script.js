@@ -314,6 +314,9 @@ const updateThemeMeta = () => {
   themeMeta.setAttribute('content', isDark ? '#0b0f14' : '#ffffff');
 };
 updateThemeMeta();
-document.getElementById('theme-toggle').addEventListener('click', updateThemeMeta);
 
+document.addEventListener("DOMContentLoaded", () => {
+  const toggleThemeBtn = document.getElementById('theme-toggle');
+  if (toggleThemeBtn) toggleThemeBtn.addEventListener('click', updateThemeMeta);
+});
 
