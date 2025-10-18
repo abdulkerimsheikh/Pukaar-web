@@ -1,5 +1,5 @@
 // ======================================
-// Pukaar - Main Script (Final Clean Build)
+// Pukaar - Auto Location Build (No Manual Button)
 // ======================================
 (() => {
   const OVERPASS_URL = "https://overpass-api.de/api/interpreter";
@@ -10,10 +10,7 @@
   let map = null;
   let userMarker = null;
   let markers = [];
-  let isFetching = false;
   let userLocation = null;
-  let allowManuallyTriggered = false;
-
 
   const qs = (s) => document.querySelector(s);
   const qsa = (s) => document.querySelectorAll(s);
@@ -26,12 +23,13 @@
     const body = qs("#toastMessage");
     if (!toastEl || !body) return alert(message);
     body.textContent = message;
-    toastEl.className = `toast align-items-center text-white ${variant === "success"
-      ? "bg-success"
-      : variant === "error"
+    toastEl.className = `toast align-items-center text-white ${
+      variant === "success"
+        ? "bg-success"
+        : variant === "error"
         ? "bg-danger"
         : "bg-dark"
-      } border-0`;
+    } border-0`;
     new bootstrap.Toast(toastEl).show();
   }
 
@@ -58,7 +56,7 @@
   })();
 
   // ===========================
-  // Leaflet map setup
+  // Map setup
   // ===========================
   const createEmojiIcon = (emoji, bg = "#0d6efd") =>
     L.divIcon({
@@ -108,8 +106,9 @@
       const type = s.type || "default";
       const icon = ICONS[type] || ICONS.default;
       if (!s.lat || !s.lng) return;
-      const popupHtml = `<strong>${s.name}</strong><br>${s.address || ""}${s.phone ? `<br>Tel: ${s.phone}` : ""
-        }${s.distance ? `<br><small>${s.distance} km</small>` : ""}`;
+      const popupHtml = `<strong>${s.name}</strong><br>${s.address || ""}${
+        s.phone ? `<br>Tel: ${s.phone}` : ""
+      }${s.distance ? `<br><small>${s.distance} km</small>` : ""}`;
       const marker = L.marker([s.lat, s.lng], { icon })
         .addTo(map)
         .bindPopup(popupHtml);
@@ -118,7 +117,7 @@
   }
 
   // ===========================
-  // Favorites (localStorage)
+  // Favorites
   // ===========================
   const getFavorites = () =>
     JSON.parse(localStorage.getItem("favorites") || "[]");
@@ -172,86 +171,21 @@
   }
 
   // ===========================
-  // Utility
+  // Data Fetch
   // ===========================
-  function getDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371;
-    const toRad = (d) => (d * Math.PI) / 180;
-    const dLat = toRad(lat2 - lat1);
-    const dLon = toRad(lon2 - lon1);
-    const a =
-      Math.sin(dLat / 2) ** 2 +
-      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
-    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  }
-
-  function setLoadingState(isLoading, message = "") {
-    isFetching = isLoading;
-    qs("#loadingSpinner").style.display = isLoading ? "inline-block" : "none";
-    qs("#statusMessage").textContent = isLoading
-      ? message || "Loading..."
-      : "Allow location for best results.";
-  }
-
-  // ===========================
-  // Find nearby services
-  // ===========================
-  async function findNearby() {
-    if (isFetching) return;
-    setLoadingState(true, "Getting your location...");
-
-    if (!navigator.geolocation) {
-      showToast("Geolocation is not supported by your browser.", "error");
-      setLoadingState(false);
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      handleGeolocationSuccess,
-      handleGeolocationError,
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
-    );
-  }
-
-  async function handleGeolocationSuccess(pos) {
-    if (!allowManuallyTriggered) return;
-    userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-    initMap(userLocation.lat, userLocation.lng, 13);
-    setLoadingState(true, "Fetching data...");
-    document.getElementById("resultsLoading").style.display = "block";
-    await fetchAndProcessData(userLocation.lat, userLocation.lng);
-    setLoadingState(false, `${lastFetchedData.length} results found`);
-    qs("#requestLocationBtn").style.display = "none";
-  }
-
-  async function handleGeolocationError(err) {
-    console.error("Geolocation Error:", err);
-    setLoadingState(false);
-    document.getElementById("resultsLoading").style.display = "block";
-    showToast("Unable to get location. Using default data.", "error");
-    initMap();
-    await fetchAndProcessData();
-    qs("#requestLocationBtn").style.display = "inline-block";
-  }
-
   async function fetchAndProcessData(lat, lng) {
     let data = [];
     try {
       const overpassData = await fetchFromOverpassCombined(lat, lng);
-      if (overpassData && overpassData.length > 0) {
-        data = overpassData;
-      } else {
-        data = await (await fetch(FALLBACK_JSON)).json();
-        showToast("Using fallback data. Overpass API may be down.", "info");
-      }
-    } catch (e) {
-      console.error("Data fetch failed:", e);
+      data = overpassData?.length
+        ? overpassData
+        : await (await fetch(FALLBACK_JSON)).json();
+    } catch {
       data = await (await fetch(FALLBACK_JSON)).json();
-      showToast("Failed to get data. Using fallback.", "error");
     }
 
-    data.forEach((item, index) => {
-      item._uid = `s_${item.id || index}_${item.lat || 0}_${item.lng || 0}`;
+    data.forEach((item, i) => {
+      item._uid = `s_${item.id || i}_${item.lat}_${item.lng}`;
       item.distance = userLocation
         ? getDistance(userLocation.lat, userLocation.lng, item.lat, item.lng).toFixed(2)
         : null;
@@ -271,7 +205,7 @@
       '["amenity"="pharmacy"]',
       '["social_facility"="food_bank"]',
     ];
-    let query = `[out:json][timeout:25];(node${tagFilters.join(
+    const query = `[out:json][timeout:25];(node${tagFilters.join(
       ";node"
     )}(around:${radius},${lat},${lng});way${tagFilters.join(
       ";way"
@@ -285,17 +219,19 @@
       id: el.id,
       name: el.tags.name || "Unnamed",
       type: el.tags.amenity || el.tags.healthcare || "other",
-      address: el.tags["addr:street"] || el.tags["addr:full"] || "Unknown address",
+      address:
+        el.tags["addr:street"] || el.tags["addr:full"] || "Unknown address",
       phone: el.tags.phone || "",
       lat: el.lat || el.center?.lat,
       lng: el.lon || el.center?.lon,
     }));
   }
 
+  // ===========================
+  // Results Display
+  // ===========================
   function displayResults(services) {
     const container = qs("#results");
-
-    // Hide the radar loader when data arrives
     const radar = document.getElementById("resultsLoading");
     if (radar) radar.style.display = "none";
 
@@ -304,296 +240,105 @@
       qs("#emptyState").classList.remove("d-none");
       return;
     }
-
     qs("#emptyState").classList.add("d-none");
 
     services.forEach((s) => {
       const isFav = getFavorites().some((f) => f.uid === s._uid);
       const col = document.createElement("div");
       col.className = "col-12 col-md-6 mb-3";
-
       col.innerHTML = `
-  <div class="card service-card shadow-sm ${s.type}">
-    <div class="card-body">
-      <div class="d-flex justify-content-between align-items-start">
-        <div class="service-info">
-          <h6 class="fw-semibold mb-1">${s.name}</h6>
-          <div class="small">${s.address}</div>
-          <div class="rating mt-1">Rating: ${s.rating}</div>
-          <div class="distance-text small">Distance: ${s.distance} km</div>
+      <div class="card service-card shadow-sm ${s.type}">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <div class="service-info">
+              <h6 class="fw-semibold mb-1">${s.name}</h6>
+              <div class="small">${s.address}</div>
+              <div class="rating mt-1">Rating: ${s.rating}</div>
+              <div class="distance-text small">Distance: ${s.distance} km</div>
+            </div>
+            <div class="action-buttons d-flex flex-column align-items-center gap-2">
+              ${
+                s.phone
+                  ? `<a href="tel:${s.phone}" class="btn btn-sm btn-success"><i class="bi bi-telephone-fill"></i></a>`
+                  : ""
+              }
+              <a href="https://www.google.com/maps?q=${s.lat},${s.lng}" target="_blank"
+                class="btn btn-sm btn-primary"><i class="bi bi-geo-alt-fill"></i></a>
+              <button class="btn btn-sm fav-btn ${
+                isFav ? "btn-warning" : "btn-outline-warning"
+              }">${isFav ? "★" : "☆"}</button>
+            </div>
+          </div>
         </div>
-        <div class="action-buttons d-flex flex-column align-items-center gap-2">
-          ${s.phone
-          ? `<a href="tel:${s.phone}" class="btn btn-sm btn-success" title="Call ${s.phone}">
-                <i class="bi bi-telephone-fill"></i>
-              </a>`
-          : ""
-        }
-          <a href="https://www.google.com/maps?q=${s.lat},${s.lng}" target="_blank"
-            class="btn btn-sm btn-primary" title="Open in Maps">
-            <i class="bi bi-geo-alt-fill"></i>
-          </a>
-          <button class="btn btn-sm fav-btn ${isFav ? "btn-warning" : "btn-outline-warning"}" 
-            title="Add to favorites">${isFav ? "★" : "☆"}</button>
-        </div>
-      </div>
-    </div>
-  </div>`;
-
-
-
-      col.querySelector(".fav-btn").addEventListener("click", () =>
-        toggleFavorite(s._uid, {
-          uid: s._uid,
-          id: s.id,
-          name: s.name,
-          address: s.address,
-          phone: s.phone,
-          lat: s.lat,
-          lng: s.lng,
-          type: s.type,
-        })
-      );
+      </div>`;
+      col
+        .querySelector(".fav-btn")
+        .addEventListener("click", () =>
+          toggleFavorite(s._uid, s)
+        );
       container.appendChild(col);
     });
   }
 
-  function filterAndSortResults() {
-    let filtered = lastFetchedData;
-    const query = qs("#searchInput").value.toLowerCase();
-    const filterType = qs("#filterSelect").value;
-    const sortDistanceBtn = qs("#sortDistance");
-    const sortRatingBtn = qs("#sortRating");
-
-    if (query) {
-      filtered = filtered.filter(
-        (s) =>
-          s.name.toLowerCase().includes(query) ||
-          s.address.toLowerCase().includes(query)
-      );
-    }
-
-    if (filterType) {
-      filtered = filtered.filter((s) => s.type === filterType);
-    }
-
-    if (sortDistanceBtn.classList.contains("active")) {
-      filtered.sort((a, b) => a.distance - b.distance);
-    } else if (sortRatingBtn.classList.contains("active")) {
-      filtered.sort((a, b) => b.rating - a.rating);
-    }
-
-    displayResults(filtered);
-    addServiceMarkers(filtered);
-  }
-
-  function filterCategory(type) {
-    qs("#filterSelect").value = type;
-    filterAndSortResults();
-  }
-  window.filterCategory = filterCategory; // Make global
-
   // ===========================
-  // Footer reveal animation
+  // Footer + Nav effects
   // ===========================
   function initFooterReveal() {
     const footer = document.querySelector(".pukaar-footer");
     if (!footer) return;
     window.addEventListener("scroll", () => {
       const scrollPos = window.scrollY + window.innerHeight;
-      if (scrollPos > document.body.scrollHeight - 200) {
-        footer.classList.add("show");
-      } else {
-        footer.classList.remove("show");
-      }
+      footer.classList.toggle(
+        "show",
+        scrollPos > document.body.scrollHeight - 200
+      );
     });
   }
 
   // ===========================
-  // Service worker
+  // Auto Geolocation
   // ===========================
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register('service-worker.js');
-    });
-  }
+  function autoLocate() {
+    const radar = document.getElementById("resultsLoading");
+    const radarTitle = document.getElementById("radarTitle");
+    const radarSubtitle = document.getElementById("radarSubtitle");
+    if (radarTitle) radarTitle.textContent = "📍 Requesting location access...";
+    radar.style.display = "block";
 
-  // ===========================
-  // Navbar underline animation
-  // ===========================
-  function initNavUnderline() {
-    const nav = qs("#navLinks");
-    const underline = document.querySelector(".nav-underline");
-    if (!nav || !underline) return;
-    const links = qsa(".nav-link");
-    function moveUnderline(el) {
-      const rect = el.getBoundingClientRect();
-      underline.style.width = `${rect.width}px`;
-      underline.style.left = `${el.offsetLeft}px`;
-      underline.style.opacity = 1;
+    if (!navigator.geolocation) {
+      showToast("Geolocation not supported by browser.", "error");
+      radarTitle.textContent = "Location not supported";
+      return;
     }
-    links.forEach((link) => {
-      link.addEventListener("mouseenter", () => moveUnderline(link));
-      link.addEventListener("mouseleave", () => (underline.style.opacity = 0));
-      link.addEventListener("click", () => {
-        links.forEach((l) => l.classList.remove("active"));
-        link.classList.add("active");
-        moveUnderline(link);
-      });
-    });
+
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        initMap(userLocation.lat, userLocation.lng, 13);
+        showToast("Location detected ✅", "success");
+        radarTitle.textContent = "Fetching nearby services...";
+        await fetchAndProcessData(userLocation.lat, userLocation.lng);
+      },
+      (err) => {
+        console.warn(err);
+        radarTitle.textContent = "Location access denied";
+        radarSubtitle.textContent =
+          "You can still search manually or use fallback data.";
+        initMap();
+        fetchAndProcessData();
+        showToast("Using fallback data.", "error");
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
+    );
   }
+
   // ===========================
-  // Init and Event Listeners
+  // Init
   // ===========================
   document.addEventListener("DOMContentLoaded", () => {
     initMap();
-    initNavUnderline();
     renderFavoritesModal();
     initFooterReveal();
-
-    // ===========================
-    // Dynamic Allow ↔ Stop Button
-    // ===========================
-    const locationBtn = document.getElementById("requestLocationBtn");
-    let locationInProgress = false;
-    let geoFetchAbort = null;
-
-    if (locationBtn) {
-      locationBtn.addEventListener("click", async () => {
-        if (!locationInProgress) {
-          startLocationProcess();
-        } else {
-          stopLocationProcess("Search stopped by user.");
-        }
-      });
-    }
-
-    function startLocationProcess() {
-      if (!navigator.geolocation) {
-        showToast("Geolocation not supported in this browser.", "error");
-        return;
-      }
-
-      allowManuallyTriggered = true;
-      locationInProgress = true;
-
-      // Change button to Stop
-      locationBtn.textContent = "Stop";
-      locationBtn.classList.remove("btn-outline-light");
-      locationBtn.classList.add("btn-danger");
-
-      // Activate radar loader (if present)
-      const radarCircle = document.querySelector(".radar-circle");
-      const radarTitle = document.getElementById("radarTitle");
-      const radarSubtitle = document.getElementById("radarSubtitle");
-
-      if (radarTitle && radarSubtitle && radarCircle) {
-        radarTitle.textContent = "📡 Scanning your area for nearby services...";
-        radarSubtitle.textContent = "";
-        radarCircle.classList.remove("idle");
-        radarCircle.classList.add("active");
-        document.getElementById("resultsLoading").style.display = "block";
-      }
-
-      qs("#statusMessage").textContent = "Getting your location...";
-      qs("#loadingSpinner").style.display = "inline-block";
-
-      geoFetchAbort = new AbortController();
-
-      navigator.geolocation.getCurrentPosition(
-        async (pos) => {
-          if (!locationInProgress) return;
-          const { latitude, longitude } = pos.coords;
-          userLocation = { lat: latitude, lng: longitude };
-          initMap(latitude, longitude, 13);
-
-          qs("#statusMessage").textContent = "Fetching nearby services...";
-
-          try {
-            await fetchAndProcessData(latitude, longitude, geoFetchAbort.signal);
-            showToast("Nearby results updated ✅", "success");
-          } catch (e) {
-            if (e.name !== "AbortError") {
-              console.error("Fetch failed:", e);
-              showToast("Failed to fetch data.", "error");
-            }
-          } finally {
-            stopLocationProcess();
-          }
-        },
-        (err) => {
-          if (err.code === 1) showToast("Location permission denied.", "error");
-          else showToast("Unable to get location.", "error");
-          stopLocationProcess();
-        },
-        { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
-      );
-    }
-
-    function stopLocationProcess(msg) {
-      allowManuallyTriggered = false;
-      if (geoFetchAbort) geoFetchAbort.abort();
-      locationInProgress = false;
-
-      // Reset button to Allow
-      locationBtn.textContent = "Allow";
-      locationBtn.classList.remove("btn-danger");
-      locationBtn.classList.add("btn-outline-light");
-
-      // Stop spinner & show idle message
-      qs("#loadingSpinner").style.display = "none";
-      qs("#statusMessage").textContent =
-        msg || "Allow location for best results.";
-
-      // Deactivate radar
-      const radarCircle = document.querySelector(".radar-circle");
-      const radarTitle = document.getElementById("radarTitle");
-      const radarSubtitle = document.getElementById("radarSubtitle");
-
-      if (radarCircle) {
-        radarCircle.classList.remove("active");
-        radarCircle.classList.add("idle");
-      }
-      if (radarTitle && radarSubtitle) {
-        radarTitle.textContent = "No results yet";
-        radarSubtitle.textContent =
-          "Search or allow location to see nearby services.";
-      }
-    }
-
-    // ===========================
-    // Filter / Sort listeners
-    // ===========================
-    qs("#findBtn")?.addEventListener("click", filterAndSortResults);
-    qs("#searchInput")?.addEventListener("input", filterAndSortResults);
-    qs("#filterSelect")?.addEventListener("change", filterAndSortResults);
-
-    qs("#sortDistance")?.addEventListener("click", () => {
-      qs("#sortDistance").classList.add("active");
-      qs("#sortRating").classList.remove("active");
-      filterAndSortResults();
-    });
-
-    qs("#sortRating")?.addEventListener("click", () => {
-      qs("#sortRating").classList.add("active");
-      qs("#sortDistance").classList.remove("active");
-      filterAndSortResults();
-    });
+    autoLocate(); // 🔥 automatically request location on load
   });
-})
-
-
-
-qs("#findBtn")?.addEventListener("click", filterAndSortResults);
-qs("#searchInput")?.addEventListener("input", filterAndSortResults);
-qs("#filterSelect")?.addEventListener("change", filterAndSortResults);
-qs("#sortDistance")?.addEventListener("click", () => {
-  qs("#sortDistance").classList.add("active");
-  qs("#sortRating").classList.remove("active");
-  filterAndSortResults();
-});
-qs("#sortRating")?.addEventListener("click", () => {
-  qs("#sortRating").classList.add("active");
-  qs("#sortDistance").classList.remove("active");
-  filterAndSortResults();
-});
+})();
