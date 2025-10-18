@@ -305,11 +305,7 @@
     });
   }
 
-  // ===========================
-  // Controlled Location Logic
-  // ===========================
 
-  // Show browser's native permission popup immediately
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       () => {},
@@ -318,42 +314,49 @@
     );
   }
 
-  // Run actual location & data only after user clicks
-  function handleFindNearby() {
-    const radar = document.getElementById("resultsLoading");
-    const radarTitle = document.getElementById("radarTitle");
-    const radarSubtitle = document.getElementById("radarSubtitle");
-    radar.style.display = "block";
-    radarTitle.textContent = "📍 Getting your location...";
-    radarSubtitle.textContent = "Please wait a moment.";
+function handleFindNearby() {
+  const radar = document.getElementById("resultsLoading");
+  const radarTitle = document.getElementById("radarTitle");
+  const radarSubtitle = document.getElementById("radarSubtitle");
+  const statusWrap = document.getElementById("statusWrap");
 
-    if (!navigator.geolocation) {
-      showToast("Geolocation not supported by your browser.", "error");
-      radarTitle.textContent = "Location not supported";
+  // Show radar loader and status only now
+  if (radar) radar.style.display = "block";
+  if (statusWrap) statusWrap.style.display = "block";
+
+  radarTitle.textContent = "Getting your location...";
+  radarSubtitle.textContent = "Please wait a moment.";
+
+  if (!navigator.geolocation) {
+    showToast("Geolocation not supported by your browser.", "error");
+    radarTitle.textContent = "Location not supported";
+    initMap();
+    fetchAndProcessData();
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    async (pos) => {
+      // When location access granted
+      userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      initMap(userLocation.lat, userLocation.lng, 13);
+      showToast("Location detected", "success");
+      radarTitle.textContent = "Fetching nearby services...";
+      await fetchAndProcessData(userLocation.lat, userLocation.lng);
+    },
+    (err) => {
+      // When denied or error
+      console.warn(err);
+      radarTitle.textContent = "Location access denied";
+      radarSubtitle.textContent = "Using fallback data instead.";
       initMap();
       fetchAndProcessData();
-      return;
-    }
+      showToast("Using fallback data.", "error");
+    },
+    { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
+  );
+}
 
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-        initMap(userLocation.lat, userLocation.lng, 13);
-        showToast("Location detected ✅", "success");
-        radarTitle.textContent = "Fetching nearby services...";
-        await fetchAndProcessData(userLocation.lat, userLocation.lng);
-      },
-      (err) => {
-        console.warn(err);
-        radarTitle.textContent = "Location access denied";
-        radarSubtitle.textContent = "Using fallback data instead.";
-        initMap();
-        fetchAndProcessData();
-        showToast("Using fallback data.", "error");
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
-    );
-  }
 
   // ===========================
   // Init Everything

@@ -80,10 +80,11 @@
           <button id="findBtn" class="btn btn-primary">Find Nearby</button>
         </div>
 
-        <div id="statusWrap" class="mt-3 small text-muted">
-          <span id="statusMessage">📍 Detecting your location...</span>
-          <span id="loadingSpinner" class="ms-2" style="display:inline-block"></span>
-        </div>
+        <div id="statusWrap" class="mt-3 small text-muted" style="display:none;">
+  <span id="statusMessage">Getting your location...</span>
+  <span id="loadingSpinner" class="ms-2" style="display:inline-block"></span>
+</div>
+
       </div>
 
       <div class="cat-grid mt-4">
@@ -116,7 +117,7 @@
         </div>
 
         <div id="results" class="row g-3 results-scroll">
-          <div id="resultsLoading" class="loading-radar text-center py-5 w-100" style="display:block;">
+          <div id="resultsLoading" class="loading-radar text-center py-5 w-100" style="display:none;">
             <div class="radar-circle idle mx-auto mb-3"></div>
             <h6 id="radarTitle" class="fw-semibold mb-1">Detecting your location...</h6>
             <p id="radarSubtitle" class="text-muted small">Please allow location access to find nearby services.</p>
