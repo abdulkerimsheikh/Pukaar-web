@@ -1,6 +1,3 @@
-// ======================================
-// Pukaar - Auto Location Build (No Manual Button)
-// ======================================
 (() => {
   const OVERPASS_URL = "https://overpass-api.de/api/interpreter";
   const FALLBACK_JSON = "json/data.json";
@@ -294,7 +291,7 @@
   }
 
   // ===========================
-  // Footer + Nav effects
+  // Footer Reveal
   // ===========================
   function initFooterReveal() {
     const footer = document.querySelector(".pukaar-footer");
@@ -309,18 +306,32 @@
   }
 
   // ===========================
-  // Auto Geolocation
+  // Controlled Location Logic
   // ===========================
-  function autoLocate() {
+
+  // Show browser's native permission popup immediately
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      () => {},
+      () => {},
+      { enableHighAccuracy: true, timeout: 5000 }
+    );
+  }
+
+  // Run actual location & data only after user clicks
+  function handleFindNearby() {
     const radar = document.getElementById("resultsLoading");
     const radarTitle = document.getElementById("radarTitle");
     const radarSubtitle = document.getElementById("radarSubtitle");
-    if (radarTitle) radarTitle.textContent = "Requesting location access...";
     radar.style.display = "block";
+    radarTitle.textContent = "📍 Getting your location...";
+    radarSubtitle.textContent = "Please wait a moment.";
 
     if (!navigator.geolocation) {
-      showToast("Geolocation not supported by browser.", "error");
+      showToast("Geolocation not supported by your browser.", "error");
       radarTitle.textContent = "Location not supported";
+      initMap();
+      fetchAndProcessData();
       return;
     }
 
@@ -328,15 +339,14 @@
       async (pos) => {
         userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
         initMap(userLocation.lat, userLocation.lng, 13);
-        showToast("Location detected", "success");
+        showToast("Location detected ✅", "success");
         radarTitle.textContent = "Fetching nearby services...";
         await fetchAndProcessData(userLocation.lat, userLocation.lng);
       },
       (err) => {
         console.warn(err);
         radarTitle.textContent = "Location access denied";
-        radarSubtitle.textContent =
-          "You can still search manually or use fallback data.";
+        radarSubtitle.textContent = "Using fallback data instead.";
         initMap();
         fetchAndProcessData();
         showToast("Using fallback data.", "error");
@@ -345,57 +355,15 @@
     );
   }
 
-// ===========================
-// Init Everything
-// ===========================
-document.addEventListener("DOMContentLoaded", () => {
-  initMap();
-  renderFavoritesModal();
-  initFooterReveal();
+  // ===========================
+  // Init Everything
+  // ===========================
+  document.addEventListener("DOMContentLoaded", () => {
+    initMap();
+    renderFavoritesModal();
+    initFooterReveal();
 
-  // Delay auto location request slightly
-  setTimeout(() => {
-    autoLocate();
-  }, 800);
-
-  // ====== Status Text Handling ======
-  const statusEl = qs("#statusMessage");
-  if (!statusEl) {
-    console.warn("⚠️ #statusMessage element not found in DOM.");
-    return; // prevent null errors
-  }
-
-  if (!navigator.geolocation) {
-    statusEl.textContent = "⚠️ Geolocation not supported by your browser.";
-    return;
-  }
-
-  // Optional: check permission state
-  if (navigator.permissions && navigator.permissions.query) {
-    navigator.permissions
-      .query({ name: "geolocation" })
-      .then((result) => {
-        if (result.state === "denied") {
-          statusEl.textContent =
-            "Location access denied. Please enable it to show nearby services.";
-        } else if (result.state === "prompt") {
-          statusEl.textContent =
-            "Please allow location access when prompted.";
-        } else if (result.state === "granted") {
-          statusEl.textContent =
-            "Location access granted — fetching nearby services...";
-        }
-      })
-      .catch(() => {
-        statusEl.textContent =
-          "Please allow location access";
-      });
-  } else {
-    statusEl.textContent =
-      "Please allow location access";
-  }
-});
+    const findBtn = document.getElementById("findBtn");
+    if (findBtn) findBtn.addEventListener("click", handleFindNearby);
+  });
 })();
-
-
-
