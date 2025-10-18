@@ -14,35 +14,32 @@
     const body = qs("#toastMessage");
     if (!toastEl || !body) return alert(message);
     body.textContent = message;
-    toastEl.className = `toast align-items-center text-white ${
-      variant === "success"
+    toastEl.className = `toast align-items-center text-white ${variant === "success"
         ? "bg-success"
         : variant === "error"
-        ? "bg-danger"
-        : "bg-dark"
-    } border-0`;
+          ? "bg-danger"
+          : "bg-dark"
+      } border-0`;
     new bootstrap.Toast(toastEl).show();
   }
 
 
-  (() => {
-    const themeBtn = qs("#theme-toggle");
-    const saved = localStorage.getItem("pukaar-theme");
-    if (saved === "dark") {
-      document.body.classList.add("dark");
-      themeBtn.innerText = "☀️";
-    }
-    themeBtn?.addEventListener("click", () => {
-      document.body.classList.toggle("dark");
-      themeBtn.innerText = document.body.classList.contains("dark")
-        ? "☀️"
-        : "🌙";
-      localStorage.setItem(
-        "pukaar-theme",
-        document.body.classList.contains("dark") ? "dark" : "light"
-      );
-    });
-  })();
+  // 🌓 Modern theme toggle
+  const toggleBtn = document.getElementById("theme-toggle");
+  const savedTheme = localStorage.getItem("pukaar-theme");
+
+  // Apply saved or system preference
+  if (savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+    document.body.classList.add("dark");
+  }
+
+  // Toggle theme on click
+  toggleBtn.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+    const isDark = document.body.classList.contains("dark");
+    localStorage.setItem("pukaar-theme", isDark ? "dark" : "light");
+  });
+
 
 
   const getFavorites = () =>
@@ -106,8 +103,8 @@
     const a =
       Math.sin(dLat / 2) ** 2 +
       Math.cos((lat1 * Math.PI) / 180) *
-        Math.cos((lat2 * Math.PI) / 180) *
-        Math.sin(dLon / 2) ** 2;
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) ** 2;
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return (R * c).toFixed(2);
   }
@@ -186,15 +183,13 @@
               <div class="distance-text small">Distance ${s.distance} km</div>
             </div>
             <div class="d-flex flex-column gap-2 align-items-center">
-              ${
-                s.phone
-                  ? `<a href="tel:${s.phone}" class="btn btn-sm btn-success"><i class="bi bi-telephone-fill"></i></a>`
-                  : ""
-              }
+              ${s.phone
+          ? `<a href="tel:${s.phone}" class="btn btn-sm btn-success"><i class="bi bi-telephone-fill"></i></a>`
+          : ""
+        }
               <a href="https://www.google.com/maps?q=${s.lat},${s.lng}" target="_blank" class="btn btn-sm btn-primary"><i class="bi bi-geo-alt-fill"></i></a>
-              <button class="btn btn-sm fav-btn ${
-                isFav ? "btn-warning" : "btn-outline-warning"
-              }">${isFav ? "★" : "☆"}</button>
+              <button class="btn btn-sm fav-btn ${isFav ? "btn-warning" : "btn-outline-warning"
+        }">${isFav ? "★" : "☆"}</button>
             </div>
           </div>
         </div>
@@ -205,7 +200,7 @@
     });
   }
 
-  
+
   function handleFindNearby() {
     const radar = document.getElementById("resultsLoading");
     const radarCircle = document.querySelector(".radar-circle");

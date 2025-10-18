@@ -98,6 +98,29 @@ body:not(.dark) .nav-link:hover {
   border-bottom-right-radius: 50px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25);
 }
+/* Modern Theme Toggle (Short Version) */
+.theme-toggle {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.3rem;
+}
+.theme-toggle:hover { background: rgba(255,255,255,0.2); transform: rotate(15deg); }
+
+.theme-toggle .bi-moon-fill { display: none; }
+
+body.dark .theme-toggle { background: rgba(255,255,255,0.15); color: #ffd54a; }
+body.dark .theme-toggle .bi-sun-fill { display: none; }
+body.dark .theme-toggle .bi-moon-fill { display: inline; }
+
 body.dark .hero {
   background: linear-gradient(135deg, #0f1724, #1c2433);
 }
@@ -319,37 +342,4 @@ body.dark .loading-radar {
   }
 }
 
-/* Sparkle particles
-.fav-btn.pulse::before,
-.fav-btn.pulse::after {
-  content: "✨";
-  position: absolute;
-  font-size: 0.9rem;
-  animation: sparkleMove 0.6s ease-out forwards;
-  opacity: 0.8;
-}
 
-.fav-btn.pulse::before {
-  top: -8px;
-  left: -8px;
-}
-
-.fav-btn.pulse::after {
-  bottom: -8px;
-  right: -8px;
-}
-
-@keyframes sparkleMove {
-  0% {
-    transform: scale(0.8) rotate(0deg);
-    opacity: 0.8;
-  }
-  50% {
-    transform: scale(1.2) rotate(20deg);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(0.5) rotate(40deg);
-    opacity: 0;
-  }
-} */
