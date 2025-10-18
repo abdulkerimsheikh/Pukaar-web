@@ -21,10 +21,10 @@
     if (!toastEl || !body) return alert(message);
     body.textContent = message;
     toastEl.className = `toast align-items-center text-white ${variant === "success"
-        ? "bg-success"
-        : variant === "error"
-          ? "bg-danger"
-          : "bg-dark"
+      ? "bg-success"
+      : variant === "error"
+        ? "bg-danger"
+        : "bg-dark"
       } border-0`;
     new bootstrap.Toast(toastEl).show();
   }
@@ -315,11 +315,15 @@
     const radarTitle = document.getElementById("radarTitle");
     const radarSubtitle = document.getElementById("radarSubtitle");
     const statusWrap = document.getElementById("statusWrap");
-    const statusMessage = document.getElementById("statusMessage");
+    const radarCircle = document.querySelector(".radar-circle");
+
+    // Activate radar animation
+    if (radarCircle) radarCircle.classList.add("active");
 
     // Show hero status and radar loader
     if (statusWrap) statusWrap.style.display = "block";
     if (radar) radar.style.display = "block";
+
 
     // Default hero text
     let heroText = "Looking for the closest help around you…";
