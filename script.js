@@ -4,9 +4,6 @@
   const RADIUS_DEFAULT = 7000;
 
   let lastFetchedData = [];
-  let map = null;
-  let userMarker = null;
-  let markers = [];
   let userLocation = null;
 
   const qs = (s) => document.querySelector(s);
@@ -47,65 +44,7 @@
     });
   })();
 
-  // ✅ Map setup
-  const createEmojiIcon = (emoji, bg = "#0d6efd") =>
-    L.divIcon({
-      html: `<div class="emoji-marker" style="background:${bg}">${emoji}</div>`,
-      className: "",
-      iconSize: [36, 36],
-      iconAnchor: [18, 36],
-    });
-
-  const ICONS = {
-    hospital: createEmojiIcon("🏥", "#dc3545"),
-    clinic: createEmojiIcon("👨‍⚕️", "#0d6efd"),
-    pharmacy: createEmojiIcon("💊", "#198754"),
-    foodbank: createEmojiIcon("🍞", "#fd7e14"),
-    user: createEmojiIcon("📍", "#0d6efd"),
-    default: createEmojiIcon("📍", "#6c757d"),
-  };
-
-  function initMap(lat = 24.8607, lng = 67.0011, zoom = 13) {
-    if (!map) {
-      map = L.map("map").setView([lat, lng], zoom);
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "© OpenStreetMap contributors",
-      }).addTo(map);
-    } else {
-      map.setView([lat, lng], zoom);
-    }
-
-    if (userMarker) userMarker.setLatLng([lat, lng]);
-    else
-      userMarker = L.marker([lat, lng], {
-        icon: ICONS.user,
-        title: "You are here",
-      }).addTo(map);
-
-    setTimeout(() => map.invalidateSize(), 200);
-  }
-
-  function clearMarkers() {
-    markers.forEach((m) => map.removeLayer(m));
-    markers = [];
-  }
-
-  function addServiceMarkers(services) {
-    clearMarkers();
-    services.forEach((s) => {
-      if (!s.lat || !s.lng) return;
-      const icon = ICONS[s.type] || ICONS.default;
-      const popupHtml = `<strong>${s.name}</strong><br>${s.address || ""}${
-        s.phone ? `<br>Tel: ${s.phone}` : ""
-      }${s.distance ? `<br><small>${s.distance} km</small>` : ""}`;
-      const marker = L.marker([s.lat, s.lng], { icon })
-        .addTo(map)
-        .bindPopup(popupHtml);
-      markers.push(marker);
-    });
-  }
-
-  // ✅ Favorites system with duplicate prevention + animation
+  // ✅ Favorites
   const getFavorites = () =>
     JSON.parse(localStorage.getItem("favorites") || "[]");
   const saveFavorites = (f) =>
@@ -159,7 +98,7 @@
     });
   }
 
-  // ✅ Accurate distance
+  // ✅ Distance
   function getDistance(lat1, lon1, lat2, lon2) {
     const R = 6371;
     const dLat = ((lat2 - lat1) * Math.PI) / 180;
@@ -194,7 +133,6 @@
 
     lastFetchedData = data;
     displayResults(data);
-    addServiceMarkers(data);
   }
 
   async function fetchFromOverpass(lat, lng, radius = RADIUS_DEFAULT) {
@@ -225,7 +163,7 @@
     }));
   }
 
-  // ✅ Display results + favorite button animation
+  // ✅ Display cards (no map)
   function displayResults(services) {
     const container = qs("#results");
     const radar = document.getElementById("resultsLoading");
@@ -267,7 +205,7 @@
     });
   }
 
-  // ✅ Radar animation fix
+  // ✅ Find nearby (no map)
   function handleFindNearby() {
     const radar = document.getElementById("resultsLoading");
     const radarCircle = document.querySelector(".radar-circle");
@@ -291,7 +229,6 @@
           lat: pos.coords.latitude,
           lng: pos.coords.longitude,
         };
-        initMap(userLocation.lat, userLocation.lng, 13);
         await fetchAndProcessData(userLocation.lat, userLocation.lng);
         radar.style.display = "none";
         statusWrap.style.display = "none";
@@ -300,7 +237,6 @@
       },
       async () => {
         showToast("Using fallback data.", "error");
-        initMap();
         await fetchAndProcessData(24.8607, 67.0011);
         radar.style.display = "none";
         statusWrap.style.display = "none";
@@ -314,19 +250,14 @@
   function filterCategory(type) {
     const results = lastFetchedData.filter((s) => !type || s.type === type);
     displayResults(results);
-    if (results.length && map) {
-      map.setView([results[0].lat, results[0].lng], 13);
-    }
     showToast(`Filtered by ${type || "all"}`, "success");
   }
   window.filterCategory = filterCategory;
 
-  // ✅ Init all
+  // ✅ Init
   document.addEventListener("DOMContentLoaded", () => {
-    initMap();
     renderFavoritesModal();
     document.getElementById("findBtn").addEventListener("click", handleFindNearby);
-    // preload default Karachi data
     fetchAndProcessData(24.8607, 67.0011);
   });
 })();
