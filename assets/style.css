@@ -214,9 +214,9 @@ body.dark .pukaar-footer {
   background: linear-gradient(180deg, #0f1724, #1c2433);
   color: #e9ecef;
 }
-/* ---------- FOOTER (Improved Light Mode Contrast) ---------- */
+/* ---------- FOOTER  ---------- */
 body:not(.dark) .pukaar-footer {
-  background: #f1f3f6; /* Softer gray tone */
+  background: #f1f3f671;
   color: #212529;
 }
 
