@@ -1,11 +1,7 @@
-/* =====================================================
-   PUKAAR — Modern Gradient Theme Build (Synced with index.html & script.js)
-   ===================================================== */
-
 /* ---------- CORE COLORS ---------- */
 :root {
-  /* --primary: #0d6efd;
-  --accent: #20c997; */
+  --primary: #0d6efd;
+  --accent: #20c997;
   --bg-light: #f8f9fa;
   --bg-dark: #0b0f14;
   --card-light: #ffffff;
@@ -31,6 +27,17 @@ body.dark {
 }
 
 /* ---------- NAVBAR ---------- */
+
+.logo-img {
+  height: 36px;
+  width: auto;
+  filter: brightness(0) invert(1);
+  transition: filter 0.3s ease;
+}
+body:not(.dark) .logo-img {
+  filter: brightness(0);
+}
+
 .modern-navbar {
   position: fixed;
   top: 0;
@@ -80,7 +87,7 @@ body:not(.dark) .nav-link:hover {
 
 /* ---------- HERO ---------- */
 .hero {
-  background: linear-gradient(135deg, #8d9cac, #989e9d);
+  background: linear-gradient(135deg, #0d6efd, #20c997);
   color: #fff;
   text-align: center;
   padding: 120px 20px 100px;
@@ -192,13 +199,13 @@ body.dark #map {
 
 /* ---------- FOOTER ---------- */
 .pukaar-footer {
-  background: linear-gradient(180deg, #0f1724, #1c2433);
-  color: #e9ecef;
+  background: linear-gradient(180deg, #f0f4f9, #e9eff6);
+  color: #212529;
   padding: 50px 0 30px;
 }
-body:not(.dark) .pukaar-footer {
-  background: #f8f9fa;
-  color: #212529;
+body.dark .pukaar-footer {
+  background: linear-gradient(180deg, #0f1724, #1c2433);
+  color: #e9ecef;
 }
 .footer-link {
   color: inherit;
