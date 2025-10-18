@@ -10,34 +10,30 @@
   let userLocation = null;
 
   const qs = (s) => document.querySelector(s);
-  const qsa = (s) => document.querySelectorAll(s);
 
-  // ===========================
-  // Toast utility
-  // ===========================
+  // ✅ Toast utility
   function showToast(message, variant = "dark") {
     const toastEl = qs("#liveToast");
     const body = qs("#toastMessage");
     if (!toastEl || !body) return alert(message);
     body.textContent = message;
-    toastEl.className = `toast align-items-center text-white ${variant === "success"
-      ? "bg-success"
-      : variant === "error"
+    toastEl.className = `toast align-items-center text-white ${
+      variant === "success"
+        ? "bg-success"
+        : variant === "error"
         ? "bg-danger"
         : "bg-dark"
-      } border-0`;
+    } border-0`;
     new bootstrap.Toast(toastEl).show();
   }
 
-  // ===========================
-  // Theme toggle
-  // ===========================
+  // ✅ Theme toggle
   (() => {
     const themeBtn = qs("#theme-toggle");
     const saved = localStorage.getItem("pukaar-theme");
     if (saved === "dark") {
       document.body.classList.add("dark");
-      if (themeBtn) themeBtn.innerText = "☀️";
+      themeBtn.innerText = "☀️";
     }
     themeBtn?.addEventListener("click", () => {
       document.body.classList.toggle("dark");
@@ -51,9 +47,7 @@
     });
   })();
 
-  // ===========================
-  // Map setup
-  // ===========================
+  // ✅ Map setup
   const createEmojiIcon = (emoji, bg = "#0d6efd") =>
     L.divIcon({
       html: `<div class="emoji-marker" style="background:${bg}">${emoji}</div>`,
@@ -73,7 +67,7 @@
 
   function initMap(lat = 24.8607, lng = 67.0011, zoom = 13) {
     if (!map) {
-      map = L.map("map", { keyboard: true }).setView([lat, lng], zoom);
+      map = L.map("map").setView([lat, lng], zoom);
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: "© OpenStreetMap contributors",
       }).addTo(map);
@@ -99,11 +93,11 @@
   function addServiceMarkers(services) {
     clearMarkers();
     services.forEach((s) => {
-      const type = s.type || "default";
-      const icon = ICONS[type] || ICONS.default;
       if (!s.lat || !s.lng) return;
-      const popupHtml = `<strong>${s.name}</strong><br>${s.address || ""}${s.phone ? `<br>Tel: ${s.phone}` : ""
-        }${s.distance ? `<br><small>${s.distance} km</small>` : ""}`;
+      const icon = ICONS[s.type] || ICONS.default;
+      const popupHtml = `<strong>${s.name}</strong><br>${s.address || ""}${
+        s.phone ? `<br>Tel: ${s.phone}` : ""
+      }${s.distance ? `<br><small>${s.distance} km</small>` : ""}`;
       const marker = L.marker([s.lat, s.lng], { icon })
         .addTo(map)
         .bindPopup(popupHtml);
@@ -111,27 +105,31 @@
     });
   }
 
-  // ===========================
-  // Favorites
-  // ===========================
+  // ✅ Favorites system with duplicate prevention + animation
   const getFavorites = () =>
     JSON.parse(localStorage.getItem("favorites") || "[]");
   const saveFavorites = (f) =>
     localStorage.setItem("favorites", JSON.stringify(f));
 
-  function toggleFavorite(uid, item) {
+  function toggleFavorite(uid, item, btn) {
     let favs = getFavorites();
-    const idx = favs.findIndex((f) => f.uid === uid);
-    if (idx >= 0) {
-      favs.splice(idx, 1);
+    const exists = favs.some((f) => f.uid === uid);
+    if (exists) {
+      favs = favs.filter((f) => f.uid !== uid);
       showToast("Removed from favorites", "info");
+      btn.classList.remove("btn-warning");
+      btn.classList.add("btn-outline-warning");
+      btn.innerHTML = "☆";
     } else {
       favs.push(item);
-      showToast("Saved to favorites", "success");
+      showToast("Added to favorites", "success");
+      btn.classList.add("btn-warning", "pulse");
+      btn.classList.remove("btn-outline-warning");
+      btn.innerHTML = "★";
+      setTimeout(() => btn.classList.remove("pulse"), 800);
     }
     saveFavorites(favs);
     renderFavoritesModal();
-    displayResults(lastFetchedData);
   }
 
   function renderFavoritesModal() {
@@ -141,7 +139,6 @@
     list.innerHTML = favs.length
       ? ""
       : `<div class="text-center text-muted w-100 py-4">No favorites saved.</div>`;
-
     favs.forEach((f) => {
       const col = document.createElement("div");
       col.className = "col-12 col-md-6";
@@ -152,40 +149,36 @@
               <h6>${f.name}</h6>
               <div class="small text-muted">${f.address || "Unknown address"}</div>
             </div>
-            <div class="d-flex flex-column gap-2">
-              <a href="tel:${f.phone || "1122"}" class="btn btn-sm btn-success">📞</a>
-              <button class="btn btn-sm btn-danger mt-2 remove-fav-btn">Remove</button>
-            </div>
+            <button class="btn btn-sm btn-danger">Remove</button>
           </div>
         </div>`;
-      col
-        .querySelector(".remove-fav-btn")
-        .addEventListener("click", () => toggleFavorite(f.uid, f));
+      col.querySelector("button").addEventListener("click", () => {
+        toggleFavorite(f.uid, f, document.createElement("button"));
+      });
       list.appendChild(col);
     });
   }
 
+  // ✅ Accurate distance
   function getDistance(lat1, lon1, lat2, lon2) {
     const R = 6371;
     const dLat = ((lat2 - lat1) * Math.PI) / 180;
     const dLon = ((lon2 - lon1) * Math.PI) / 180;
     const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.sin(dLat / 2) ** 2 +
       Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) ** 2;
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
+    return (R * c).toFixed(2);
   }
 
-  // ===========================
-  // Data Fetch
-  // ===========================
+  // ✅ Data fetching
   async function fetchAndProcessData(lat, lng) {
     let data = [];
     try {
-      const overpassData = await fetchFromOverpassCombined(lat, lng);
-      data = overpassData?.length
+      const overpassData = await fetchFromOverpass(lat, lng);
+      data = overpassData.length
         ? overpassData
         : await (await fetch(FALLBACK_JSON)).json();
     } catch {
@@ -193,10 +186,9 @@
     }
 
     data.forEach((item, i) => {
-      item._uid = `s_${item.id || i}_${item.lat}_${item.lng}`;
-      const base = userLocation || { lat: 24.8607, lng: 67.0011 }; // Default Karachi center
-      item.distance = getDistance(base.lat, base.lng, item.lat, item.lng).toFixed(2);
-
+      item.uid = `s_${item.id || i}_${item.lat}_${item.lng}`;
+      const base = userLocation || { lat: lat, lng: lng };
+      item.distance = getDistance(base.lat, base.lng, item.lat, item.lng);
       item.rating = item.rating || (Math.random() * 2 + 3).toFixed(1);
     });
 
@@ -205,21 +197,19 @@
     addServiceMarkers(data);
   }
 
-  async function fetchFromOverpassCombined(lat, lng, radius = RADIUS_DEFAULT) {
-    const tagFilters = [
+  async function fetchFromOverpass(lat, lng, radius = RADIUS_DEFAULT) {
+    const filters = [
       '["amenity"="hospital"]',
       '["amenity"="clinic"]',
       '["healthcare"="clinic"]',
       '["amenity"="pharmacy"]',
       '["social_facility"="food_bank"]',
     ];
-    const query = `[out:json][timeout:25];(node${tagFilters.join(
-      ";node"
-    )}(around:${radius},${lat},${lng});way${tagFilters.join(
-      ";way"
-    )}(around:${radius},${lat},${lng});relation${tagFilters.join(
-      ";relation"
-    )}(around:${radius},${lat},${lng}););out center;`;
+    const query = `[out:json][timeout:25];
+      (node${filters.join(";node")}(around:${radius},${lat},${lng});
+       way${filters.join(";way")}(around:${radius},${lat},${lng});
+       relation${filters.join(";relation")}(around:${radius},${lat},${lng}););
+       out center;`;
 
     const res = await fetch(`${OVERPASS_URL}?data=${encodeURIComponent(query)}`);
     const json = await res.json();
@@ -235,192 +225,108 @@
     }));
   }
 
-  // ===========================
-  // Results Display
-  // ===========================
+  // ✅ Display results + favorite button animation
   function displayResults(services) {
     const container = qs("#results");
     const radar = document.getElementById("resultsLoading");
     if (radar) radar.style.display = "none";
-
     container.innerHTML = "";
-    if (!services.length) {
-      qs("#emptyState").classList.remove("d-none");
-      return;
-    }
-    qs("#emptyState").classList.add("d-none");
+    if (!services.length) return;
 
     services.forEach((s) => {
-      const isFav = getFavorites().some((f) => f.uid === s._uid);
+      const isFav = getFavorites().some((f) => f.uid === s.uid);
       const col = document.createElement("div");
       col.className = "col-12 col-md-6 mb-3";
       col.innerHTML = `
       <div class="card service-card shadow-sm ${s.type}">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-start">
-            <div class="service-info">
+            <div>
               <h6 class="fw-semibold mb-1">${s.name}</h6>
               <div class="small">${s.address}</div>
-              <div class="rating mt-1">Rating: ${s.rating}</div>
-              <div class="distance-text small">Distance: ${s.distance} km</div>
+              <div class="rating mt-1">⭐ ${s.rating}</div>
+              <div class="distance-text small">📍 ${s.distance} km</div>
             </div>
-            <div class="action-buttons d-flex flex-column align-items-center gap-2">
-              ${s.phone
-          ? `<a href="tel:${s.phone}" class="btn btn-sm btn-success"><i class="bi bi-telephone-fill"></i></a>`
-          : ""
-        }
-              <a href="https://www.google.com/maps?q=${s.lat},${s.lng}" target="_blank"
-                class="btn btn-sm btn-primary"><i class="bi bi-geo-alt-fill"></i></a>
-              <button class="btn btn-sm fav-btn ${isFav ? "btn-warning" : "btn-outline-warning"
-        }">${isFav ? "★" : "☆"}</button>
+            <div class="d-flex flex-column gap-2 align-items-center">
+              ${
+                s.phone
+                  ? `<a href="tel:${s.phone}" class="btn btn-sm btn-success"><i class="bi bi-telephone-fill"></i></a>`
+                  : ""
+              }
+              <a href="https://www.google.com/maps?q=${s.lat},${s.lng}" target="_blank" class="btn btn-sm btn-primary"><i class="bi bi-geo-alt-fill"></i></a>
+              <button class="btn btn-sm fav-btn ${
+                isFav ? "btn-warning" : "btn-outline-warning"
+              }">${isFav ? "★" : "☆"}</button>
             </div>
           </div>
         </div>
       </div>`;
-      col
-        .querySelector(".fav-btn")
-        .addEventListener("click", () =>
-          toggleFavorite(s._uid, s)
-        );
+      const btn = col.querySelector(".fav-btn");
+      btn.addEventListener("click", () => toggleFavorite(s.uid, s, btn));
       container.appendChild(col);
     });
   }
 
-  // ===========================
-  // Footer Reveal
-  // ===========================
-  function initFooterReveal() {
-    const footer = document.querySelector(".pukaar-footer");
-    if (!footer) return;
-    window.addEventListener("scroll", () => {
-      const scrollPos = window.scrollY + window.innerHeight;
-      footer.classList.toggle(
-        "show",
-        scrollPos > document.body.scrollHeight - 200
-      );
-    });
-  }
-
-
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      () => { },
-      () => { },
-      { enableHighAccuracy: true, timeout: 5000 }
-    );
-  }
-
+  // ✅ Radar animation fix
   function handleFindNearby() {
     const radar = document.getElementById("resultsLoading");
-    const radarTitle = document.getElementById("radarTitle");
-    const radarSubtitle = document.getElementById("radarSubtitle");
-    const statusWrap = document.getElementById("statusWrap");
     const radarCircle = document.querySelector(".radar-circle");
+    const statusWrap = document.getElementById("statusWrap");
+    const statusMessage = document.getElementById("statusMessage");
 
-    // Activate radar animation
     if (radarCircle) radarCircle.classList.add("active");
-
-    // Show hero status and radar loader
-    if (statusWrap) statusWrap.style.display = "block";
-    if (radar) radar.style.display = "block";
-
-
-    // Default hero text
-    let heroText = "Looking for the closest help around you…";
-
-    // Check permission state to customize message
-    if (navigator.permissions && navigator.permissions.query) {
-      navigator.permissions.query({ name: "geolocation" }).then((result) => {
-        if (result.state === "granted") {
-          heroText = "Using your location to find nearby services…";
-        } else if (result.state === "denied") {
-          heroText = "Location access denied. Using fallback data.";
-        }
-        if (statusMessage) statusMessage.textContent = heroText;
-      }).catch(() => {
-        if (statusMessage) statusMessage.textContent = heroText;
-      });
-    } else if (statusMessage) {
-      statusMessage.textContent = heroText;
-    }
+    radar.style.display = "block";
+    statusWrap.style.display = "block";
+    statusMessage.textContent = "Detecting your location…";
 
     if (!navigator.geolocation) {
-      showToast("Geolocation not supported by your browser.", "error");
-      if (statusMessage) statusMessage.textContent = "Location not supported";
-      initMap();
-      fetchAndProcessData().then(() => {
-        if (statusWrap) statusWrap.style.display = "none";
-        if (radar) radar.style.display = "none";
-      });
+      showToast("Geolocation not supported.", "error");
+      radar.style.display = "none";
       return;
     }
 
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
-        userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        userLocation = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+        };
         initMap(userLocation.lat, userLocation.lng, 13);
-        showToast("Location detected", "success");
-        if (radarTitle) radarTitle.textContent = "Fetching nearby services...";
-        if (radarSubtitle) radarSubtitle.textContent = "";
-
         await fetchAndProcessData(userLocation.lat, userLocation.lng);
-
-        // Hide hero status and radar after results are displayed
-        if (statusWrap) statusWrap.style.display = "none";
-        if (radar) radar.style.display = "none";
+        radar.style.display = "none";
+        statusWrap.style.display = "none";
+        radarCircle.classList.remove("active");
+        showToast("Location detected ✅", "success");
       },
-      async (err) => {
-        console.warn(err);
-        if (radarTitle) radarTitle.textContent = "Location access denied";
-        if (radarSubtitle) radarSubtitle.textContent = "Using fallback data instead.";
-        initMap();
-        await fetchAndProcessData();
-
+      async () => {
         showToast("Using fallback data.", "error");
-
-        // Hide hero status and radar after results
-        if (statusWrap) statusWrap.style.display = "none";
-        if (radar) radar.style.display = "none";
+        initMap();
+        await fetchAndProcessData(24.8607, 67.0011);
+        radar.style.display = "none";
+        statusWrap.style.display = "none";
+        radarCircle.classList.remove("active");
       },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
+      { enableHighAccuracy: true, timeout: 10000 }
     );
   }
 
-
-
-  // ===========================
-  // Category Filter Helper
-  // ===========================
+  // ✅ Category filter
   function filterCategory(type) {
-    const results = lastFetchedData.filter(
-      (s) => !type || s.type === type
-    );
+    const results = lastFetchedData.filter((s) => !type || s.type === type);
     displayResults(results);
-
-    // Optional: center map on first item if found
     if (results.length && map) {
       map.setView([results[0].lat, results[0].lng], 13);
     }
-
-    showToast(
-      type
-        ? `Showing only ${type.charAt(0).toUpperCase() + type.slice(1)}s`
-        : "Showing all services",
-      "success"
-    );
+    showToast(`Filtered by ${type || "all"}`, "success");
   }
   window.filterCategory = filterCategory;
 
-
-  // ===========================
-  // Init Everything
-  // ===========================
+  // ✅ Init all
   document.addEventListener("DOMContentLoaded", () => {
     initMap();
     renderFavoritesModal();
-    initFooterReveal();
-
-    const findBtn = document.getElementById("findBtn");
-    if (findBtn) findBtn.addEventListener("click", handleFindNearby);
+    document.getElementById("findBtn").addEventListener("click", handleFindNearby);
+    // preload default Karachi data
+    fetchAndProcessData(24.8607, 67.0011);
   });
 })();

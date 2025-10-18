@@ -273,3 +273,13 @@ body.dark .loading-radar {
   .hero p { font-size: 1rem; }
   #map { height: 320px; }
 }
+
+
+.fav-btn.pulse {
+  animation: favPulse 0.8s ease;
+}
+@keyframes favPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}
