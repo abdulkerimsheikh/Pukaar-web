@@ -315,7 +315,7 @@
     const radar = document.getElementById("resultsLoading");
     const radarTitle = document.getElementById("radarTitle");
     const radarSubtitle = document.getElementById("radarSubtitle");
-    if (radarTitle) radarTitle.textContent = "📍 Requesting location access...";
+    if (radarTitle) radarTitle.textContent = "Requesting location access...";
     radar.style.display = "block";
 
     if (!navigator.geolocation) {
@@ -328,7 +328,7 @@
       async (pos) => {
         userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
         initMap(userLocation.lat, userLocation.lng, 13);
-        showToast("Location detected ✅", "success");
+        showToast("Location detected", "success");
         radarTitle.textContent = "Fetching nearby services...";
         await fetchAndProcessData(userLocation.lat, userLocation.lng);
       },
@@ -388,11 +388,11 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .catch(() => {
         statusEl.textContent =
-          "Please allow location access when prompted.";
+          "Please allow location access";
       });
   } else {
     statusEl.textContent =
-      "Please allow location access when prompted.";
+      "Please allow location access";
   }
 });
 })();
