@@ -332,31 +332,54 @@
     );
   }
 
-document.addEventListener('DOMContentLoaded', () => {
+// ===========================
+// Init Everything
+// ===========================
+document.addEventListener("DOMContentLoaded", () => {
   initMap();
   renderFavoritesModal();
+  initFooterReveal();
 
+  // Delay auto location request slightly
+  setTimeout(() => {
+    autoLocate();
+  }, 800);
 
- setTimeout(() => {
-  autoLocate();
-}, 800);
+  // ====== Status Text Handling ======
+  const statusEl = qs("#statusMessage");
+  if (!statusEl) {
+    console.warn("⚠️ #statusMessage element not found in DOM.");
+    return; // prevent null errors
+  }
 
+  if (!navigator.geolocation) {
+    statusEl.textContent = "⚠️ Geolocation not supported by your browser.";
+    return;
+  }
 
- if (!navigator.geolocation) {
-  qs('#statusMessage').textContent = "⚠️ Geolocation not supported by your browser.";
-} else {
-  navigator.permissions?.query({ name: 'geolocation' }).then((result) => {
-    if (result.state === 'denied') {
-      qs('#statusMessage').textContent = "Location access denied. Please enable it to show nearby services.";
-    } else if (result.state === 'prompt') {
-      qs('#statusMessage').textContent = "Please allow location access when prompted.";
-    } else if (result.state === 'granted') {
-      qs('#statusMessage').textContent = "Location access granted — fetching nearby services...";
-    }
-  }).catch(() => {
-    qs('#statusMessage').textContent = "Please allow location access when prompted.";
-  });
-}
+  // Optional: check permission state
+  if (navigator.permissions && navigator.permissions.query) {
+    navigator.permissions
+      .query({ name: "geolocation" })
+      .then((result) => {
+        if (result.state === "denied") {
+          statusEl.textContent =
+            "Location access denied. Please enable it to show nearby services.";
+        } else if (result.state === "prompt") {
+          statusEl.textContent =
+            "Please allow location access when prompted.";
+        } else if (result.state === "granted") {
+          statusEl.textContent =
+            "Location access granted — fetching nearby services...";
+        }
+      })
+      .catch(() => {
+        statusEl.textContent =
+          "Please allow location access when prompted.";
+      });
+  } else {
+    statusEl.textContent =
+      "Please allow location access when prompted.";
+  }
 });
-
 })();
