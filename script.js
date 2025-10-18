@@ -324,8 +324,30 @@ function handleFindNearby() {
   if (radar) radar.style.display = "block";
   if (statusWrap) statusWrap.style.display = "block";
 
-  radarTitle.textContent = "Looking for the closest help around you…";
-  radarSubtitle.textContent = "Please wait a moment.";
+  // Default messages
+  let titleText = "Looking for the closest help around you…";
+  let subtitleText = "Please wait a moment.";
+
+  // Check current permission state
+  if (navigator.permissions && navigator.permissions.query) {
+    navigator.permissions.query({ name: "geolocation" }).then((result) => {
+      if (result.state === "granted") {
+        titleText = "Using your location to find nearby services…";
+        subtitleText = "";
+      } else if (result.state === "denied") {
+        titleText = "Location access denied";
+        subtitleText = "Using fallback data instead.";
+      } // 'prompt' or unknown stays default
+      radarTitle.textContent = titleText;
+      radarSubtitle.textContent = subtitleText;
+    }).catch(() => {
+      radarTitle.textContent = titleText;
+      radarSubtitle.textContent = subtitleText;
+    });
+  } else {
+    radarTitle.textContent = titleText;
+    radarSubtitle.textContent = subtitleText;
+  }
 
   if (!navigator.geolocation) {
     showToast("Geolocation not supported by your browser.", "error");
@@ -337,15 +359,14 @@ function handleFindNearby() {
 
   navigator.geolocation.getCurrentPosition(
     async (pos) => {
-      // When location access granted
       userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
       initMap(userLocation.lat, userLocation.lng, 13);
       showToast("Location detected", "success");
       radarTitle.textContent = "Fetching nearby services...";
+      radarSubtitle.textContent = "";
       await fetchAndProcessData(userLocation.lat, userLocation.lng);
     },
     (err) => {
-      // When denied or error
       console.warn(err);
       radarTitle.textContent = "Location access denied";
       radarSubtitle.textContent = "Using fallback data instead.";
@@ -356,6 +377,7 @@ function handleFindNearby() {
     { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
   );
 }
+
 
 // ===========================
 // Category Filter Helper
