@@ -161,12 +161,17 @@ body.dark #statusWrap {
 .cat-grid {
   display: flex;
   gap: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 25px;
+  overflow-x: auto;
+  padding: 10px;
+  scroll-snap-type: x mandatory;
+}
+.cat-card {
+  flex: 0 0 auto;
+  scroll-snap-align: center;
 }
 
-.cat-card {
+
+/* .cat-card {
   width: 120px;
   height: 120px;
   border-radius: 16px;
@@ -179,7 +184,7 @@ body.dark #statusWrap {
   justify-content: center;
   font-weight: 600;
   transition: all 0.25s ease;
-}
+} */
 .cat-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
@@ -189,7 +194,14 @@ body.dark .cat-card {
   color: var(--text-dark);
 }
 
-/* ---------- RESULTS & CARDS (unchanged design) ---------- */
+#findBtn {
+  position: sticky;
+  bottom: 10px;
+  z-index: 100;
+}
+
+
+/* ---------- RESULTS & CARDS  ---------- */
 .service-card {
   border: none;
   border-radius: 14px;

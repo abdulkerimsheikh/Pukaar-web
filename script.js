@@ -296,3 +296,14 @@ document.getElementById('pwaCloseBtn').addEventListener('click', () => {
   document.getElementById('pwaBanner').classList.add('d-none');
 });
 
+
+// ===== Update theme-color meta dynamically =====
+const themeMeta = document.querySelector('meta[name="theme-color"]');
+const updateThemeMeta = () => {
+  const isDark = document.body.classList.contains('dark');
+  themeMeta.setAttribute('content', isDark ? '#0b0f14' : '#ffffff');
+};
+updateThemeMeta();
+document.getElementById('theme-toggle').addEventListener('click', updateThemeMeta);
+  
+
