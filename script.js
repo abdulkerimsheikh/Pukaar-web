@@ -266,35 +266,45 @@
   });
 })();
 
-
-// ====== PWA Install Banner Logic ======
+// ====== PWA Install Banner Logic (fixed) ======
 let deferredPrompt;
+
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
+  window.showPwaBanner = true;
+});
+
+document.addEventListener("DOMContentLoaded", () => {
   const banner = document.getElementById('pwaBanner');
-  if (!localStorage.getItem('pwaBannerShown')) {
+  const installBtn = document.getElementById('pwaInstallBtn');
+  const closeBtn = document.getElementById('pwaCloseBtn');
+
+  if (!banner || !installBtn || !closeBtn) return; // stop if banner isn't on this page
+
+  if (window.showPwaBanner && !localStorage.getItem('pwaBannerShown')) {
     banner.classList.remove('d-none');
   }
-});
 
-document.getElementById('pwaInstallBtn').addEventListener('click', async () => {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    const choice = await deferredPrompt.userChoice;
-    if (choice.outcome === 'accepted') {
-      showToast('Pukaar installed successfully ✅', 'success');
+  installBtn.addEventListener('click', async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const choice = await deferredPrompt.userChoice;
+      if (choice.outcome === 'accepted') {
+        showToast('Pukaar installed successfully ✅', 'success');
+      }
+      deferredPrompt = null;
     }
-    deferredPrompt = null;
-  }
-  localStorage.setItem('pwaBannerShown', 'true');
-  document.getElementById('pwaBanner').classList.add('d-none');
+    localStorage.setItem('pwaBannerShown', 'true');
+    banner.classList.add('d-none');
+  });
+
+  closeBtn.addEventListener('click', () => {
+    localStorage.setItem('pwaBannerShown', 'true');
+    banner.classList.add('d-none');
+  });
 });
 
-document.getElementById('pwaCloseBtn').addEventListener('click', () => {
-  localStorage.setItem('pwaBannerShown', 'true');
-  document.getElementById('pwaBanner').classList.add('d-none');
-});
 
 
 // ===== Update theme-color meta dynamically =====
@@ -305,5 +315,5 @@ const updateThemeMeta = () => {
 };
 updateThemeMeta();
 document.getElementById('theme-toggle').addEventListener('click', updateThemeMeta);
-  
+
 
