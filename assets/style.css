@@ -216,7 +216,7 @@ body.dark .pukaar-footer {
 }
 /* ---------- FOOTER  ---------- */
 body:not(.dark) .pukaar-footer {
-  background: #f1f3f671;
+  background: #001e4b71;
   color: #212529;
 }
 
@@ -295,9 +295,9 @@ body.dark .loading-radar {
 }
 
 
-/* =====================================================
-   FAVORITE STAR ANIMATION (Glow + Sparkles)
-   ===================================================== */
+/* ==========================
+   FAVORITE STAR ANIMATION 
+   ======================== */
 .fav-btn.pulse {
   position: relative;
   animation: favPulse 0.8s ease;
@@ -319,7 +319,7 @@ body.dark .loading-radar {
   }
 }
 
-/* Sparkle particles */
+/* Sparkle particles
 .fav-btn.pulse::before,
 .fav-btn.pulse::after {
   content: "✨";
@@ -352,4 +352,4 @@ body.dark .loading-radar {
     transform: scale(0.5) rotate(40deg);
     opacity: 0;
   }
-}
+} */
