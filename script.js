@@ -357,6 +357,28 @@ function handleFindNearby() {
   );
 }
 
+// ===========================
+// Category Filter Helper
+// ===========================
+function filterCategory(type) {
+  const results = lastFetchedData.filter(
+    (s) => !type || s.type === type
+  );
+  displayResults(results);
+
+  // Optional: center map on first item if found
+  if (results.length && map) {
+    map.setView([results[0].lat, results[0].lng], 13);
+  }
+
+  showToast(
+    type
+      ? `Showing only ${type.charAt(0).toUpperCase() + type.slice(1)}s`
+      : "Showing all services",
+    "success"
+  );
+}
+
 
   // ===========================
   // Init Everything
