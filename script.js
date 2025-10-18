@@ -20,13 +20,12 @@
     const body = qs("#toastMessage");
     if (!toastEl || !body) return alert(message);
     body.textContent = message;
-    toastEl.className = `toast align-items-center text-white ${
-      variant === "success"
+    toastEl.className = `toast align-items-center text-white ${variant === "success"
         ? "bg-success"
         : variant === "error"
-        ? "bg-danger"
-        : "bg-dark"
-    } border-0`;
+          ? "bg-danger"
+          : "bg-dark"
+      } border-0`;
     new bootstrap.Toast(toastEl).show();
   }
 
@@ -103,9 +102,8 @@
       const type = s.type || "default";
       const icon = ICONS[type] || ICONS.default;
       if (!s.lat || !s.lng) return;
-      const popupHtml = `<strong>${s.name}</strong><br>${s.address || ""}${
-        s.phone ? `<br>Tel: ${s.phone}` : ""
-      }${s.distance ? `<br><small>${s.distance} km</small>` : ""}`;
+      const popupHtml = `<strong>${s.name}</strong><br>${s.address || ""}${s.phone ? `<br>Tel: ${s.phone}` : ""
+        }${s.distance ? `<br><small>${s.distance} km</small>` : ""}`;
       const marker = L.marker([s.lat, s.lng], { icon })
         .addTo(map)
         .bindPopup(popupHtml);
@@ -174,8 +172,8 @@
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos((lat1 * Math.PI) / 180) *
-        Math.cos((lat2 * Math.PI) / 180) *
-        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   }
@@ -196,9 +194,9 @@
 
     data.forEach((item, i) => {
       item._uid = `s_${item.id || i}_${item.lat}_${item.lng}`;
-      item.distance = userLocation
-        ? getDistance(userLocation.lat, userLocation.lng, item.lat, item.lng).toFixed(2)
-        : null;
+      const base = userLocation || { lat: 24.8607, lng: 67.0011 }; // Default Karachi center
+      item.distance = getDistance(base.lat, base.lng, item.lat, item.lng).toFixed(2);
+
       item.rating = item.rating || (Math.random() * 2 + 3).toFixed(1);
     });
 
@@ -267,16 +265,14 @@
               <div class="distance-text small">Distance: ${s.distance} km</div>
             </div>
             <div class="action-buttons d-flex flex-column align-items-center gap-2">
-              ${
-                s.phone
-                  ? `<a href="tel:${s.phone}" class="btn btn-sm btn-success"><i class="bi bi-telephone-fill"></i></a>`
-                  : ""
-              }
+              ${s.phone
+          ? `<a href="tel:${s.phone}" class="btn btn-sm btn-success"><i class="bi bi-telephone-fill"></i></a>`
+          : ""
+        }
               <a href="https://www.google.com/maps?q=${s.lat},${s.lng}" target="_blank"
                 class="btn btn-sm btn-primary"><i class="bi bi-geo-alt-fill"></i></a>
-              <button class="btn btn-sm fav-btn ${
-                isFav ? "btn-warning" : "btn-outline-warning"
-              }">${isFav ? "★" : "☆"}</button>
+              <button class="btn btn-sm fav-btn ${isFav ? "btn-warning" : "btn-outline-warning"
+        }">${isFav ? "★" : "☆"}</button>
             </div>
           </div>
         </div>
@@ -308,108 +304,108 @@
 
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
-      () => {},
-      () => {},
+      () => { },
+      () => { },
       { enableHighAccuracy: true, timeout: 5000 }
     );
   }
 
-function handleFindNearby() {
-  const radar = document.getElementById("resultsLoading");
-  const radarTitle = document.getElementById("radarTitle");
-  const radarSubtitle = document.getElementById("radarSubtitle");
-  const statusWrap = document.getElementById("statusWrap");
-  const statusMessage = document.getElementById("statusMessage");
+  function handleFindNearby() {
+    const radar = document.getElementById("resultsLoading");
+    const radarTitle = document.getElementById("radarTitle");
+    const radarSubtitle = document.getElementById("radarSubtitle");
+    const statusWrap = document.getElementById("statusWrap");
+    const statusMessage = document.getElementById("statusMessage");
 
-  // Show hero status and radar loader
-  if (statusWrap) statusWrap.style.display = "block";
-  if (radar) radar.style.display = "block";
+    // Show hero status and radar loader
+    if (statusWrap) statusWrap.style.display = "block";
+    if (radar) radar.style.display = "block";
 
-  // Default hero text
-  let heroText = "Looking for the closest help around you…";
+    // Default hero text
+    let heroText = "Looking for the closest help around you…";
 
-  // Check permission state to customize message
-  if (navigator.permissions && navigator.permissions.query) {
-    navigator.permissions.query({ name: "geolocation" }).then((result) => {
-      if (result.state === "granted") {
-        heroText = "Using your location to find nearby services…";
-      } else if (result.state === "denied") {
-        heroText = "Location access denied. Using fallback data.";
-      }
-      if (statusMessage) statusMessage.textContent = heroText;
-    }).catch(() => {
-      if (statusMessage) statusMessage.textContent = heroText;
-    });
-  } else if (statusMessage) {
-    statusMessage.textContent = heroText;
-  }
+    // Check permission state to customize message
+    if (navigator.permissions && navigator.permissions.query) {
+      navigator.permissions.query({ name: "geolocation" }).then((result) => {
+        if (result.state === "granted") {
+          heroText = "Using your location to find nearby services…";
+        } else if (result.state === "denied") {
+          heroText = "Location access denied. Using fallback data.";
+        }
+        if (statusMessage) statusMessage.textContent = heroText;
+      }).catch(() => {
+        if (statusMessage) statusMessage.textContent = heroText;
+      });
+    } else if (statusMessage) {
+      statusMessage.textContent = heroText;
+    }
 
-  if (!navigator.geolocation) {
-    showToast("Geolocation not supported by your browser.", "error");
-    if (statusMessage) statusMessage.textContent = "Location not supported";
-    initMap();
-    fetchAndProcessData().then(() => {
-      if (statusWrap) statusWrap.style.display = "none";
-      if (radar) radar.style.display = "none";
-    });
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(
-    async (pos) => {
-      userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-      initMap(userLocation.lat, userLocation.lng, 13);
-      showToast("Location detected", "success");
-      if (radarTitle) radarTitle.textContent = "Fetching nearby services...";
-      if (radarSubtitle) radarSubtitle.textContent = "";
-
-      await fetchAndProcessData(userLocation.lat, userLocation.lng);
-
-      // Hide hero status and radar after results are displayed
-      if (statusWrap) statusWrap.style.display = "none";
-      if (radar) radar.style.display = "none";
-    },
-    async (err) => {
-      console.warn(err);
-      if (radarTitle) radarTitle.textContent = "Location access denied";
-      if (radarSubtitle) radarSubtitle.textContent = "Using fallback data instead.";
+    if (!navigator.geolocation) {
+      showToast("Geolocation not supported by your browser.", "error");
+      if (statusMessage) statusMessage.textContent = "Location not supported";
       initMap();
-      await fetchAndProcessData();
+      fetchAndProcessData().then(() => {
+        if (statusWrap) statusWrap.style.display = "none";
+        if (radar) radar.style.display = "none";
+      });
+      return;
+    }
 
-      showToast("Using fallback data.", "error");
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        initMap(userLocation.lat, userLocation.lng, 13);
+        showToast("Location detected", "success");
+        if (radarTitle) radarTitle.textContent = "Fetching nearby services...";
+        if (radarSubtitle) radarSubtitle.textContent = "";
 
-      // Hide hero status and radar after results
-      if (statusWrap) statusWrap.style.display = "none";
-      if (radar) radar.style.display = "none";
-    },
-    { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
-  );
-}
+        await fetchAndProcessData(userLocation.lat, userLocation.lng);
 
+        // Hide hero status and radar after results are displayed
+        if (statusWrap) statusWrap.style.display = "none";
+        if (radar) radar.style.display = "none";
+      },
+      async (err) => {
+        console.warn(err);
+        if (radarTitle) radarTitle.textContent = "Location access denied";
+        if (radarSubtitle) radarSubtitle.textContent = "Using fallback data instead.";
+        initMap();
+        await fetchAndProcessData();
 
+        showToast("Using fallback data.", "error");
 
-// ===========================
-// Category Filter Helper
-// ===========================
-function filterCategory(type) {
-  const results = lastFetchedData.filter(
-    (s) => !type || s.type === type
-  );
-  displayResults(results);
-
-  // Optional: center map on first item if found
-  if (results.length && map) {
-    map.setView([results[0].lat, results[0].lng], 13);
+        // Hide hero status and radar after results
+        if (statusWrap) statusWrap.style.display = "none";
+        if (radar) radar.style.display = "none";
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
+    );
   }
 
-  showToast(
-    type
-      ? `Showing only ${type.charAt(0).toUpperCase() + type.slice(1)}s`
-      : "Showing all services",
-    "success"
-  );
-}
-window.filterCategory = filterCategory;
+
+
+  // ===========================
+  // Category Filter Helper
+  // ===========================
+  function filterCategory(type) {
+    const results = lastFetchedData.filter(
+      (s) => !type || s.type === type
+    );
+    displayResults(results);
+
+    // Optional: center map on first item if found
+    if (results.length && map) {
+      map.setView([results[0].lat, results[0].lng], 13);
+    }
+
+    showToast(
+      type
+        ? `Showing only ${type.charAt(0).toUpperCase() + type.slice(1)}s`
+        : "Showing all services",
+      "success"
+    );
+  }
+  window.filterCategory = filterCategory;
 
 
   // ===========================
