@@ -14,7 +14,6 @@
   let userLocation = null;
   let allowManuallyTriggered = false;
 
-
   const qs = (s) => document.querySelector(s);
   const qsa = (s) => document.querySelectorAll(s);
 
@@ -26,12 +25,13 @@
     const body = qs("#toastMessage");
     if (!toastEl || !body) return alert(message);
     body.textContent = message;
-    toastEl.className = `toast align-items-center text-white ${variant === "success"
-      ? "bg-success"
-      : variant === "error"
+    toastEl.className = `toast align-items-center text-white ${
+      variant === "success"
+        ? "bg-success"
+        : variant === "error"
         ? "bg-danger"
         : "bg-dark"
-      } border-0`;
+    } border-0`;
     new bootstrap.Toast(toastEl).show();
   }
 
@@ -108,8 +108,11 @@
       const type = s.type || "default";
       const icon = ICONS[type] || ICONS.default;
       if (!s.lat || !s.lng) return;
-      const popupHtml = `<strong>${s.name}</strong><br>${s.address || ""}${s.phone ? `<br>Tel: ${s.phone}` : ""
-        }${s.distance ? `<br><small>${s.distance} km</small>` : ""}`;
+      const popupHtml = `<strong>${s.name}</strong><br>${
+        s.address || ""
+      }${s.phone ? `<br>Tel: ${s.phone}` : ""}${
+        s.distance ? `<br><small>${s.distance} km</small>` : ""
+      }`;
       const marker = L.marker([s.lat, s.lng], { icon })
         .addTo(map)
         .bindPopup(popupHtml);
@@ -172,7 +175,7 @@
   }
 
   // ===========================
-  // Utility
+  // Utility functions
   // ===========================
   function getDistance(lat1, lon1, lat2, lon2) {
     const R = 6371;
@@ -194,46 +197,8 @@
   }
 
   // ===========================
-  // Find nearby services
+  // Data fetching
   // ===========================
-  async function findNearby() {
-    if (isFetching) return;
-    setLoadingState(true, "Getting your location...");
-
-    if (!navigator.geolocation) {
-      showToast("Geolocation is not supported by your browser.", "error");
-      setLoadingState(false);
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      handleGeolocationSuccess,
-      handleGeolocationError,
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
-    );
-  }
-
-  async function handleGeolocationSuccess(pos) {
-    if (!allowManuallyTriggered) return;
-    userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-    initMap(userLocation.lat, userLocation.lng, 13);
-    setLoadingState(true, "Fetching data...");
-    document.getElementById("resultsLoading").style.display = "block";
-    await fetchAndProcessData(userLocation.lat, userLocation.lng);
-    setLoadingState(false, `${lastFetchedData.length} results found`);
-    qs("#requestLocationBtn").style.display = "none";
-  }
-
-  async function handleGeolocationError(err) {
-    console.error("Geolocation Error:", err);
-    setLoadingState(false);
-    document.getElementById("resultsLoading").style.display = "block";
-    showToast("Unable to get location. Using default data.", "error");
-    initMap();
-    await fetchAndProcessData();
-    qs("#requestLocationBtn").style.display = "inline-block";
-  }
-
   async function fetchAndProcessData(lat, lng) {
     let data = [];
     try {
@@ -253,7 +218,12 @@
     data.forEach((item, index) => {
       item._uid = `s_${item.id || index}_${item.lat || 0}_${item.lng || 0}`;
       item.distance = userLocation
-        ? getDistance(userLocation.lat, userLocation.lng, item.lat, item.lng).toFixed(2)
+        ? getDistance(
+            userLocation.lat,
+            userLocation.lng,
+            item.lat,
+            item.lng
+          ).toFixed(2)
         : null;
       item.rating = item.rating || (Math.random() * 2 + 3).toFixed(1);
     });
@@ -285,17 +255,19 @@
       id: el.id,
       name: el.tags.name || "Unnamed",
       type: el.tags.amenity || el.tags.healthcare || "other",
-      address: el.tags["addr:street"] || el.tags["addr:full"] || "Unknown address",
+      address:
+        el.tags["addr:street"] || el.tags["addr:full"] || "Unknown address",
       phone: el.tags.phone || "",
       lat: el.lat || el.center?.lat,
       lng: el.lon || el.center?.lon,
     }));
   }
 
+  // ===========================
+  // Display results
+  // ===========================
   function displayResults(services) {
     const container = qs("#results");
-
-    // Hide the radar loader when data arrives
     const radar = document.getElementById("resultsLoading");
     if (radar) radar.style.display = "none";
 
@@ -313,34 +285,34 @@
       col.className = "col-12 col-md-6 mb-3";
 
       col.innerHTML = `
-  <div class="card service-card shadow-sm ${s.type}">
-    <div class="card-body">
-      <div class="d-flex justify-content-between align-items-start">
-        <div class="service-info">
-          <h6 class="fw-semibold mb-1">${s.name}</h6>
-          <div class="small">${s.address}</div>
-          <div class="rating mt-1">Rating: ${s.rating}</div>
-          <div class="distance-text small">Distance: ${s.distance} km</div>
-        </div>
-        <div class="action-buttons d-flex flex-column align-items-center gap-2">
-          ${s.phone
-          ? `<a href="tel:${s.phone}" class="btn btn-sm btn-success" title="Call ${s.phone}">
-                <i class="bi bi-telephone-fill"></i>
-              </a>`
-          : ""
-        }
-          <a href="https://www.google.com/maps?q=${s.lat},${s.lng}" target="_blank"
-            class="btn btn-sm btn-primary" title="Open in Maps">
-            <i class="bi bi-geo-alt-fill"></i>
-          </a>
-          <button class="btn btn-sm fav-btn ${isFav ? "btn-warning" : "btn-outline-warning"}" 
-            title="Add to favorites">${isFav ? "★" : "☆"}</button>
-        </div>
-      </div>
-    </div>
-  </div>`;
-
-
+        <div class="card service-card shadow-sm ${s.type}">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start">
+              <div class="service-info">
+                <h6 class="fw-semibold mb-1">${s.name}</h6>
+                <div class="small">${s.address}</div>
+                <div class="rating mt-1">Rating: ${s.rating}</div>
+                <div class="distance-text small">Distance: ${s.distance} km</div>
+              </div>
+              <div class="action-buttons d-flex flex-column align-items-center gap-2">
+                ${
+                  s.phone
+                    ? `<a href="tel:${s.phone}" class="btn btn-sm btn-success" title="Call ${s.phone}">
+                        <i class="bi bi-telephone-fill"></i>
+                      </a>`
+                    : ""
+                }
+                <a href="https://www.google.com/maps?q=${s.lat},${s.lng}" target="_blank"
+                  class="btn btn-sm btn-primary" title="Open in Maps">
+                  <i class="bi bi-geo-alt-fill"></i>
+                </a>
+                <button class="btn btn-sm fav-btn ${
+                  isFav ? "btn-warning" : "btn-outline-warning"
+                }" title="Add to favorites">${isFav ? "★" : "☆"}</button>
+              </div>
+            </div>
+          </div>
+        </div>`;
 
       col.querySelector(".fav-btn").addEventListener("click", () =>
         toggleFavorite(s._uid, {
@@ -358,6 +330,9 @@
     });
   }
 
+  // ===========================
+  // Filter and Sort
+  // ===========================
   function filterAndSortResults() {
     let filtered = lastFetchedData;
     const query = qs("#searchInput").value.toLowerCase();
@@ -391,7 +366,7 @@
     qs("#filterSelect").value = type;
     filterAndSortResults();
   }
-  window.filterCategory = filterCategory; // Make global
+  window.filterCategory = filterCategory;
 
   // ===========================
   // Footer reveal animation
@@ -406,15 +381,6 @@
       } else {
         footer.classList.remove("show");
       }
-    });
-  }
-
-  // ===========================
-  // Service worker
-  // ===========================
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register('service-worker.js');
     });
   }
 
@@ -444,6 +410,15 @@
   }
 
   // ===========================
+  // Service worker
+  // ===========================
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("service-worker.js");
+    });
+  }
+
+  // ===========================
   // Init and Event Listeners
   // ===========================
   document.addEventListener("DOMContentLoaded", () => {
@@ -452,9 +427,6 @@
     renderFavoritesModal();
     initFooterReveal();
 
-    // ===========================
-    // Dynamic Allow ↔ Stop Button
-    // ===========================
     const locationBtn = document.getElementById("requestLocationBtn");
     let locationInProgress = false;
     let geoFetchAbort = null;
@@ -464,14 +436,14 @@
         if (!locationInProgress) {
           startLocationProcess();
         } else {
-          stopLocationProcess("Search stopped by user");
+          stopLocationProcess("Search stopped by user.");
         }
       });
     }
 
     function startLocationProcess() {
       if (!navigator.geolocation) {
-        showToast("Geolocation not supported in this browser", "error");
+        showToast("Geolocation not supported in this browser.", "error");
         return;
       }
 
@@ -480,7 +452,11 @@
       locationBtn.textContent = "Stop";
       locationBtn.classList.remove("btn-outline-light");
       locationBtn.classList.add("btn-danger");
+
       const radarCircle = document.querySelector(".radar-circle");
+      const radarTitle = document.getElementById("radarTitle");
+      const radarSubtitle = document.getElementById("radarSubtitle");
+
       if (radarTitle && radarSubtitle && radarCircle) {
         radarTitle.textContent = "📡 Scanning your area for nearby services...";
         radarSubtitle.textContent = "";
@@ -488,8 +464,6 @@
         radarCircle.classList.add("active");
         document.getElementById("resultsLoading").style.display = "block";
       }
-
-
 
       qs("#statusMessage").textContent = "Getting your location...";
       qs("#loadingSpinner").style.display = "inline-block";
@@ -502,22 +476,25 @@
           const { latitude, longitude } = pos.coords;
           userLocation = { lat: latitude, lng: longitude };
           initMap(latitude, longitude, 13);
+
           qs("#statusMessage").textContent = "Fetching nearby services...";
+
           try {
             await fetchAndProcessData(latitude, longitude, geoFetchAbort.signal);
             showToast("Nearby results updated ✅", "success");
           } catch (e) {
             if (e.name !== "AbortError") {
               console.error("Fetch failed:", e);
-              showToast("Failed to fetch data", "error");
+              showToast("Failed to fetch data.", "error");
             }
           } finally {
             stopLocationProcess();
           }
         },
         (err) => {
-          if (err.code === 1) showToast("Location permission denied", "error");
-          else showToast("Unable to get location", "error");
+          if (err.code === 1)
+            showToast("Location permission denied.", "error");
+          else showToast("Unable to get location.", "error");
           stopLocationProcess();
         },
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
@@ -528,27 +505,44 @@
       allowManuallyTriggered = false;
       if (geoFetchAbort) geoFetchAbort.abort();
       locationInProgress = false;
+
       locationBtn.textContent = "Allow";
       locationBtn.classList.remove("btn-danger");
       locationBtn.classList.add("btn-outline-light");
+
       qs("#loadingSpinner").style.display = "none";
-      qs("#statusMessage").textContent = msg || "Allow location for best results.";
+      qs("#statusMessage").textContent =
+        msg || "Allow location for best results.";
+
+      const radarCircle = document.querySelector(".radar-circle");
+      const radarTitle = document.getElementById("radarTitle");
+      const radarSubtitle = document.getElementById("radarSubtitle");
+
+      if (radarCircle) {
+        radarCircle.classList.remove("active");
+        radarCircle.classList.add("idle");
+      }
+      if (radarTitle && radarSubtitle) {
+        radarTitle.textContent = "No results yet";
+        radarSubtitle.textContent =
+          "Search or allow location to see nearby services.";
+      }
     }
-  });
 
+    qs("#findBtn")?.addEventListener("click", filterAndSortResults);
+    qs("#searchInput")?.addEventListener("input", filterAndSortResults);
+    qs("#filterSelect")?.addEventListener("change", filterAndSortResults);
 
-  qs("#findBtn")?.addEventListener("click", filterAndSortResults);
-  qs("#searchInput")?.addEventListener("input", filterAndSortResults);
-  qs("#filterSelect")?.addEventListener("change", filterAndSortResults);
-  qs("#sortDistance")?.addEventListener("click", () => {
-    qs("#sortDistance").classList.add("active");
-    qs("#sortRating").classList.remove("active");
-    filterAndSortResults();
-  });
-  qs("#sortRating")?.addEventListener("click", () => {
-    qs("#sortRating").classList.add("active");
-    qs("#sortDistance").classList.remove("active");
-    filterAndSortResults();
-  });
+    qs("#sortDistance")?.addEventListener("click", () => {
+      qs("#sortDistance").classList.add("active");
+      qs("#sortRating").classList.remove("active");
+      filterAndSortResults();
+    });
 
+    qs("#sortRating")?.addEventListener("click", () => {
+      qs("#sortRating").classList.add("active");
+      qs("#sortDistance").classList.remove("active");
+      filterAndSortResults();
+    });
+  });
 })();

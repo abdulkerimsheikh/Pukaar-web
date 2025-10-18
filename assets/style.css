@@ -379,7 +379,7 @@ body {
   padding-top: 66px !important;
 }
 
-/* ================== RADAR LOADER (Smart Idle + Active) ================== */
+/* ================== RADAR LOADER ================== */
 .loading-radar {
   color: var(--muted-light);
   text-align: center;
@@ -388,7 +388,7 @@ body.dark .loading-radar {
   color: var(--muted-dark);
 }
 
-/* Default radar (idle) */
+/* Base appearance */
 .radar-circle {
   width: 70px;
   height: 70px;
@@ -400,12 +400,12 @@ body.dark .loading-radar {
   transition: all 0.3s ease;
 }
 
-/* Idle state — explicitly prevent animation */
+/* 🔸 Idle: No animation at all */
 .radar-circle.idle {
   animation: none !important;
 }
 
-/* Only animate when scanning is active */
+/* 🔹 Active: Pulse animation only while scanning */
 .radar-circle.active {
   animation: radarPulse 1.8s infinite ease-in-out;
   box-shadow: 0 0 15px rgba(13, 110, 253, 0.4);
