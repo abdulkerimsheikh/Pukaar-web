@@ -1,48 +1,46 @@
 /* =====================================================
-   PUKAAR — Final Theme-Safe Build (Full Light & Dark)
+   PUKAAR — Modern Gradient Theme Build (Synced with index.html & script.js)
    ===================================================== */
 
-/* Core palette */
+/* ---------- CORE COLORS ---------- */
 :root {
   --primary: #0d6efd;
   --accent: #20c997;
-  --text-light: #1a1a1a;
-  --text-dark: #e8eef7;
-  --muted-light: #6c757d;
-  --muted-dark: #aeb8c5;
   --bg-light: #f8f9fa;
   --bg-dark: #0b0f14;
   --card-light: #ffffff;
   --card-dark: #111a25;
+  --text-light: #1a1a1a;
+  --text-dark: #e8eef7;
+  --muted-light: #6c757d;
+  --muted-dark: #aeb8c5;
 }
 
-/* Base setup */
+/* ---------- BASE ---------- */
 body {
+  font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   background: var(--bg-light);
   color: var(--text-light);
-  font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   transition: background 0.3s, color 0.3s;
-  padding-top: 70px;
+  padding-top: 70px !important;
 }
 
-/* Dark mode base */
 body.dark {
   background: var(--bg-dark);
   color: var(--text-dark);
 }
 
-/* ================= NAVBAR ================= */
-/* ================= NAVBAR ================= */
+/* ---------- NAVBAR ---------- */
 .modern-navbar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1050;
-  background: rgba(15, 22, 33, 0.95);
+  background: linear-gradient(90deg, #0d6efd, #20c997);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(10px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-  transition: background 0.3s ease, box-shadow 0.3s ease;
+  transition: background 0.3s, box-shadow 0.3s;
 }
 
 body.dark .modern-navbar {
@@ -52,28 +50,24 @@ body.dark .modern-navbar {
 .navbar-brand {
   font-weight: 900;
   font-size: 1.7rem;
-  text-transform: uppercase;
   background: linear-gradient(90deg, var(--primary), var(--accent));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.navbar-nav {
-  align-items: center;
-}
-
 .nav-link {
   font-weight: 500;
+  color: #fff !important;
   padding: 0.6rem 1rem !important;
-  color: rgba(255, 255, 255, 0.9) !important;
-  transition: all 0.25s ease;
+  transition: all 0.25s;
 }
 .nav-link:hover,
 .nav-link.active {
-  color: #fff !important;
   transform: translateY(-2px);
+  color: #fff !important;
 }
 
+/* Light mode navbar */
 body:not(.dark) .modern-navbar {
   background: rgba(255, 255, 255, 0.95);
 }
@@ -84,12 +78,7 @@ body:not(.dark) .nav-link:hover {
   color: var(--primary) !important;
 }
 
-/* Adjust page offset for fixed navbar */
-body {
-  padding-top: 74px !important;
-}
-
-/* ================= HERO ================= */
+/* ---------- HERO ---------- */
 .hero {
   background: linear-gradient(135deg, #007bff, #00b894);
   color: #fff;
@@ -97,31 +86,23 @@ body {
   padding: 120px 20px 100px;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
   border-bottom-left-radius: 50px;
   border-bottom-right-radius: 50px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25);
 }
-
 body.dark .hero {
   background: linear-gradient(135deg, #0f1724, #1c2433);
-}
-
-.hero .container {
-  max-width: 950px;
 }
 
 .hero h1 {
   font-size: 2.8rem;
   font-weight: 800;
-  margin-bottom: 0.7rem;
 }
-
 .hero p {
   font-size: 1.1rem;
-  margin-bottom: 1.3rem;
   opacity: 0.95;
+  margin-bottom: 1rem;
 }
 
 .input-group {
@@ -132,35 +113,20 @@ body.dark .hero {
 
 #statusWrap {
   margin-top: 10px;
+  font-size: 0.95rem;
   color: #fff;
-  text-align: center;
 }
-
 body.dark #statusWrap {
   color: #e9ecef;
 }
 
-/* Responsive alignment fixes */
-@media (max-width: 768px) {
-  .hero {
-    padding: 90px 15px 70px;
-  }
-  .hero h1 {
-    font-size: 2.3rem;
-  }
-  .hero p {
-    font-size: 1rem;
-  }
-}
-
-
-/* ================= CATEGORY ================= */
+/* ---------- CATEGORY GRID ---------- */
 .cat-grid {
   display: flex;
   gap: 12px;
   justify-content: center;
   flex-wrap: wrap;
-  margin-top: 20px;
+  margin-top: 25px;
 }
 
 .cat-card {
@@ -174,19 +140,19 @@ body.dark #statusWrap {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  font-weight: 600;
   transition: all 0.25s ease;
 }
 .cat-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 body.dark .cat-card {
   background: var(--card-dark);
   color: var(--text-dark);
-  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.06);
 }
 
-/* ================= RESULTS + CARDS ================= */
+/* ---------- RESULTS & CARDS (unchanged design) ---------- */
 .service-card {
   border: none;
   border-radius: 14px;
@@ -199,30 +165,19 @@ body.dark .cat-card {
   transform: translateY(-5px);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
 }
-
 body.dark .service-card {
   background: var(--card-dark);
   color: var(--text-dark);
   box-shadow: 0 4px 12px rgba(255, 255, 255, 0.05);
 }
 
-.service-info h6 {
-  font-weight: 600;
-  color: inherit;
-}
-.service-info .small,
-.rating,
-.distance-text {
-  color: inherit;
-  opacity: 0.85;
-}
-
+/* Card borders by category */
 .service-card.hospital { border-left: 4px solid #dc3545; }
-.service-card.clinic   { border-left: 4px solid #0d6efd; }
+.service-card.clinic { border-left: 4px solid #0d6efd; }
 .service-card.pharmacy { border-left: 4px solid #198754; }
 .service-card.foodbank { border-left: 4px solid #fd7e14; }
 
-/* ================= MAP ================= */
+/* ---------- MAP ---------- */
 #map {
   width: 100%;
   height: 500px;
@@ -235,32 +190,7 @@ body.dark #map {
   border-color: #1c2735;
 }
 
-/* ================= BUTTONS ================= */
-.btn {
-  font-weight: 500;
-  border-radius: 8px;
-  transition: all 0.25s ease;
-}
-
-.btn-outline-light {
-  border-color: #fff;
-  color: #fff;
-}
-.btn-outline-light:hover {
-  background: #fff;
-  color: #000;
-}
-
-body.dark .btn-outline-light {
-  border-color: #f8f9fa;
-  color: #f8f9fa;
-}
-body.dark .btn-outline-light:hover {
-  background: #f8f9fa;
-  color: #000;
-}
-
-/* ================= FOOTER ================= */
+/* ---------- FOOTER ---------- */
 .pukaar-footer {
   background: linear-gradient(180deg, #0f1724, #1c2433);
   color: #e9ecef;
@@ -270,28 +200,25 @@ body:not(.dark) .pukaar-footer {
   background: #f8f9fa;
   color: #212529;
 }
-
 .footer-link {
   color: inherit;
   text-decoration: none;
   font-weight: 500;
-  transition: color 0.2s ease;
 }
 .footer-link:hover {
   color: var(--primary);
 }
-
 .social-link {
   font-size: 1.3rem;
   color: inherit;
-  transition: color 0.25s ease, transform 0.25s ease;
+  transition: transform 0.25s ease, color 0.25s ease;
 }
 .social-link:hover {
   color: var(--accent);
   transform: translateY(-3px);
 }
 
-/* ================= TOAST ================= */
+/* ---------- TOAST ---------- */
 .toast {
   background: #212529 !important;
   color: #fff !important;
@@ -300,86 +227,7 @@ body.dark .toast {
   background: #0d1117 !important;
 }
 
-/* ================= SPINNER ================= */
-#loadingSpinner {
-  display: inline-block;
-  width: 18px;
-  height: 18px;
-  border: 3px solid rgba(255, 255, 255, 0.2);
-  border-top-color: var(--primary);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-left: 6px;
-}
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-/* ================= MISC ================= */
-.results-scroll {
-  max-height: 520px;
-  overflow-y: auto;
-  padding-right: 5px;
-}
-.emoji-marker {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  color: #fff;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, .15);
-  border: 2px solid rgba(255, 255, 255, 0.18);
-}
-
-/* ================= NAVBAR FINAL FIX ================= */
-.modern-navbar {
-  height: 66px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 1rem !important;
-}
-
-.navbar-brand {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 1.6rem !important;
-  line-height: 1;
-}
-
-.navbar-toggler {
-  border: none !important;
-  box-shadow: none !important;
-  outline: none !important;
-}
-
-.navbar-collapse {
-  background: transparent !important;
-}
-
-@media (max-width: 991px) {
-  .modern-navbar .navbar-collapse {
-    background: rgba(15, 22, 33, 0.96);
-    border-radius: 12px;
-    padding: 0.8rem 1rem;
-    margin-top: 0.5rem;
-  }
-
-  body:not(.dark) .modern-navbar .navbar-collapse {
-    background: rgba(255, 255, 255, 0.98);
-  }
-}
-
-/* Ensure consistent page offset */
-body {
-  padding-top: 66px !important;
-}
-
-/* ================== RADAR LOADER ================== */
+/* ---------- RADAR LOADER ---------- */
 .loading-radar {
   color: var(--muted-light);
   text-align: center;
@@ -387,44 +235,41 @@ body {
 body.dark .loading-radar {
   color: var(--muted-dark);
 }
-
-/* Base appearance */
 .radar-circle {
   width: 70px;
   height: 70px;
   border-radius: 50%;
   background: radial-gradient(circle, var(--primary) 35%, transparent 36%);
-  position: relative;
   box-shadow: 0 0 8px rgba(13, 110, 253, 0.25);
-  opacity: 0.8;
-  transition: all 0.3s ease;
 }
-
-/* 🔸 Idle: No animation at all */
-.radar-circle.idle {
-  animation: none !important;
-}
-
-/* 🔹 Active: Pulse animation only while scanning */
 .radar-circle.active {
   animation: radarPulse 1.8s infinite ease-in-out;
-  box-shadow: 0 0 15px rgba(13, 110, 253, 0.4);
+}
+@keyframes radarPulse {
+  0% { transform: scale(0.7); opacity: 0.6; }
+  50% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.7); opacity: 0.6; }
 }
 
-@keyframes radarPulse {
-  0% {
-    transform: scale(0.7);
-    opacity: 0.6;
-    box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.5);
+/* ---------- SPINNER ---------- */
+#loadingSpinner {
+  width: 18px;
+  height: 18px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 768px) {
+  .hero {
+    padding: 90px 15px 70px;
   }
-  50% {
-    transform: scale(1);
-    opacity: 1;
-    box-shadow: 0 0 0 15px rgba(13, 110, 253, 0);
-  }
-  100% {
-    transform: scale(0.7);
-    opacity: 0.6;
-    box-shadow: 0 0 0 0 rgba(13, 110, 253, 0);
-  }
+  .hero h1 { font-size: 2.3rem; }
+  .hero p { font-size: 1rem; }
+  #map { height: 320px; }
 }

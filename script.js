@@ -333,30 +333,30 @@
   }
 
 document.addEventListener('DOMContentLoaded', () => {
-  initMap(); // default center
+  initMap();
   renderFavoritesModal();
 
-  // Automatically trigger browser location prompt
-  setTimeout(() => {
-    findNearby();
-  }, 800);
 
-  // Graceful fallback: if user denies or blocks location
-  if (!navigator.geolocation) {
-    qs('#statusText').textContent = "⚠️ Geolocation not supported by your browser.";
-  } else {
-    navigator.permissions?.query({ name: 'geolocation' }).then((result) => {
-      if (result.state === 'denied') {
-        qs('#statusText').textContent = "Location access denied. Please enable it to show nearby services.";
-      } else if (result.state === 'prompt') {
-        qs('#statusText').textContent = "Please allow location access when prompted.";
-      } else if (result.state === 'granted') {
-        qs('#statusText').textContent = "Location access granted — fetching nearby services...";
-      }
-    }).catch(() => {
-      qs('#statusText').textContent = "Please allow location access when prompted.";
-    });
-  }
+ setTimeout(() => {
+  autoLocate();
+}, 800);
+
+
+ if (!navigator.geolocation) {
+  qs('#statusMessage').textContent = "⚠️ Geolocation not supported by your browser.";
+} else {
+  navigator.permissions?.query({ name: 'geolocation' }).then((result) => {
+    if (result.state === 'denied') {
+      qs('#statusMessage').textContent = "Location access denied. Please enable it to show nearby services.";
+    } else if (result.state === 'prompt') {
+      qs('#statusMessage').textContent = "Please allow location access when prompted.";
+    } else if (result.state === 'granted') {
+      qs('#statusMessage').textContent = "Location access granted — fetching nearby services...";
+    }
+  }).catch(() => {
+    qs('#statusMessage').textContent = "Please allow location access when prompted.";
+  });
+}
 });
 
 })();
