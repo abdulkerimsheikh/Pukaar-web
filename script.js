@@ -8,7 +8,7 @@
 
   const qs = (s) => document.querySelector(s);
 
-  // ✅ Toast utility
+
   function showToast(message, variant = "dark") {
     const toastEl = qs("#liveToast");
     const body = qs("#toastMessage");
@@ -24,7 +24,7 @@
     new bootstrap.Toast(toastEl).show();
   }
 
-  // ✅ Theme toggle
+
   (() => {
     const themeBtn = qs("#theme-toggle");
     const saved = localStorage.getItem("pukaar-theme");
@@ -44,7 +44,7 @@
     });
   })();
 
-  // ✅ Favorites
+
   const getFavorites = () =>
     JSON.parse(localStorage.getItem("favorites") || "[]");
   const saveFavorites = (f) =>
@@ -98,7 +98,7 @@
     });
   }
 
-  // ✅ Distance
+
   function getDistance(lat1, lon1, lat2, lon2) {
     const R = 6371;
     const dLat = ((lat2 - lat1) * Math.PI) / 180;
@@ -112,7 +112,7 @@
     return (R * c).toFixed(2);
   }
 
-  // ✅ Data fetching
+
   async function fetchAndProcessData(lat, lng) {
     let data = [];
     try {
@@ -163,7 +163,7 @@
     }));
   }
 
-  // ✅ Display cards (no map)
+
   function displayResults(services) {
     const container = qs("#results");
     const radar = document.getElementById("resultsLoading");
@@ -174,7 +174,7 @@
     services.forEach((s) => {
       const isFav = getFavorites().some((f) => f.uid === s.uid);
       const col = document.createElement("div");
-      col.className = "col-12 col-md-6 mb-3";
+      col.className = "col-12 col-md-6 col-lg-4 mb-3";
       col.innerHTML = `
       <div class="card service-card shadow-sm ${s.type}">
         <div class="card-body">
@@ -182,8 +182,8 @@
             <div>
               <h6 class="fw-semibold mb-1">${s.name}</h6>
               <div class="small">${s.address}</div>
-              <div class="rating mt-1">⭐ ${s.rating}</div>
-              <div class="distance-text small">📍 ${s.distance} km</div>
+              <div class="rating mt-1">Rating ${s.rating}</div>
+              <div class="distance-text small">Distance ${s.distance} km</div>
             </div>
             <div class="d-flex flex-column gap-2 align-items-center">
               ${
@@ -205,7 +205,7 @@
     });
   }
 
-  // ✅ Find nearby (no map)
+  
   function handleFindNearby() {
     const radar = document.getElementById("resultsLoading");
     const radarCircle = document.querySelector(".radar-circle");
@@ -233,7 +233,7 @@
         radar.style.display = "none";
         statusWrap.style.display = "none";
         radarCircle.classList.remove("active");
-        showToast("Location detected ✅", "success");
+        showToast("Location detected ", "success");
       },
       async () => {
         showToast("Using fallback data.", "error");
@@ -246,7 +246,7 @@
     );
   }
 
-  // ✅ Category filter
+
   function filterCategory(type) {
     const results = lastFetchedData.filter((s) => !type || s.type === type);
     displayResults(results);
@@ -254,7 +254,7 @@
   }
   window.filterCategory = filterCategory;
 
-  // ✅ Init
+
   document.addEventListener("DOMContentLoaded", () => {
     renderFavoritesModal();
     document.getElementById("findBtn").addEventListener("click", handleFindNearby);
