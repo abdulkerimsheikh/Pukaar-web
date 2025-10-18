@@ -320,3 +320,11 @@ document.addEventListener("DOMContentLoaded", () => {
   if (toggleThemeBtn) toggleThemeBtn.addEventListener('click', updateThemeMeta);
 });
 
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./scripts/service-worker.js')
+      .then(reg => console.log('✅ Service Worker registered:', reg.scope))
+      .catch(err => console.error('❌ Service Worker failed:', err));
+  });
+}
+
