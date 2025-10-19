@@ -9,7 +9,7 @@
       "./contact.html",
       "./profile.html",
       "./assets/style.css",
-      "./scripts/script.js",
+      "./script.js",
       "./scripts/contact.js",
       "./json/data.json",
       "./assets/icons/icon-192.png",
