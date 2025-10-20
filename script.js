@@ -104,10 +104,14 @@
                 </div>
               </div>`;
       col.querySelector("button").addEventListener("click", () => {
-        toggleFavorite(f.uid, f, document.querySelector(`.fav-btn[data-uid="${f.uid}"]`) || document.createElement("button"));
+        // Remove from favorites list only
+        let favs = getFavorites().filter(x => x.uid !== f.uid);
+        saveFavorites(favs);
+        renderFavoritesModal();
+        updateFavoritesCount();
+        showToast("Removed from favorites", "info");
 
-
-        // Update corresponding card's star button dynamically
+        // Update main card button color dynamically
         const cardBtn = document.querySelector(`.fav-btn[data-uid="${f.uid}"]`);
         if (cardBtn) {
           cardBtn.classList.remove("btn-warning");
@@ -115,6 +119,7 @@
           cardBtn.innerHTML = "☆";
         }
       });
+
 
       list.appendChild(col);
     });
