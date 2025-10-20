@@ -1,10 +1,12 @@
 
 (() => {
   const theme = localStorage.getItem("pukaar-theme");
-  if (theme === "dark" || (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
-    document.documentElement.classList.add("dark-preload");
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (theme === "dark" || (!theme && prefersDark)) {
+    document.documentElement.classList.add("dark");
   }
 })();
+
 (() => {
   const OVERPASS_URL = "https://overpass-api.de/api/interpreter";
   const FALLBACK_JSON = "json/data.json";
@@ -32,11 +34,16 @@
 
 
 const toggleBtn = document.getElementById("theme-toggle");
-toggleBtn.addEventListener("click", () => {
-  const html = document.documentElement;
-  const isDark = html.classList.toggle("dark");
-  localStorage.setItem("pukaar-theme", isDark ? "dark" : "light");
-});
+if (toggleBtn) {
+  toggleBtn.addEventListener("click", () => {
+    const html = document.documentElement;
+    const isDark = html.classList.toggle("dark");
+    document.body.classList.toggle("dark", isDark);
+    localStorage.setItem("pukaar-theme", isDark ? "dark" : "light");
+    updateThemeMeta();
+  });
+}
+
 
 
 
@@ -310,11 +317,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 // ===== Update theme-color meta dynamically =====
-const themeMeta = document.querySelector('meta[name="theme-color"]');
 const updateThemeMeta = () => {
-  const isDark = document.body.classList.contains('dark');
+  const isDark = document.documentElement.classList.contains('dark');
   themeMeta.setAttribute('content', isDark ? '#0b0f14' : '#ffffff');
 };
+
+
 updateThemeMeta();
 
 document.addEventListener("DOMContentLoaded", () => {
