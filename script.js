@@ -33,16 +33,16 @@
   }
 
 
-const toggleBtn = document.getElementById("theme-toggle");
-if (toggleBtn) {
-  toggleBtn.addEventListener("click", () => {
-    const html = document.documentElement;
-    const isDark = html.classList.toggle("dark");
-    document.body.classList.toggle("dark", isDark);
-    localStorage.setItem("pukaar-theme", isDark ? "dark" : "light");
-    updateThemeMeta();
-  });
-}
+  const toggleBtn = document.getElementById("theme-toggle");
+  if (toggleBtn) {
+    toggleBtn.addEventListener("click", () => {
+      const html = document.documentElement;
+      const isDark = html.classList.toggle("dark");
+      document.body.classList.toggle("dark", isDark);
+      localStorage.setItem("pukaar-theme", isDark ? "dark" : "light");
+      updateThemeMeta();
+    });
+  }
 
 
 
@@ -104,17 +104,17 @@ if (toggleBtn) {
                 </div>
               </div>`;
       col.querySelector("button").addEventListener("click", () => {
-  // Remove from favorites
-  toggleFavorite(f.uid, f, document.createElement("button"));
+        // Remove from favorites
+        toggleFavorite(f.uid, f, document.createElement("button"));
 
-  // Update corresponding card's star button dynamically
-  const cardBtn = document.querySelector(`.fav-btn[data-uid="${f.uid}"]`);
-  if (cardBtn) {
-    cardBtn.classList.remove("btn-warning");
-    cardBtn.classList.add("btn-outline-warning");
-    cardBtn.innerHTML = "☆";
-  }
-});
+        // Update corresponding card's star button dynamically
+        const cardBtn = document.querySelector(`.fav-btn[data-uid="${f.uid}"]`);
+        if (cardBtn) {
+          cardBtn.classList.remove("btn-warning");
+          cardBtn.classList.add("btn-outline-warning");
+          cardBtn.innerHTML = "☆";
+        }
+      });
 
       list.appendChild(col);
     });
@@ -213,8 +213,8 @@ if (toggleBtn) {
           : ""
         }
                     <a href="https://www.google.com/maps?q=${s.lat},${s.lng}" target="_blank" class="btn btn-sm btn-primary"><i class="bi bi-geo-alt-fill"></i></a>
-                    <button class="btn btn-sm fav-btn ${isFav ? "btn-warning" : "btn-outline-warning"
-        }">${isFav ? "★" : "☆"}</button>
+                    <button class="btn btn-sm fav-btn ${isFav ? "btn-warning" : "btn-outline-warning"}" data-uid="${s.uid}">${isFav ? "★" : "☆"}</button>
+
                   </div>
                 </div>
               </div>
