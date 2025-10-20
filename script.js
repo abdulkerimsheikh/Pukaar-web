@@ -60,28 +60,53 @@
   }
 
 
-  function toggleFavorite(uid, item, btn) {
-    let favs = getFavorites();
-    const exists = favs.some((f) => f.uid === uid);
+function toggleFavorite(uid, item, btn) {
+  let favs = getFavorites();
+  const exists = favs.some((f) => f.uid === uid);
+
+  if (exists) {
+    favs = favs.filter((f) => f.uid !== uid);
+    showToast("Removed from favorites", "info");
+  } else {
+    favs.push(item);
+    showToast("Added to favorites", "success");
+  }
+
+  saveFavorites(favs);
+
+  // Update main card button if exists
+  const cardBtn = document.querySelector(`.fav-btn[data-uid="${uid}"]`);
+  if (cardBtn) {
     if (exists) {
-      favs = favs.filter((f) => f.uid !== uid);
-      showToast("Removed from favorites", "info");
+      cardBtn.classList.remove("btn-warning");
+      cardBtn.classList.add("btn-outline-warning");
+      cardBtn.innerHTML = "☆";
+    } else {
+      cardBtn.classList.add("btn-warning", "pulse");
+      cardBtn.classList.remove("btn-outline-warning");
+      cardBtn.innerHTML = "★";
+      setTimeout(() => cardBtn.classList.remove("pulse"), 800);
+    }
+  }
+
+  // If btn argument is provided (e.g., modal button), update it too
+  if (btn) {
+    if (exists) {
       btn.classList.remove("btn-warning");
       btn.classList.add("btn-outline-warning");
       btn.innerHTML = "☆";
     } else {
-      favs.push(item);
-      showToast("Added to favorites", "success");
       btn.classList.add("btn-warning", "pulse");
       btn.classList.remove("btn-outline-warning");
       btn.innerHTML = "★";
       setTimeout(() => btn.classList.remove("pulse"), 800);
     }
-    saveFavorites(favs);
-    renderFavoritesModal();
-    updateFavoritesCount();
-
   }
+
+  updateFavoritesCount();
+  renderFavoritesModal();
+}
+
 
   function renderFavoritesModal() {
     const list = qs("#favoritesList");
@@ -103,15 +128,9 @@
                   <button class="btn btn-sm btn-danger">Remove</button>
                 </div>
               </div>`;
-      col.querySelector("button").addEventListener("click", () => {
-  // Remove from favorites
-  toggleFavorite(f.uid, f, document.querySelector(`.fav-btn[data-uid="${f.uid}"]`) || { 
-    classList: { add() {}, remove() {} }, 
-    innerHTML: "" 
-  });
+col.querySelector("button").addEventListener("click", () => {
+  toggleFavorite(f.uid, f, col.querySelector("button"));
 });
-
-
 
       list.appendChild(col);
     });
