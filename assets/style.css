@@ -1,85 +1,84 @@
-/* =======================================
-   PUKAAR WEB APP - MAIN STYLESHEET
-   Author: Abdul Karim
-   Updated: Oct 2025
-======================================= */
+/* ==============================
+   Pukaar — Global Stylesheet
+   ============================== */
 
-/* -------- Root Variables -------- */
+/* ---------- Reset & Base ---------- */
 :root {
-  --primary: #007bff;
-  --secondary: #6c757d;
-  --light: #f8f9fa;
-  --dark: #121212;
-  --accent: #4dabf7;
-  --radius: 18px;
-  --shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  --bs-primary: #0d6efd;
+  --bs-light: #f8f9fa;
+  --bs-dark: #212529;
+  --bs-body-bg: #ffffff;
+  --bs-body-color: #212529;
   --transition: all 0.3s ease;
 }
 
-/* -------- General Reset -------- */
+body.dark {
+  --bs-body-bg: #121212;
+  --bs-body-color: #f1f1f1;
+  --bs-light: #1e1e1e;
+  --bs-dark: #f8f9fa;
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+}
+
 body {
-  font-family: "Poppins", "Segoe UI", sans-serif;
-  background-color: var(--light);
-  color: #333;
+  font-family: "Inter", "Segoe UI", Roboto, sans-serif;
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
+  line-height: 1.6;
   transition: var(--transition);
 }
 
-a {
-  text-decoration: none;
-  color: inherit;
-  transition: var(--transition);
-}
-
-a:hover {
-  color: var(--primary);
-}
-
-/* -------- Navbar -------- */
+/* ---------- Navbar ---------- */
 .navbar {
-  background: white;
-  box-shadow: var(--shadow);
-  padding: 0.8rem 1.2rem;
+  background-color: var(--bs-body-bg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 0.7rem 1rem;
 }
 
 .navbar-brand {
   font-weight: 700;
-  font-size: 1.5rem;
-  color: var(--primary);
+  color: var(--bs-primary);
+  letter-spacing: 0.5px;
 }
 
-.navbar-nav .nav-link {
+.navbar-brand img {
+  height: 36px;
+  width: auto;
+  margin-right: 8px;
+}
+
+.nav-link {
+  color: var(--bs-body-color);
   font-weight: 500;
-  color: #333;
+  transition: var(--transition);
 }
 
-.navbar-nav .nav-link:hover {
-  color: var(--primary);
+.nav-link:hover {
+  color: var(--bs-primary);
 }
 
-/* -------- Hero Section -------- */
+/* ---------- Hero Section ---------- */
 .hero {
-  background: linear-gradient(135deg, #007bff, #00b4d8);
-  color: white;
-  padding: 4rem 2rem;
   text-align: center;
-  border-radius: 0 0 30px 30px;
+  padding: 4rem 1rem 3rem;
+  background: linear-gradient(180deg, rgba(13, 110, 253, 0.05), transparent);
 }
 
 .hero h1 {
-  font-size: 2rem;
   font-weight: 700;
-  margin-bottom: 1rem;
+  font-size: 2.2rem;
+  margin-bottom: 0.8rem;
 }
 
 .hero p {
   font-size: 1.1rem;
-  opacity: 0.9;
+  color: #6c757d;
 }
 
-/* -------- Category Grid -------- */
+/* ---------- Category Grid ---------- */
 .cat-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -90,9 +89,10 @@ a:hover {
 }
 
 .cat-card {
-  background: white;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  border-radius: 18px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   padding: 2rem 1rem;
   text-align: center;
   font-weight: 600;
@@ -109,137 +109,152 @@ a:hover {
 .cat-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
-  background: #f9fcff;
-}
-
-.cat-card span {
-  font-size: 2rem;
-  margin-bottom: 0.6rem;
+  background: var(--bs-light);
 }
 
 .cat-card div {
+  margin-top: 0.6rem;
   font-size: 1rem;
 }
 
 .cat-card:hover div {
-  color: var(--primary);
+  color: var(--bs-primary);
 }
 
-/* -------- Results Cards -------- */
-.result-card {
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  background: white;
-  padding: 1.2rem;
-  margin-bottom: 1.2rem;
+.cat-card::first-line {
+  font-size: 2rem;
+}
+
+/* ---------- Search & Input ---------- */
+.search-bar {
+  max-width: 600px;
+  margin: 1rem auto 2rem;
+}
+
+.search-bar input {
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ccc;
+  font-size: 1rem;
   transition: var(--transition);
 }
 
-.result-card:hover {
-  transform: translateY(-4px);
+.search-bar input:focus {
+  border-color: var(--bs-primary);
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
 }
 
-.result-card .distance {
-  color: var(--primary);
-  font-weight: 500;
+/* ---------- Cards (Results) ---------- */
+.service-card {
+  border-radius: 16px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: var(--transition);
+  background: var(--bs-body-bg);
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+.service-card .card-body {
+  padding: 1.2rem;
+}
+
+.service-card .card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.service-card .distance {
   font-size: 0.95rem;
+  color: #6c757d;
   margin-top: 0.4rem;
 }
 
-.result-card .call-btn {
-  background: var(--primary);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 42px;
-  height: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.service-card .contact-icons {
+  margin-top: 1rem;
+}
+
+.service-card .contact-icons a {
+  color: var(--bs-primary);
+  margin-right: 0.6rem;
+  font-size: 1.2rem;
   transition: var(--transition);
 }
 
-.result-card .call-btn:hover {
-  background: #0056b3;
+.service-card .contact-icons a:hover {
+  color: #0a58ca;
 }
 
-/* -------- Footer -------- */
+/* ---------- Footer ---------- */
 footer {
-  background: #f8f9fa;
-  color: #555;
+  background: var(--bs-light);
+  color: #6c757d;
   text-align: center;
-  padding: 1.5rem 0;
-  margin-top: 3rem;
+  padding: 1rem;
   font-size: 0.95rem;
-  border-top: 1px solid #eaeaea;
-}
-
-footer a {
-  color: var(--primary);
-  font-weight: 500;
-}
-
-/* -------- Alerts / Banners -------- */
-.pwa-banner {
-  position: fixed;
-  bottom: 1rem;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--primary);
-  color: white;
-  padding: 0.8rem 1.4rem;
-  border-radius: 50px;
-  box-shadow: var(--shadow);
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: var(--transition);
-  z-index: 1000;
-}
-
-.pwa-banner:hover {
-  background: #0056b3;
-}
-
-/* -------- Dark Mode -------- */
-body.dark {
-  background-color: var(--dark);
-  color: #ddd;
-}
-
-body.dark .navbar {
-  background: #1e1e1e;
-  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.05);
-}
-
-body.dark .cat-card,
-body.dark .result-card {
-  background: #1f1f1f;
-  color: #eee;
-  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 body.dark footer {
   background: #1e1e1e;
-  color: #bbb;
+  color: #aaa;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-body.dark .cat-card:hover {
-  background: #262626;
+/* ---------- Buttons ---------- */
+.btn-primary {
+  border-radius: 10px;
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  transition: var(--transition);
 }
 
-/* -------- Responsive Adjustments -------- */
-@media (max-width: 576px) {
+.btn-primary:hover {
+  background-color: #0a58ca;
+}
+
+/* ---------- Alerts & PWA Banner ---------- */
+.alert-pwa {
+  background: var(--bs-primary);
+  color: #fff;
+  text-align: center;
+  padding: 0.8rem;
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1050;
+  animation: fadeInUp 0.5s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* ---------- Responsive Tweaks ---------- */
+@media (max-width: 768px) {
   .hero {
-    padding: 3rem 1.2rem;
+    padding: 3rem 1rem 2rem;
   }
 
   .hero h1 {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
   }
+}
 
+@media (max-width: 576px) {
   .cat-grid {
     grid-template-columns: 1fr;
   }
@@ -249,7 +264,7 @@ body.dark .cat-card:hover {
     padding: 1.5rem;
   }
 
-  footer {
-    font-size: 0.85rem;
+  .navbar-brand img {
+    height: 32px;
   }
 }
