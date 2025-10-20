@@ -108,33 +108,49 @@ function toggleFavorite(uid, item, btn) {
 }
 
 
-  function renderFavoritesModal() {
-    const list = qs("#favoritesList");
-    if (!list) return;
-    const favs = getFavorites();
-    list.innerHTML = favs.length
-      ? ""
-      : `<div class="text-center text-muted w-100 py-4">No favorites saved.</div>`;
-    favs.forEach((f) => {
-      const col = document.createElement("div");
-      col.className = "col-12 col-md-6";
-      col.innerHTML = `
-              <div class="card p-2 service-card">
-                <div class="card-body d-flex justify-content-between align-items-start">
-                  <div>
-                    <h6>${f.name}</h6>
-                    <div class="small text-muted">${f.address || "Unknown address"}</div>
-                  </div>
-                  <button class="btn btn-sm btn-danger">Remove</button>
-                </div>
-              </div>`;
-col.querySelector("button").addEventListener("click", () => {
-  toggleFavorite(f.uid, f, col.querySelector("button"));
-});
+ function renderFavoritesModal() {
+  const list = qs("#favoritesList");
+  if (!list) return;
 
-      list.appendChild(col);
-    });
+  const favs = getFavorites();
+
+  // Clear the container only if empty
+  if (!favs.length) {
+    list.innerHTML = `<div class="text-center text-muted w-100 py-4">No favorites saved.</div>`;
+    return;
   }
+
+  // Otherwise, build only missing cards
+  favs.forEach((f) => {
+    if (list.querySelector(`.fav-modal-item[data-uid="${f.uid}"]`)) return; // already exists
+
+    const col = document.createElement("div");
+    col.className = "col-12 col-md-6 fav-modal-item";
+    col.setAttribute("data-uid", f.uid);
+    col.innerHTML = `
+      <div class="card p-2 service-card">
+        <div class="card-body d-flex justify-content-between align-items-start">
+          <div>
+            <h6>${f.name}</h6>
+            <div class="small text-muted">${f.address || "Unknown address"}</div>
+          </div>
+          <button class="btn btn-sm btn-danger">Remove</button>
+        </div>
+      </div>
+    `;
+
+    const btn = col.querySelector("button");
+    btn.addEventListener("click", () => {
+      toggleFavorite(f.uid, f, btn); // updates modal + main card + badge
+      col.remove(); // remove the card from modal immediately
+      if (!getFavorites().length) {
+        list.innerHTML = `<div class="text-center text-muted w-100 py-4">No favorites saved.</div>`;
+      }
+    });
+
+    list.appendChild(col);
+  });
+}
 
 
   function getDistance(lat1, lon1, lat2, lon2) {
