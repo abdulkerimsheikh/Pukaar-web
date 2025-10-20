@@ -104,8 +104,18 @@ if (toggleBtn) {
                 </div>
               </div>`;
       col.querySelector("button").addEventListener("click", () => {
-        toggleFavorite(f.uid, f, document.createElement("button"));
-      });
+  // Remove from favorites
+  toggleFavorite(f.uid, f, document.createElement("button"));
+
+  // Update corresponding card's star button dynamically
+  const cardBtn = document.querySelector(`.fav-btn[data-uid="${f.uid}"]`);
+  if (cardBtn) {
+    cardBtn.classList.remove("btn-warning");
+    cardBtn.classList.add("btn-outline-warning");
+    cardBtn.innerHTML = "☆";
+  }
+});
+
       list.appendChild(col);
     });
   }
