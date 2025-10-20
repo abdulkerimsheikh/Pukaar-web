@@ -104,21 +104,13 @@
                 </div>
               </div>`;
       col.querySelector("button").addEventListener("click", () => {
-        // Remove from favorites list only
-        let favs = getFavorites().filter(x => x.uid !== f.uid);
-        saveFavorites(favs);
-        renderFavoritesModal();
-        updateFavoritesCount();
-        showToast("Removed from favorites", "info");
+  // Remove from favorites
+  toggleFavorite(f.uid, f, document.querySelector(`.fav-btn[data-uid="${f.uid}"]`) || { 
+    classList: { add() {}, remove() {} }, 
+    innerHTML: "" 
+  });
+});
 
-        // Update main card button color dynamically
-        const cardBtn = document.querySelector(`.fav-btn[data-uid="${f.uid}"]`);
-        if (cardBtn) {
-          cardBtn.classList.remove("btn-warning");
-          cardBtn.classList.add("btn-outline-warning");
-          cardBtn.innerHTML = "☆";
-        }
-      });
 
 
       list.appendChild(col);
