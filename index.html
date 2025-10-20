@@ -6,12 +6,21 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Pukaar — Find Nearby Services</title>
 
+  <script>
+(() => {
+  const theme = localStorage.getItem("pukaar-theme");
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (theme === "dark" || (!theme && prefersDark)) {
+    document.documentElement.classList.add("dark");
+  }
+})();
+</script>
+
   <!-- Bootstrap & Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
-  <!-- Custom -->
-  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/style.css?v=2.1">
 
   <!-- PWA -->
   <link rel="manifest" href="json/manifest.json">
@@ -215,7 +224,7 @@
 
   <!-- ================= SCRIPTS ================= -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="script.js"></script>
+  <script src="script.js?v=2.1"></script>
 
 
   <!-- Custom PWA Install Banner -->
