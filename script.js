@@ -104,8 +104,8 @@
                 </div>
               </div>`;
       col.querySelector("button").addEventListener("click", () => {
-        // Remove from favorites
-        toggleFavorite(f.uid, f, document.createElement("button"));
+        toggleFavorite(f.uid, f, document.querySelector(`.fav-btn[data-uid="${f.uid}"]`) || document.createElement("button"));
+
 
         // Update corresponding card's star button dynamically
         const cardBtn = document.querySelector(`.fav-btn[data-uid="${f.uid}"]`);
