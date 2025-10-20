@@ -44,10 +44,6 @@
     });
   }
 
-
-
-
-
   const getFavorites = () =>
     JSON.parse(localStorage.getItem("favorites") || "[]");
   const saveFavorites = (f) =>
@@ -61,60 +57,60 @@
 
 
 function toggleFavorite(uid, item, btn) {
-  let favs = getFavorites();
-  const exists = favs.some((f) => f.uid === uid);
+  let favs = getFavorites();
+  const exists = favs.some((f) => f.uid === uid);
 
-  if (exists) {
-    favs = favs.filter((f) => f.uid !== uid);
-    showToast("Removed from favorites", "info");
-  } else {
-    favs.push(item);
-    showToast("Added to favorites", "success");
-  }
+  if (exists) {
+    favs = favs.filter((f) => f.uid !== uid);
+    showToast("Removed from favorites", "info");
+  } else {
+    favs.push(item);
+    showToast("Added to favorites", "success");
+  }
 
-  saveFavorites(favs);
+  saveFavorites(favs);
 
-  // Update main card button if exists
-  const cardBtn = document.querySelector(`.fav-btn[data-uid="${uid}"]`);
-  if (cardBtn) {
-    if (exists) {
-      cardBtn.classList.remove("btn-warning");
-      cardBtn.classList.add("btn-outline-warning");
-      cardBtn.innerHTML = "☆";
-    } else {
-      cardBtn.classList.add("btn-warning", "pulse");
-      cardBtn.classList.remove("btn-outline-warning");
-      cardBtn.innerHTML = "★";
-      setTimeout(() => cardBtn.classList.remove("pulse"), 800);
-    }
-  }
+  // Update main card button if exists
+  const cardBtn = document.querySelector(`.fav-btn[data-uid="${uid}"]`);
+  if (cardBtn) {
+    if (exists) {
+      cardBtn.classList.remove("btn-warning");
+      cardBtn.classList.add("btn-outline-warning");
+      cardBtn.innerHTML = "☆";
+    } else {
+      cardBtn.classList.add("btn-warning", "pulse");
+      cardBtn.classList.remove("btn-outline-warning");
+      cardBtn.innerHTML = "★";
+      setTimeout(() => cardBtn.classList.remove("pulse"), 800);
+    }
+  }
 
-  // If btn argument is provided (e.g., modal button), update it too
-  if (btn) {
-    if (exists) {
-      btn.classList.remove("btn-warning");
-      btn.classList.add("btn-outline-warning");
-      btn.innerHTML = "☆";
-    } else {
-      btn.classList.add("btn-warning", "pulse");
-      btn.classList.remove("btn-outline-warning");
-      btn.innerHTML = "★";
-      setTimeout(() => btn.classList.remove("pulse"), 800);
-    }
-  }
+  // If btn argument is provided (e.g., modal button), update it too
+  if (btn) {
+    if (exists) {
+      btn.classList.remove("btn-warning");
+      btn.classList.add("btn-outline-warning");
+      btn.innerHTML = "☆";
+    } else {
+      btn.classList.add("btn-warning", "pulse");
+      btn.classList.remove("btn-outline-warning");
+      btn.innerHTML = "★";
+      setTimeout(() => btn.classList.remove("pulse"), 800);
+    }
+  }
 
-  updateFavoritesCount(); // This correctly updates the '0' badge count
-  // Removed renderFavoritesModal() call to prevent inefficient re-render on every toggle
+  updateFavoritesCount();
+  renderFavoritesModal();
 }
 
 
-function renderFavoritesModal() {
+ function renderFavoritesModal() {
   const list = qs("#favoritesList");
   if (!list) return;
 
   const favs = getFavorites();
 
-  // **CRITICAL FIX:** Clear the container to correctly reflect the current state
+  // Clear everything first
   list.innerHTML = "";
 
   if (!favs.length) {
@@ -122,9 +118,8 @@ function renderFavoritesModal() {
     return;
   }
 
-  // Build all current favorite cards
+  // Rebuild the modal from scratch
   favs.forEach((f) => {
-    // No need to check if it exists, as we cleared the list
     const col = document.createElement("div");
     col.className = "col-12 col-md-6 fav-modal-item";
     col.setAttribute("data-uid", f.uid);
@@ -142,22 +137,13 @@ function renderFavoritesModal() {
 
     const btn = col.querySelector("button");
     btn.addEventListener("click", () => {
-      // 1. Toggle the favorite state, update badge, and main card icon
-      // Note: toggleFavorite will mark it as *removed* because it's already in favs
-      toggleFavorite(f.uid, f, btn);
-
-      // 2. Manually remove the card from the modal immediately for smooth UX
-      col.remove();
-
-      // 3. Update the modal's empty state message if no favorites remain
-      if (!getFavorites().length) {
-        list.innerHTML = `<div class="text-center text-muted w-100 py-4">No favorites saved.</div>`;
-      }
+      toggleFavorite(f.uid, f, btn); // updates main card + badge
     });
 
     list.appendChild(col);
   });
 }
+
 
 
   function getDistance(lat1, lon1, lat2, lon2) {
