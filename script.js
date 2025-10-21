@@ -69,39 +69,28 @@ function toggleFavorite(uid, item, btn) {
   }
 
   saveFavorites(favs);
-
-  // Update main card button if exists
-  const cardBtn = document.querySelector(`.fav-btn[data-uid="${uid}"]`);
-  if (cardBtn) {
-    if (exists) {
-      cardBtn.classList.remove("btn-warning");
-      cardBtn.classList.add("btn-outline-warning");
-      cardBtn.innerHTML = "☆";
-    } else {
-      cardBtn.classList.add("btn-warning", "pulse");
-      cardBtn.classList.remove("btn-outline-warning");
-      cardBtn.innerHTML = "★";
-      setTimeout(() => cardBtn.classList.remove("pulse"), 800);
-    }
-  }
-
-  // If btn argument is provided (e.g., modal button), update it too
-  if (btn) {
-    if (exists) {
-      btn.classList.remove("btn-warning");
-      btn.classList.add("btn-outline-warning");
-      btn.innerHTML = "☆";
-    } else {
-      btn.classList.add("btn-warning", "pulse");
-      btn.classList.remove("btn-outline-warning");
-      btn.innerHTML = "★";
-      setTimeout(() => btn.classList.remove("pulse"), 800);
-    }
-  }
-
   updateFavoritesCount();
+
+  // Update main card button
+  const mainBtn = document.querySelector(`.fav-btn[data-uid="${uid}"]`);
+  if (mainBtn) {
+    mainBtn.classList.toggle("btn-warning", !exists);
+    mainBtn.classList.toggle("btn-outline-warning", exists);
+    mainBtn.classList.toggle("active", !exists);
+    mainBtn.innerHTML = exists ? "☆" : "★";
+  }
+
+  // Update modal button (if provided)
+  if (btn) {
+    btn.classList.toggle("btn-warning", !exists);
+    btn.classList.toggle("btn-outline-warning", exists);
+    btn.classList.toggle("active", !exists);
+    btn.innerHTML = exists ? "☆" : "★";
+  }
+
   renderFavoritesModal();
 }
+
 
 
  function renderFavoritesModal() {

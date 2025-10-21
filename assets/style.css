@@ -148,71 +148,31 @@ a:hover {
   transform: translateY(-4px);
   box-shadow: 0 6px 18px var(--shadow);
 }
-.service-card .distance-text {
+.service-card .distance {
   color: var(--muted);
   font-size: 0.9rem;
 }
 
-/* -------- Favorite Icon -------- */
+/* Favorite button default */
 .fav-btn {
   font-size: 1.3rem;
-  transition: all 0.3s ease;
-}
-
-/* Outline state (not favorite) */
-.fav-btn.btn-outline-warning {
   color: var(--muted);
-  background-color: transparent;
-  border-color: #ffc107;
+  background: none;
+  border: none;
+  transition: color 0.3s ease, transform 0.3s ease;
 }
 
-/* Favorite state */
-.fav-btn.btn-warning {
-  color: #fff;
-  background-color: #ffc107;
-  border-color: #ffc107;
-  transform: scale(1.15);
-}
-
-/* Pulse animation */
-.fav-btn.pulse {
-  animation: pulseAnim 0.8s ease forwards;
-}
-
-/* Hover effect */
-.fav-btn:hover {
+/* Active favorite (highlight) */
+.fav-btn.btn-warning,
+.fav-btn.active {
+  color: crimson;
   transform: scale(1.2);
 }
 
-/* Pulse Keyframes */
-@keyframes pulseAnim {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.3); }
-  100% { transform: scale(1.15); }
+.fav-btn:hover {
+  color: crimson;
 }
 
-/* -------- Favorites Modal -------- */
-.fav-modal-item .btn {
-  font-size: 0.9rem;
-  min-width: 60px;
-}
-.fav-modal-item h6 {
-  margin-bottom: 0.2rem;
-}
-.fav-modal-item .small {
-  color: var(--muted);
-}
-
-/* -------- Favorites Badge -------- */
-#favCountBadge {
-  font-size: 0.75rem;
-  padding: 0.35em 0.5em;
-  line-height: 1;
-  top: 0;
-  right: 0;
-  transform: translate(50%, -50%);
-  transition: all 0.3s ease;
-}
 
 /* -------- No Results / Error -------- */
 .message-box {
