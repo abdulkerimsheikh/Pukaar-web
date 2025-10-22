@@ -56,82 +56,85 @@
   }
 
 
-function toggleFavorite(uid, item, btn) {
-  let favs = getFavorites();
-  const exists = favs.some((f) => f.uid === uid);
+  function toggleFavorite(uid, item, btn) {
+    let favs = getFavorites();
+    const exists = favs.some((f) => f.uid === uid);
 
-  if (exists) {
-    favs = favs.filter((f) => f.uid !== uid);
-    showToast("Removed from favorites", "info");
-  } else {
-    favs.push(item);
-    showToast("Added to favorites", "success");
+    if (exists) {
+      favs = favs.filter((f) => f.uid !== uid);
+      showToast("Removed from favorites", "info");
+    } else {
+      favs.push(item);
+      showToast("Added to favorites", "success");
+    }
+
+    saveFavorites(favs);
+    updateFavoritesCount();
+
+    // Update main card button
+    const mainBtn = document.querySelector(`.fav-btn[data-uid="${uid}"]`);
+    if (mainBtn) {
+      mainBtn.classList.toggle("btn-warning", !exists);
+      mainBtn.classList.toggle("btn-outline-warning", exists);
+      mainBtn.classList.toggle("active", !exists);
+      mainBtn.innerHTML = exists ? "☆" : "★";
+    }
+
+    // Update modal button (if provided)
+    if (btn) {
+      btn.classList.toggle("btn-warning", !exists);
+      btn.classList.toggle("btn-outline-warning", exists);
+      btn.classList.toggle("active", !exists);
+      btn.innerHTML = exists ? "☆" : "★";
+    }
+
+    renderFavoritesModal();
   }
 
-  saveFavorites(favs);
-  updateFavoritesCount();
-
-  // Update main card button
-  const mainBtn = document.querySelector(`.fav-btn[data-uid="${uid}"]`);
-  if (mainBtn) {
-    mainBtn.classList.toggle("btn-warning", !exists);
-    mainBtn.classList.toggle("btn-outline-warning", exists);
-    mainBtn.classList.toggle("active", !exists);
-    mainBtn.innerHTML = exists ? "☆" : "★";
-  }
-
-  // Update modal button (if provided)
-  if (btn) {
-    btn.classList.toggle("btn-warning", !exists);
-    btn.classList.toggle("btn-outline-warning", exists);
-    btn.classList.toggle("active", !exists);
-    btn.innerHTML = exists ? "☆" : "★";
-  }
-
-  renderFavoritesModal();
-}
 
 
+  function renderFavoritesModal() {
+    const list = qs("#favoritesList");
+    if (!list) return;
 
- function renderFavoritesModal() {
-  const list = qs("#favoritesList");
-  if (!list) return;
+    const favs = getFavorites();
 
-  const favs = getFavorites();
+    // Clear everything first
+    list.innerHTML = "";
 
-  // Clear everything first
-  list.innerHTML = "";
+    if (!favs.length) {
+      list.innerHTML = `<div class="text-center text-muted w-100 py-4">No favorites saved.</div>`;
+      return;
+    }
 
-  if (!favs.length) {
-    list.innerHTML = `<div class="text-center text-muted w-100 py-4">No favorites saved.</div>`;
-    return;
-  }
-
-  // Rebuild the modal from scratch
-  favs.forEach((f) => {
-    const col = document.createElement("div");
-    col.className = "col-12 col-md-6 fav-modal-item";
-    col.setAttribute("data-uid", f.uid);
-    col.innerHTML = `
-      <div class="card p-2 service-card">
-        <div class="card-body d-flex justify-content-between align-items-start">
-          <div>
-            <h6>${f.name}</h6>
-            <div class="small text-muted">${f.address || "Unknown address"}</div>
+    // Rebuild the modal from scratch
+    favs.forEach((f) => {
+      const col = document.createElement("div");
+      col.className = "col-12 col-md-6 fav-modal-item";
+      col.setAttribute("data-uid", f.uid);
+      col.innerHTML = `
+        <div class="card p-2 service-card">
+          <div class="card-body d-flex justify-content-between align-items-start">
+            <div>
+              <h6>${f.name}</h6>
+              <div class="small text-muted">${f.address || "Unknown address"}</div>
+            </div>
+            <button class="btn btn-sm btn-danger">Remove</button>
           </div>
-          <button class="btn btn-sm btn-danger">Remove</button>
         </div>
-      </div>
-    `;
+      `;
 
-    const btn = col.querySelector("button");
-    btn.addEventListener("click", () => {
-      toggleFavorite(f.uid, f, btn); // updates main card + badge
+      const btn = col.querySelector("button");
+      btn.addEventListener("click", () => {
+        toggleFavorite(f.uid, f, btn); // updates main card + badge
+      });
+
+      list.appendChild(col);
+      updateFavoritesCount(); // 🔥 Keep modal badge synced
+      displayResults(lastFetchedData); // 🔥 Refresh main cards icon state
+
     });
-
-    list.appendChild(col);
-  });
-}
+  }
 
 
 
@@ -180,10 +183,10 @@ function toggleFavorite(uid, item, btn) {
       '["social_facility"="food_bank"]',
     ];
     const query = `[out:json][timeout:25];
-            (node${filters.join(";node")}(around:${radius},${lat},${lng});
-            way${filters.join(";way")}(around:${radius},${lat},${lng});
-            relation${filters.join(";relation")}(around:${radius},${lat},${lng}););
-            out center;`;
+              (node${filters.join(";node")}(around:${radius},${lat},${lng});
+              way${filters.join(";way")}(around:${radius},${lat},${lng});
+              relation${filters.join(";relation")}(around:${radius},${lat},${lng}););
+              out center;`;
 
     const res = await fetch(`${OVERPASS_URL}?data=${encodeURIComponent(query)}`);
     const json = await res.json();
@@ -212,27 +215,27 @@ function toggleFavorite(uid, item, btn) {
       const col = document.createElement("div");
       col.className = "col-12 col-md-6 col-lg-4 mb-3";
       col.innerHTML = `
-            <div class="card service-card shadow-sm ${s.type}">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start">
-                  <div>
-                    <h6 class="fw-semibold mb-1">${s.name}</h6>
-                    <div class="small">${s.address}</div>
-                    <div class="rating mt-1">Rating ${s.rating}</div>
-                    <div class="distance-text small">Distance ${s.distance} km</div>
-                  </div>
-                  <div class="d-flex flex-column gap-2 align-items-center">
-                    ${s.phone
+              <div class="card service-card shadow-sm ${s.type}">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                      <h6 class="fw-semibold mb-1">${s.name}</h6>
+                      <div class="small">${s.address}</div>
+                      <div class="rating mt-1">Rating ${s.rating}</div>
+                      <div class="distance-text small">Distance ${s.distance} km</div>
+                    </div>
+                    <div class="d-flex flex-column gap-2 align-items-center">
+                      ${s.phone
           ? `<a href="tel:${s.phone}" class="btn btn-sm btn-success"><i class="bi bi-telephone-fill"></i></a>`
           : ""
         }
-                    <a href="https://www.google.com/maps?q=${s.lat},${s.lng}" target="_blank" class="btn btn-sm btn-primary"><i class="bi bi-geo-alt-fill"></i></a>
-                    <button class="btn btn-sm fav-btn ${isFav ? "btn-warning" : "btn-outline-warning"}" data-uid="${s.uid}">${isFav ? "★" : "☆"}</button>
+                      <a href="https://www.google.com/maps?q=${s.lat},${s.lng}" target="_blank" class="btn btn-sm btn-primary"><i class="bi bi-geo-alt-fill"></i></a>
+                      <button class="btn btn-sm fav-btn ${isFav ? "btn-warning" : "btn-outline-warning"}" data-uid="${s.uid}">${isFav ? "★" : "☆"}</button>
 
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>`;
+              </div>`;
       const btn = col.querySelector(".fav-btn");
       btn.addEventListener("click", () => toggleFavorite(s.uid, s, btn));
       container.appendChild(col);
