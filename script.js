@@ -88,7 +88,9 @@
       btn.innerHTML = exists ? "☆" : "★";
     }
 
+    updateFavoritesCount();
     renderFavoritesModal();
+
   }
 
 
