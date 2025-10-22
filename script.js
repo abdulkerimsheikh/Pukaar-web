@@ -57,6 +57,8 @@
 
 
   function toggleFavorite(uid, item, btn) {
+    console.log("toggleFavorite called for:", uid);
+
     let favs = getFavorites();
     const exists = favs.some((f) => f.uid === uid);
 
@@ -95,48 +97,52 @@
 
 
 
-  function renderFavoritesModal() {
-    const list = qs("#favoritesList");
-    if (!list) return;
+ function renderFavoritesModal() {
+  const list = qs("#favoritesList");
+  if (!list) return;
 
-    const favs = getFavorites();
+  const favs = getFavorites();
+  list.innerHTML = "";
 
-    // Clear everything first
-    list.innerHTML = "";
-
-    if (!favs.length) {
-      list.innerHTML = `<div class="text-center text-muted w-100 py-4">No favorites saved.</div>`;
-      return;
-    }
-
-    // Rebuild the modal from scratch
-    favs.forEach((f) => {
-      const col = document.createElement("div");
-      col.className = "col-12 col-md-6 fav-modal-item";
-      col.setAttribute("data-uid", f.uid);
-      col.innerHTML = `
-        <div class="card p-2 service-card">
-          <div class="card-body d-flex justify-content-between align-items-start">
-            <div>
-              <h6>${f.name}</h6>
-              <div class="small text-muted">${f.address || "Unknown address"}</div>
-            </div>
-            <button class="btn btn-sm btn-danger">Remove</button>
-          </div>
-        </div>
-      `;
-
-      const btn = col.querySelector("button");
-      btn.addEventListener("click", () => {
-        toggleFavorite(f.uid, f, btn); // updates main card + badge
-      });
-
-      list.appendChild(col);
-      updateFavoritesCount(); // 🔥 Keep modal badge synced
-      displayResults(lastFetchedData); // 🔥 Refresh main cards icon state
-
-    });
+  if (!favs.length) {
+    list.innerHTML = `<div class="text-center text-muted w-100 py-4">No favorites saved.</div>`;
+    updateFavoritesCount();
+    return;
   }
+
+  favs.forEach((f) => {
+    const col = document.createElement("div");
+    col.className = "col-12 col-md-6 fav-modal-item";
+    col.setAttribute("data-uid", f.uid);
+    col.innerHTML = `
+      <div class="card p-2 service-card">
+        <div class="card-body d-flex justify-content-between align-items-start">
+          <div>
+            <h6>${f.name}</h6>
+            <div class="small text-muted">${f.address || "Unknown address"}</div>
+          </div>
+          <button class="btn btn-sm btn-danger remove-fav-btn">Remove</button>
+        </div>
+      </div>
+    `;
+    list.appendChild(col);
+  });
+
+  // ✅ Re-bind event listeners safely every time
+  list.querySelectorAll(".remove-fav-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      const uid = e.target.closest(".fav-modal-item").dataset.uid;
+      const favs = getFavorites();
+      const item = favs.find((f) => f.uid === uid);
+      toggleFavorite(uid, item, e.target);
+      displayResults(lastFetchedData);
+      updateFavoritesCount();
+      renderFavoritesModal(); // Refresh modal itself
+    });
+  });
+
+  updateFavoritesCount();
+}
 
 
 
