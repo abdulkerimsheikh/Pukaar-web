@@ -128,27 +128,28 @@
       list.appendChild(col);
     });
 
-    // ✅ Re-bind event listeners safely every time
-    list.querySelectorAll(".remove-fav-btn").forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-  const uid = e.target.closest(".fav-modal-item").dataset.uid;
-  const favs = getFavorites();
-  const item = favs.find((f) => f.uid === uid);
-  
-  // Just toggle + update UI, no full re-render
-  toggleFavorite(uid, item, e.target);
-  displayResults(lastFetchedData);
-  updateFavoritesCount();
-  
-  // ✅ Instead of full rerender, manually remove the item from modal
-  const card = e.target.closest(".fav-modal-item");
-  if (card) card.remove();
-  
-  // If no favorites left, show "No favorites saved"
-  if (!getFavorites().length) {
-    qs("#favoritesList").innerHTML = `<div class="text-center text-muted w-100 py-4">No favorites saved.</div>`;
+// ✅ Use event delegation so it always works
+list.addEventListener("click", (e) => {
+  if (e.target.classList.contains("remove-fav-btn")) {
+    const card = e.target.closest(".fav-modal-item");
+    const uid = card.dataset.uid;
+    const favs = getFavorites();
+    const item = favs.find((f) => f.uid === uid);
+
+    toggleFavorite(uid, item, e.target); // Sync state
+    displayResults(lastFetchedData); // Update cards
+    updateFavoritesCount(); // Badge count
+
+    // Remove this card instantly
+    card.remove();
+
+    // If no favorites left
+    if (!getFavorites().length) {
+      list.innerHTML = `<div class="text-center text-muted w-100 py-4">No favorites saved.</div>`;
+    }
   }
 });
+
 
     });
 
