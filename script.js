@@ -97,24 +97,24 @@
 
 
 
- function renderFavoritesModal() {
-  const list = qs("#favoritesList");
-  if (!list) return;
+  function renderFavoritesModal() {
+    const list = qs("#favoritesList");
+    if (!list) return;
 
-  const favs = getFavorites();
-  list.innerHTML = "";
+    const favs = getFavorites();
+    list.innerHTML = "";
 
-  if (!favs.length) {
-    list.innerHTML = `<div class="text-center text-muted w-100 py-4">No favorites saved.</div>`;
-    updateFavoritesCount();
-    return;
-  }
+    if (!favs.length) {
+      list.innerHTML = `<div class="text-center text-muted w-100 py-4">No favorites saved.</div>`;
+      updateFavoritesCount();
+      return;
+    }
 
-  favs.forEach((f) => {
-    const col = document.createElement("div");
-    col.className = "col-12 col-md-6 fav-modal-item";
-    col.setAttribute("data-uid", f.uid);
-    col.innerHTML = `
+    favs.forEach((f) => {
+      const col = document.createElement("div");
+      col.className = "col-12 col-md-6 fav-modal-item";
+      col.setAttribute("data-uid", f.uid);
+      col.innerHTML = `
       <div class="card p-2 service-card">
         <div class="card-body d-flex justify-content-between align-items-start">
           <div>
@@ -125,24 +125,24 @@
         </div>
       </div>
     `;
-    list.appendChild(col);
-  });
-
-  // ✅ Re-bind event listeners safely every time
-  list.querySelectorAll(".remove-fav-btn").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      const uid = e.target.closest(".fav-modal-item").dataset.uid;
-      const favs = getFavorites();
-      const item = favs.find((f) => f.uid === uid);
-      toggleFavorite(uid, item, e.target);
-      displayResults(lastFetchedData);
-      updateFavoritesCount();
-      renderFavoritesModal(); // Refresh modal itself
+      list.appendChild(col);
     });
-  });
 
-  updateFavoritesCount();
-}
+    // ✅ Re-bind event listeners safely every time
+    list.querySelectorAll(".remove-fav-btn").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const uid = e.target.closest(".fav-modal-item").dataset.uid;
+        const favs = getFavorites();
+        const item = favs.find((f) => f.uid === uid);
+        toggleFavorite(uid, item, e.target);
+        displayResults(lastFetchedData);
+        updateFavoritesCount();
+        renderFavoritesModal(); // Refresh modal itself
+      });
+    });
+
+    updateFavoritesCount();
+  }
 
 
 
@@ -302,75 +302,77 @@
 
 
   document.addEventListener("DOMContentLoaded", () => {
-    renderFavoritesModal();
     document.getElementById("findBtn").addEventListener("click", handleFindNearby);
-    fetchAndProcessData(24.8607, 67.0011);
+    fetchAndProcessData(24.8607, 67.0011).then(() => {
+      renderFavoritesModal(); // ✅ call AFTER cards are ready
+      updateFavoritesCount(); // ✅ ensure badge correct
+    });
   });
-})();
 
-// ====== PWA Install Banner (Fixed) ======
-let deferredPrompt;
 
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
+  // ====== PWA Install Banner (Fixed) ======
+  let deferredPrompt;
 
-  const banner = document.getElementById("pwaBanner");
-  if (banner && !localStorage.getItem("pwaBannerShown")) {
-    banner.classList.remove("d-none");
-  }
-});
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
 
-document.addEventListener("DOMContentLoaded", () => {
-  const banner = document.getElementById("pwaBanner");
-  const installBtn = document.getElementById("pwaInstallBtn");
-  const closeBtn = document.getElementById("pwaCloseBtn");
-
-  if (!banner || !installBtn || !closeBtn) return;
-
-  installBtn.addEventListener("click", async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const choice = await deferredPrompt.userChoice;
-      if (choice.outcome === "accepted") {
-        showToast("✅ Pukaar installed successfully!", "success");
-      } else {
-        showToast("Install dismissed", "info");
-      }
-      deferredPrompt = null;
+    const banner = document.getElementById("pwaBanner");
+    if (banner && !localStorage.getItem("pwaBannerShown")) {
+      banner.classList.remove("d-none");
     }
-    banner.classList.add("d-none");
-    localStorage.setItem("pwaBannerShown", "true");
   });
 
-  closeBtn.addEventListener("click", () => {
-    banner.classList.add("d-none");
-    localStorage.setItem("pwaBannerShown", "true");
+  document.addEventListener("DOMContentLoaded", () => {
+    const banner = document.getElementById("pwaBanner");
+    const installBtn = document.getElementById("pwaInstallBtn");
+    const closeBtn = document.getElementById("pwaCloseBtn");
+
+    if (!banner || !installBtn || !closeBtn) return;
+
+    installBtn.addEventListener("click", async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const choice = await deferredPrompt.userChoice;
+        if (choice.outcome === "accepted") {
+          showToast("✅ Pukaar installed successfully!", "success");
+        } else {
+          showToast("Install dismissed", "info");
+        }
+        deferredPrompt = null;
+      }
+      banner.classList.add("d-none");
+      localStorage.setItem("pwaBannerShown", "true");
+    });
+
+    closeBtn.addEventListener("click", () => {
+      banner.classList.add("d-none");
+      localStorage.setItem("pwaBannerShown", "true");
+    });
   });
-});
 
 
 
-// ===== Update theme-color meta dynamically =====
-const updateThemeMeta = () => {
-  const isDark = document.documentElement.classList.contains('dark');
-  themeMeta.setAttribute('content', isDark ? '#0b0f14' : '#ffffff');
-};
+  // ===== Update theme-color meta dynamically =====
+  const updateThemeMeta = () => {
+    const isDark = document.documentElement.classList.contains('dark');
+    themeMeta.setAttribute('content', isDark ? '#0b0f14' : '#ffffff');
+  };
 
 
-updateThemeMeta();
+  updateThemeMeta();
 
-document.addEventListener("DOMContentLoaded", () => {
-  const toggleThemeBtn = document.getElementById('theme-toggle');
-  if (toggleThemeBtn) toggleThemeBtn.addEventListener('click', updateThemeMeta);
-});
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('service-worker.js')
-
-      .then(reg => console.log('✅ Service Worker registered:', reg.scope))
-      .catch(err => console.error('❌ Service Worker failed:', err));
+  document.addEventListener("DOMContentLoaded", () => {
+    const toggleThemeBtn = document.getElementById('theme-toggle');
+    if (toggleThemeBtn) toggleThemeBtn.addEventListener('click', updateThemeMeta);
   });
-}
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('service-worker.js')
+
+        .then(reg => console.log('✅ Service Worker registered:', reg.scope))
+        .catch(err => console.error('❌ Service Worker failed:', err));
+    });
+  }
 
