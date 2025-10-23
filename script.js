@@ -91,31 +91,31 @@
     }
 
     updateFavoritesCount();
-    renderFavoritesModal();
+
 
   }
 
 
 
   function renderFavoritesModal() {
-  const list = qs("#favoritesList");
-  if (!list) return;
+    const list = qs("#favoritesList");
+    if (!list) return;
 
-  const favs = getFavorites();
-  list.innerHTML = "";
+    const favs = getFavorites();
+    list.innerHTML = "";
 
-  if (!favs.length) {
-    list.innerHTML = `<div class="text-center text-muted w-100 py-4">No favorites saved.</div>`;
-    updateFavoritesCount();
-    return;
-  }
+    if (!favs.length) {
+      list.innerHTML = `<div class="text-center text-muted w-100 py-4">No favorites saved.</div>`;
+      updateFavoritesCount();
+      return;
+    }
 
-  // Render all favorite cards
-  favs.forEach((f) => {
-    const col = document.createElement("div");
-    col.className = "col-12 col-md-6 fav-modal-item";
-    col.setAttribute("data-uid", f.uid);
-    col.innerHTML = `
+    // Render all favorite cards
+    favs.forEach((f) => {
+      const col = document.createElement("div");
+      col.className = "col-12 col-md-6 fav-modal-item";
+      col.setAttribute("data-uid", f.uid);
+      col.innerHTML = `
       <div class="card p-2 service-card">
         <div class="card-body d-flex justify-content-between align-items-start">
           <div>
@@ -126,32 +126,28 @@
         </div>
       </div>
     `;
-    list.appendChild(col);
-  });
+      list.appendChild(col);
+    });
 
-  // ✅ Add this only once (outside forEach)
-  list.onclick = (e) => {
-    if (e.target.classList.contains("remove-fav-btn")) {
-      const card = e.target.closest(".fav-modal-item");
-      if (!card) return;
-      const uid = card.dataset.uid;
-      const favs = getFavorites();
-      const item = favs.find((f) => f.uid === uid);
+    // ✅ Add this only once (outside forEach)
+    list.onclick = (e) => {
+      if (e.target.classList.contains("remove-fav-btn")) {
+        const card = e.target.closest(".fav-modal-item");
+        if (!card) return;
+        const uid = card.dataset.uid;
+        const favs = getFavorites();
+        const item = favs.find((f) => f.uid === uid);
 
-      toggleFavorite(uid, item, e.target);
-      displayResults(lastFetchedData);
-      updateFavoritesCount();
+        toggleFavorite(uid, item, e.target);
+        displayResults(lastFetchedData);
+        renderFavoritesModal(); // refresh after toggle
+        updateFavoritesCount();
 
-      card.remove();
-
-      if (!getFavorites().length) {
-        list.innerHTML = `<div class="text-center text-muted w-100 py-4">No favorites saved.</div>`;
       }
-    }
-  };
+    };
 
-  updateFavoritesCount();
-}
+    updateFavoritesCount();
+  }
 
 
 
